@@ -7,8 +7,16 @@ set "KEY=HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon"
 echo === antes === > "%OUT%"
 reg query "%KEY%" /v Shell >> "%OUT%" 2>&1
 
+rem Siempre el instalador más reciente, tenga la versión que tenga
+set "NSIS=C:\Users\CASA\Consola\src-tauri\target\release\bundle\nsis"
+for /f "delims=" %%F in ('dir /b /o-d "%NSIS%\Consola_*_x64-setup.exe"') do if not defined SETUP set "SETUP=%NSIS%\%%F"
+echo instalador: %SETUP% >> "%OUT%"
+
 taskkill /im consola.exe /f >nul 2>&1
-start "" /wait "C:\Users\CASA\Consola\src-tauri\target\release\bundle\nsis\Consola_0.1.0_x64-setup.exe" /S
+start "" /wait "%SETUP%" /S
+rem Con la misma versión ya instalada el instalador puede no reemplazar nada: se copia el programa recién compilado
+taskkill /im consola.exe /f >nul 2>&1
+copy /y "C:\Users\CASA\Consola\src-tauri\target\release\consola.exe" "%LOCALAPPDATA%\Consola\consola.exe" >> "%OUT%" 2>&1
 
 if exist "%LOCALAPPDATA%\Consola\consola.exe" (
   reg add "%KEY%" /v Shell /t REG_SZ /d "\"%LOCALAPPDATA%\Consola\consola.exe\"" /f >> "%OUT%" 2>&1

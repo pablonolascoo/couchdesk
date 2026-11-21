@@ -8,6 +8,8 @@
 // Si algo falla antes de publicar, lo deja todo como estaba.
 import { $ } from 'bun'
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
 type Level = 'patch' | 'minor' | 'major'
 const level = (process.argv[2] ?? 'patch') as Level
@@ -52,15 +54,16 @@ const section = changelog.split(/^## /m).find((s) => s.startsWith(`[${version}]`
 const notes = (section ? section.split('\n').slice(1).join('\n').trim() : `Versión ${label}.`) +
   `\n\n**Descarga:** \`Consola_${version}_x64-setup.exe\` (Windows 10/11, 64 bits).` +
   `\n\nWindows puede avisar de que el programa no es conocido (aún no está firmado): «Más información» → «Ejecutar de todas formas».`
-writeFileSync('.release-notes.md', notes)
+// Fuera del proyecto: así no se cuela en el commit de la versión
+const notesFile = join(tmpdir(), 'consola-release-notes.md')
+writeFileSync(notesFile, notes)
 
 await $`git add -A`
 await $`git commit -m ${`release: ${label}`}`.nothrow()
 await $`git tag -a ${tag} -m ${label}`
 const pushed = await $`git push origin main --follow-tags`.nothrow()
 if (pushed.exitCode !== 0) { console.error('\n✖  No se pudo subir a GitHub. La etiqueta queda en local.'); process.exit(1) }
-await $`gh release create ${tag} ${installer} --title ${`Consola ${version} · ${meta.codename}`} --notes-file .release-notes.md --latest`
-await $`rm -f .release-notes.md`.nothrow()
+await $`gh release create ${tag} ${installer} --title ${`Consola ${version} · ${meta.codename}`} --notes-file ${notesFile} --latest`
 // Avisar a los buscadores de que hay versión nueva (si la web ya está publicada)
 await $`bun scripts/indexnow.ts`.nothrow()
 console.log(`\n✔  ${label} publicada: https://github.com/pablonolascoo/consola/releases/tag/${tag}\n`)
