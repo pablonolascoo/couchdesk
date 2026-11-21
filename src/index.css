@@ -1,53 +1,119 @@
-/* Sistema de diseño: high-end-visual-design · "Editorial Luxury"
-   Crema cálido con grano de papel, serif enorme, doble marco y movimiento con muelle */
+/* CouchDesk · capa de diseño
+   1. Marca (valores fijos)  2. Papeles del tema (cambian con el tema)  3. Piezas (usan los papeles)
+   El tema activo escribe los papeles en :root (style + data-theme + data-mode) antes de pintar:
+   ver src/data/themes.ts y el guion de index.html. Aquí van los del tema "Salón". */
 :root {
-  --bg: #fbf8f2;
-  --bg-2: #f4efe6;
-  --surface: #fffdf9;
-  --surface-2: #f7f3ec;
-  --hair: rgba(58, 42, 24, 0.08);          /* línea finísima translúcida */
-  --border: var(--hair);
-  --border-strong: #1c1712;
-  --text: #1c1712;                         /* espresso */
-  --text-2: #3d342b;
-  --muted: #8a7f72;
+  /* ---------- 1. Marca ---------- */
+  --brand-tinta: #1F1A17;
+  --brand-lino: #F3ECE1;
+  --brand-brasa: #E8643A;
+  --brand-arena: #E6DCCB;
+  --brand-taupe: #8C7F72;
+  --brand-noche: #14110F;
 
-  --red-bg: #f7e4e1;   --red: #93362f;
-  --blue-bg: #e3edf3;  --blue: #2e5f80;
-  --green-bg: #e8efe4; --green: #3f6440;
-  --yellow-bg: #f6ecd6; --yellow: #8a6418;
-
-  --serif: 'Instrument Serif', 'Newsreader', Georgia, serif;
-  --sans: 'Geist Variable', 'Plus Jakarta Sans', sans-serif;
-  --mono: 'Geist Mono Variable', 'SF Mono', monospace;
-
+  /* ---------- 2. Papeles (tema Salón) ---------- */
+  color-scheme: light;
+  --bg: #F3ECE1;
+  --bg-2: #EBE2D3;
+  --surface: #FBF7F0;
+  --surface-2: #F5EEE3;
+  --text: #1F1A17;
+  --text-2: #3D342B;
+  --muted: #6F6358;
+  --accent: #E8643A;          /* la luz: poco y con intención */
+  --accent-ink: #1F1A17;      /* texto sobre el acento */
+  --focus: #D9562E;           /* aro del foco */
+  --success: #3B6340; --success-bg: #E3ECDD;
+  --warn: #7A5710;    --warn-bg: #F4E8CF;
+  --error: #983829;   --error-bg: #F6E1DB;
+  --info: #2B5B7C;    --info-bg: #E0EBF2;
+  /* Tripletes "r g b" para usar con transparencia: rgb(var(--ink-rgb) / 0.1) */
+  --ink-rgb: 31 26 23;
+  --bg-rgb: 243 236 225;
+  --surface-rgb: 251 247 240;
+  --accent-rgb: 232 100 58;
+  --focus-rgb: 217 86 46;
+  --shadow-rgb: 80 56 30;
+  --hair-alpha: 0.09;
+  --highlight: rgba(255, 255, 255, 0.9);
+  --grain: 0.05;
+  /* Fondo animado */
+  --bd-top: #F6F0E6; --bd-mid: #F1E9DC; --bd-bottom: #EBE0CF;
+  --bd-tint-1: 232 196 148; --bd-tint-2: 236 168 132; --bd-tint-3: 196 184 150; --bd-light: 252 249 243;
+  /* Letra y esquinas */
+  --serif: 'Instrument Serif', 'Newsreader', Georgia, serif;   /* títulos */
+  --title-tracking: -0.035em;
   --radius: 22px;
   --radius-sm: 14px;
+
+  /* ---------- Papeles derivados (no cambian por tema) ---------- */
+  --sans: 'Geist Variable', 'Plus Jakarta Sans', sans-serif;
+  --mono: 'Geist Mono Variable', 'SF Mono', monospace;
+  --hair: rgb(var(--ink-rgb) / var(--hair-alpha));   /* línea finísima translúcida */
+  --border: var(--hair);
+  --border-strong: var(--text);
+  --radius-pill: 9999px;
   --gutter: clamp(28px, 4.5vw, 72px);
+  /* Nombres antiguos: siguen funcionando */
+  --red: var(--error);    --red-bg: var(--error-bg);
+  --green: var(--success); --green-bg: var(--success-bg);
+  --blue: var(--info);    --blue-bg: var(--info-bg);
+  --yellow: var(--warn);  --yellow-bg: var(--warn-bg);
 
-  /* Curvas: nada lineal ni ease-in-out */
-  --ease: cubic-bezier(0.32, 0.72, 0, 1);      /* peso y frenada suave */
-  --spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* rebote ligero del foco */
-  --out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* ---------- Movimiento ---------- */
+  /* Duraciones: micro, corta, media, larga, ceremonia */
+  --dur-1: 160ms;
+  --dur-2: 280ms;
+  --dur-3: 480ms;
+  --dur-4: 800ms;
+  --dur-5: 1200ms;
+  /* Curvas: nunca lineales ni ease-in-out */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);      /* entradas: llega rápido y frena largo */
+  --ease-glide: cubic-bezier(0.32, 0.72, 0, 1);        /* cambios de estado con peso */
+  --ease-in-soft: cubic-bezier(0.55, 0, 0.75, 0.2);    /* salidas: arranca suave y se va */
+  --ease-settle: cubic-bezier(0.34, 1.32, 0.64, 1);    /* asiento ligero del foco (sin rebote brusco) */
+  --ease: var(--ease-glide);
+  --spring: var(--ease-settle);
+  --out: var(--ease-out-expo);
 
-  /* Doble marco: núcleo + bandeja exterior + sombra ambiente muy difusa */
+  /* ---------- Elevación: doble marco ---------- */
+  --shadow-soft: 0 30px 60px -30px rgb(var(--shadow-rgb) / 0.22);
   --bezel:
-    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 1px 1px var(--highlight),
     0 0 0 1px var(--hair),
-    0 0 0 6px rgba(255, 253, 249, 0.55),
-    0 0 0 7px rgba(58, 42, 24, 0.045),
-    0 30px 60px -30px rgba(80, 56, 30, 0.22);
+    0 0 0 6px rgb(var(--surface-rgb) / 0.55),
+    0 0 0 7px rgb(var(--ink-rgb) / 0.045),
+    var(--shadow-soft);
+  /* Foco: aro fino de tinta (contraste alto) + aire + aro de luz con un brillo muy suave */
   --bezel-focus:
-    inset 0 1px 1px rgba(255, 255, 255, 0.9),
-    0 0 0 1px rgba(28, 23, 18, 0.9),
-    0 0 0 6px rgba(255, 253, 249, 0.85),
-    0 0 0 7.5px rgba(28, 23, 18, 0.85),
-    0 40px 70px -28px rgba(80, 56, 30, 0.35);
+    inset 0 1px 1px var(--highlight),
+    0 0 0 1.5px rgb(var(--ink-rgb) / 0.88),
+    0 0 0 6px rgb(var(--surface-rgb) / 0.92),
+    0 0 0 8px var(--focus),
+    0 0 34px 8px rgb(var(--focus-rgb) / 0.2),
+    0 40px 70px -28px rgb(var(--shadow-rgb) / 0.35);
+}
+
+/* Oscuros: el grano se nota menos y el foco brilla un poco más */
+:root[data-mode='dark'] {
+  --bezel-focus:
+    inset 0 1px 1px var(--highlight),
+    0 0 0 1.5px rgb(var(--ink-rgb) / 0.9),
+    0 0 0 6px rgb(var(--bg-rgb) / 0.92),
+    0 0 0 8px var(--focus),
+    0 0 40px 10px rgb(var(--focus-rgb) / 0.26),
+    0 40px 70px -28px rgb(0 0 0 / 0.6);
+}
+/* Alto contraste: aro grueso, sin brillos ni grano */
+:root[data-theme='alto-contraste'] {
+  --bezel: 0 0 0 1.5px var(--hair);
+  --bezel-focus: 0 0 0 3px var(--text), 0 0 0 7px var(--bg), 0 0 0 10px var(--focus);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body, #root { height: 100%; }
+html { background: var(--bg); }
 
 body {
   background: var(--bg);
@@ -58,6 +124,7 @@ body {
   -webkit-font-smoothing: antialiased;
   user-select: none;
   overflow: hidden;
+  transition: background-color var(--dur-3) var(--ease-glide), color var(--dur-3) var(--ease-glide);
 }
 
 /* Grano de papel: capa fija que no se mueve con el scroll */
@@ -67,19 +134,19 @@ body::after {
   inset: 0;
   pointer-events: none;
   z-index: 40;
-  opacity: 0.05;
+  opacity: var(--grain);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Luz ambiente cálida */
+/* Luz ambiente del tema */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(55% 45% at 85% 0%, rgba(226, 196, 150, 0.22), transparent 70%),
-    radial-gradient(45% 40% at 0% 100%, rgba(190, 170, 140, 0.16), transparent 70%);
+    radial-gradient(55% 45% at 85% 0%, rgb(var(--bd-tint-1) / 0.22), transparent 70%),
+    radial-gradient(45% 40% at 0% 100%, rgb(var(--bd-tint-3) / 0.16), transparent 70%);
 }
 
 #root { position: relative; z-index: 1; }
@@ -90,17 +157,24 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 html[data-input='pad'], html[data-input='pad'] *,
 html[data-input='keyboard'], html[data-input='keyboard'] * { cursor: none !important; }
 
-/* Foco del mando: el elemento sube con un pequeño rebote y gana un doble aro oscuro */
+/* ---------- Foco del mando ----------
+   El elemento sube con un asiento suave y el aro se desliza a su sitio.
+   Al pulsar A, un pequeño hundimiento ("scale", que no pisa los "transform" de cada pieza). */
 [data-nav] {
   outline: none;
   transition:
-    transform 520ms var(--spring),
-    box-shadow 420ms var(--ease),
-    background-color 420ms var(--ease),
-    opacity 420ms var(--ease);
+    transform 560ms var(--ease-settle),
+    scale var(--dur-1) var(--ease-glide),
+    box-shadow var(--dur-3) var(--ease-glide),
+    background-color var(--dur-3) var(--ease-glide),
+    color var(--dur-2) var(--ease-glide),
+    opacity var(--dur-3) var(--ease-glide);
 }
 [data-nav][data-focused] { box-shadow: var(--bezel-focus) !important; }
-[data-nav]:active { transform: scale(0.97) !important; transition-duration: 120ms; }
+[data-nav]:active, [data-nav][data-pressed] {
+  scale: 0.975;
+  transition-duration: 560ms, 90ms, var(--dur-3), var(--dur-3), var(--dur-2), var(--dur-3);
+}
 
 kbd {
   display: inline-grid;
@@ -110,9 +184,9 @@ kbd {
   padding: 0 7px;
   font-family: var(--mono);
   font-size: 11px;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
   background: var(--surface);
-  box-shadow: inset 0 1px 1px #fff, 0 0 0 1px var(--hair);
+  box-shadow: inset 0 1px 1px var(--highlight), 0 0 0 1px var(--hair);
   color: var(--text-2);
 }
 
@@ -128,9 +202,9 @@ kbd {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
-  background: rgba(255, 253, 249, 0.7);
+  background: rgb(var(--surface-rgb) / 0.7);
   box-shadow: 0 0 0 1px var(--hair);
   color: var(--text-2);
 }
@@ -141,35 +215,115 @@ kbd {
   border-radius: 50%;
   background: currentColor;
 }
-.tag.steam { color: var(--blue); }
-.tag.epic { color: var(--yellow); }
-.tag.emu, .tag.gog { color: var(--green); }
-.tag.xbox { color: var(--red); }
-.tag.pc { color: #6e5a44; }
+.tag.steam { color: var(--info); }
+.tag.epic { color: var(--warn); }
+.tag.emu, .tag.gog { color: var(--success); }
+.tag.xbox { color: var(--error); }
+.tag.pc { color: var(--muted); }
 
 .mono { font-family: var(--mono); }
 
-/* Entrada de cada pantalla: sube, se enfoca y aparece */
-.route {
-  height: 100%;
-  animation: route-in 820ms var(--ease) both;
+/* Temas oscuros: etiquetas sobre tarjetas de color con fondo del tema (el blanco las borraba) */
+:root[data-mode='dark'] :is(.emu-card, .emu-hero) .tag { background: rgb(var(--surface-rgb) / 0.92); }
+
+/* Títulos: siguen la letra del tema */
+.hero-title { letter-spacing: var(--title-tracking) !important; }
+
+/* La marca de la barra de arriba: el símbolo de CouchDesk (C abierta + luz) */
+.brand-mark {
+  box-shadow: none !important;
+  background: var(--text);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath d='M205.95 63.97A104 104 0 1 0 205.95 192.03A19 19 0 0 0 176.01 168.63A66 66 0 1 1 176.01 87.37A19 19 0 0 0 205.95 63.97Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath d='M205.95 63.97A104 104 0 1 0 205.95 192.03A19 19 0 0 0 176.01 168.63A66 66 0 1 1 176.01 87.37A19 19 0 0 0 205.95 63.97Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  overflow: visible;
 }
-@keyframes route-in {
-  from { opacity: 0; transform: translateY(18px) scale(0.992); filter: blur(10px); }
-  to { opacity: 1; transform: none; filter: none; }
+.topbar-brand { position: relative; }
+.brand-mark span { display: none !important; }
+.topbar-brand::before {
+  /* La luz va fuera de la máscara: un punto de Brasa en el hueco de la C */
+  content: '';
+  position: absolute;
+  left: calc(30px * 191 / 256);
+  top: calc(50% - 30px * 20 / 256);
+  width: calc(30px * 40 / 256);
+  height: calc(30px * 40 / 256);
+  border-radius: 50%;
+  background: var(--accent);
+  z-index: 1;
 }
 
+/* ---------- Transiciones entre pantallas ----------
+   Ir adelante: la pantalla llega desde un poco de profundidad.
+   Volver (B): llega desde delante, como si se apartara la anterior. */
+.route {
+  height: 100%;
+  animation: route-in var(--dur-4) var(--ease-out-expo) both;
+}
+:root[data-nav-dir='back'] .route { animation-name: route-back; animation-duration: 680ms; }
+@keyframes route-in {
+  0% { opacity: 0; transform: translateY(12px) scale(0.985); filter: blur(6px); }
+  55% { filter: blur(0); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+@keyframes route-back {
+  0% { opacity: 0; transform: translateY(-8px) scale(1.012); filter: blur(6px); }
+  55% { filter: blur(0); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+
+/* Mientras se ve el arranque, la primera pantalla espera quieta debajo y entra al disolverse
+   (la entrada la hace BootSplash.tsx con scale 1.02 → 1, desenfoque y opacidad) */
+:root[data-booting] .route { animation: none; opacity: 0; }
+:root[data-booting] .route * { animation-play-state: paused !important; }
+
 /* Aparición escalonada de los bloques de cada pantalla */
-/* Usa "translate" (no "transform") para no pisar el rebote del foco */
+/* Usa "translate" (no "transform") para no pisar el asiento del foco */
 .reveal {
-  animation: reveal 900ms var(--ease) both;
+  animation: reveal 900ms var(--ease-out-expo) both;
   animation-delay: calc(120ms + var(--i, 0) * 70ms);
 }
 @keyframes reveal {
   from { opacity: 0; translate: 0 16px; filter: blur(6px); }
   to { opacity: 1; translate: 0 0; filter: none; }
 }
+@keyframes enter-up {
+  from { opacity: 0; translate: 0 20px; filter: blur(6px); }
+  to { opacity: 1; translate: 0 0; filter: none; }
+}
+@keyframes enter-up-sm {
+  from { opacity: 0; translate: 0 8px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes pop-in {
+  from { opacity: 0; scale: 0.6; }
+  to { opacity: 1; scale: 1; }
+}
 
+/* Inicio: barra, juegos, destacado y secciones entran uno tras otro */
+.home > .topbar { animation: enter-up var(--dur-4) var(--ease-out-expo) both; }
+.home > .rail { animation: enter-up var(--dur-4) var(--ease-out-expo) 70ms both; }
+.home > .hero { animation: enter-up 860ms var(--ease-out-expo) 140ms both; }
+.home > .dock { animation: enter-up 900ms var(--ease-out-expo) 210ms both; }
+
+/* ---------- Detalles ---------- */
+.notice { animation: enter-up-sm var(--dur-3) var(--ease-out-expo) both; }
+.option[aria-pressed='true'] .option-check svg,
+.sv-toggle.is-on svg { animation: pop-in var(--dur-3) var(--ease-settle) both; }
+:root .osk { animation: osk-rise 620ms var(--ease-settle) both; }
+@keyframes osk-rise {
+  from { opacity: 0; translate: 0 48px; }
+  to { opacity: 1; translate: 0 0; }
+}
+:root .overlay { animation: overlay-in 640ms var(--ease-out-expo) both; }
+@keyframes overlay-in {
+  from { opacity: 0; translate: 0 18px; scale: 0.97; filter: blur(6px); }
+  to { opacity: 1; translate: 0 0; scale: 1; filter: none; }
+}
+:root .np-pill, :root .np-open { animation: enter-up-sm 700ms var(--ease-out-expo) 360ms both; }
+:root .ss:not(.ss-off) { animation: ss-in var(--dur-5) var(--ease-glide) both; }
+@keyframes ss-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Sin movimiento: cambios casi al instante, solo fundidos */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important; }
 }

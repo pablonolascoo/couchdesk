@@ -1,0 +1,16 @@
+{
+  "games.title": "Spiel",
+  "games.notInstalled": "Dieses Spiel ist nicht mehr installiert.",
+  "games.lastPlayed": "Zuletzt gespielt",
+  "games.size": "Größe",
+  "games.folder": "Ordner",
+  "games.play": "Spielen",
+  "games.notGame": "Kein Spiel",
+  "games.openError": "Öffnen fehlgeschlagen: {error}",
+  "games.played.never": "Noch nicht gespielt",
+  "games.played.today": "Heute",
+  "games.played.yesterday": "Gestern",
+  "games.played.days": "Vor {n} Tagen",
+  "games.played.weeks": "Vor {n} Woche|Vor {n} Wochen",
+  "games.played.months": "Vor {n} Monat|Vor {n} Monaten"
+}

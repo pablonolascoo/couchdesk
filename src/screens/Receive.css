@@ -9,3 +9,18 @@
   box-shadow: var(--bezel);
 }
 .qr-box svg { width: 100%; height: 100%; display: block; }
+.receive-intro { margin: 0 0 20px; max-width: 560px; }
+.receive-tag { margin-left: 10px; vertical-align: 2px; }
+.receive-steps { display: flex; flex-direction: column; gap: 14px; max-width: 480px; padding-left: 22px; font-size: 15px; line-height: 1.5; color: var(--text-2); }
+.receive-steps b { color: var(--text); font-weight: 600; }
+.receive-url { margin-top: 24px; padding: 12px 18px; border-radius: 9999px; background: var(--surface); box-shadow: 0 0 0 1px var(--hair); width: fit-content; max-width: 100%; overflow-wrap: anywhere; }
+.ls-ask { margin: 0 0 28px; padding: 20px 24px; border-radius: var(--radius); background: var(--surface); box-shadow: var(--bezel); max-width: 520px; }
+.ls-ask p { margin: 0 0 6px; font-size: 15px; color: var(--text-2); }
+.ls-ask b { color: var(--text); font-weight: 600; }
+.ls-ask .hero-actions { margin-top: 16px; }
+.ls-names { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.ls-actions { margin: 8px 0 20px; }
+.ls-recent-title { margin: 28px 0 10px; }
+.ls-recent { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; max-width: 520px; }
+.ls-recent .row { width: 100%; }
+.ls-qr figcaption { max-width: 228px; text-align: center; }

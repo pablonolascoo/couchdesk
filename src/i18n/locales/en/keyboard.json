@@ -1,0 +1,11 @@
+{
+  "keyboard.label": "On-screen keyboard",
+  "keyboard.placeholder": "Type",
+  "keyboard.shift": "Shift",
+  "keyboard.delete": "Delete",
+  "keyboard.space": "Space",
+  "keyboard.done": "Done",
+  "keyboard.hint.type": "Type",
+  "keyboard.hint.caret": "Move cursor",
+  "keyboard.hint.close": "Close"
+}

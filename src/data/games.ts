@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { convertFileSrc, invoke } from '@tauri-apps/api/core'
 import { isDesktopApp } from '../native'
+import { t, getLanguage } from '../i18n'
 
 export type Store = 'steam' | 'epic' | 'gog' | 'xbox' | 'pc'
 
@@ -109,16 +110,19 @@ export const storeTint: Record<Store, string> = {
 }
 
 export function lastPlayedText(ts?: number | null) {
-  if (!ts) return 'Sin jugar todavía'
+  if (!ts) return t('games.played.never')
   const days = Math.floor((Date.now() / 1000 - ts) / day)
-  if (days <= 0) return 'Hoy'
-  if (days === 1) return 'Ayer'
-  if (days < 7) return `Hace ${days} días`
-  if (days < 30) return `Hace ${Math.floor(days / 7)} semana${days < 14 ? '' : 's'}`
-  return `Hace ${Math.floor(days / 30)} mes${days < 60 ? '' : 'es'}`
+  if (days <= 0) return t('games.played.today')
+  if (days === 1) return t('games.played.yesterday')
+  if (days < 7) return t('games.played.days', { n: days })
+  if (days < 30) return t('games.played.weeks', { n: Math.floor(days / 7) })
+  return t('games.played.months', { n: Math.floor(days / 30) })
 }
 
 export function sizeText(bytes?: number | null) {
   if (!bytes) return null
-  return bytes >= 1e9 ? `${(bytes / 1e9).toFixed(1)} GB` : `${Math.round(bytes / 1e6)} MB`
+  const lang = getLanguage()
+  return bytes >= 1e9
+    ? `${(bytes / 1e9).toLocaleString(lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} GB`
+    : `${Math.round(bytes / 1e6).toLocaleString(lang)} MB`
 }

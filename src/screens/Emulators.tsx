@@ -3,11 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import {
   DownloadSimple, Play, ArrowCounterClockwise, Cpu, FolderOpen, Disc, Key, FloppyDisk,
-  GameController, DeviceMobile, Cube, ArrowSquareOut, type Icon,
+  GameController, DeviceMobile, Cube, ArrowSquareOut, ArrowLineDown, type Icon,
 } from '@phosphor-icons/react'
 import { Page } from '../components/Page'
 import { call, isDesktopApp } from '../native'
 import { BrandLogo, type Brand } from '../ui/brands'
+import { bringUrl } from './Files'
+import { useT } from '../i18n'
 import './Emulators.css'
 
 interface Hardware { cpu: string; threads: number; avx2: boolean; ramGb: number; gpu: string; vramGb: number; gpuTier: number; vulkan: boolean }
@@ -18,7 +20,7 @@ interface Emu {
   icon?: string | null; folders: Folder[]
 }
 
-const verdictText = { bien: 'Irá bien', justo: 'Irá justo', no: 'No funcionará bien' }
+// Texto del veredicto: emulators.verdict.<bien|justo|no>
 const verdictClass = { bien: 'emu', justo: 'epic', no: 'xbox' } // colores de las etiquetas existentes
 
 // Identidad de cada consola: su color y su logo (oficial en PlayStation; Nintendo no permite usar el suyo)
@@ -75,12 +77,13 @@ function useEmulators() {
 }
 
 export function Emulators() {
+  const t = useT()
   const navigate = useNavigate()
   const { hw, list } = useEmulators()
   return (
-    <Page title="Emuladores">
+    <Page wide title={t('emulators.title')}>
       {hw && (
-        <p className="hw"><Cpu size={18} weight="light" /> Tu PC: {hw.cpu.replace(/\(R\)|\(TM\)|CPU|@.*$/g, '').trim()} · {hw.gpu.replace('NVIDIA GeForce ', '')} ({hw.vramGb} GB) · {Math.round(hw.ramGb)} GB de RAM</p>
+        <p className="hw"><Cpu size={18} weight="light" /> {t('emulators.hw', { cpu: hw.cpu.replace(/\(R\)|\(TM\)|CPU|@.*$/g, '').trim(), gpu: hw.gpu.replace('NVIDIA GeForce ', ''), vram: hw.vramGb, ram: Math.round(hw.ramGb) })}</p>
       )}
       <div className="emu-grid">
         {list?.map((e, i) => {
@@ -97,28 +100,30 @@ export function Emulators() {
               <span className="emu-art" aria-hidden><ConsoleArt look={look} size={150} /></span>
               <span className="emu-top">
                 <span className="emu-icon"><EmuIcon e={e} size={34} /></span>
-                <span className={`tag ${verdictClass[e.verdict]}`}>{verdictText[e.verdict]}</span>
+                <span className={`tag ${verdictClass[e.verdict]}`}>{t(`emulators.verdict.${e.verdict}`)}</span>
               </span>
               <span className="emu-text">
                 <span className="emu-name">{e.name}</span>
                 <span className="emu-sub">
                   {e.console}
-                  {e.trust === 'experimental' && ' · experimental'}
+                  {e.trust === 'experimental' && ` · ${t('emulators.experimentalLower')}`}
                 </span>
-                <span className="emu-state">{e.installed ? `Instalado · ${e.installed}` : 'Sin instalar'}</span>
+                <span className="emu-state">{e.installed ? t('emulators.installed', { version: e.installed }) : t('emulators.notInstalled')}</span>
               </span>
             </button>
           )
         })}
       </div>
-      <p className="notice info">La consola no descarga juegos, BIOS ni claves. Usa los de tus propias consolas.</p>
+      <p className="notice info">{t('emulators.legal')}</p>
     </Page>
   )
 }
 
 const folderIcon = { juegos: Disc, bios: Key, datos: FloppyDisk }
+// Nombre corto de cada carpeta: emulators.short.<juegos|bios|datos>
 
 export function EmulatorDetail() {
+  const t = useT()
   const { id } = useParams()
   const navigate = useNavigate()
   const { list, reload } = useEmulators()
@@ -127,7 +132,7 @@ export function EmulatorDetail() {
   const [msg, setMsg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  if (!e) return <Page title="Emulador"><p className="hero-meta">Cargando…</p></Page>
+  if (!e) return <Page title={t('emulators.one')}><p className="hero-meta">{t('emulators.loading')}</p></Page>
   const look = lookOf(e.id)
 
   const run = async (fn: () => Promise<string | void>, okText: (r: string | void) => string) => {
@@ -135,15 +140,16 @@ export function EmulatorDetail() {
     try { const r = await fn(); setMsg(okText(r)); reload() } catch (err) { setError(String(err)) }
     setBusy(false)
   }
-  const install = () => run(() => call<string>('install_emulator', { id: e.id }, 'v1.0'), (v) => `Listo: versión ${v}`)
-  const open = () => run(() => call('launch_emulator', { id: e.id }), () => 'Abriendo…')
-  const rollback = () => run(() => call<string>('rollback_emulator', { id: e.id }, 'anterior'), (v) => `Vuelto a la versión ${v}`)
+  const install = () => run(() => call<string>('install_emulator', { id: e.id }, 'v1.0'), (v) => t('emulators.msg.installed', { version: String(v) }))
+  const open = () => run(() => call('launch_emulator', { id: e.id }), () => t('emulators.msg.opening'))
+  const rollback = () => run(() => call<string>('rollback_emulator', { id: e.id }, 'anterior'), (v) => t('emulators.msg.rolledBack', { version: String(v) }))
   // Las carpetas se crean al abrirlas por primera vez
-  const folder = async (key: Folder['key'], inWindows = false) => {
+  const folder = async (key: Folder['key'], how: 'ver' | 'windows' | 'traer' = 'ver') => {
     setError(null)
     try {
       const path = await call<string>('emu_folder', { id: e.id, key }, e.folders.find((x) => x.key === key)?.path ?? '')
-      if (inWindows) await call('open_path', { path })
+      if (how === 'windows') await call('open_path', { path })
+      else if (how === 'traer') navigate(bringUrl(path, t('emulators.bringTitle', { folder: t(`emulators.short.${key}`), name: e.name })))
       else navigate(`/archivos/carpeta?ruta=${encodeURIComponent(path)}`)
     } catch (err) { setError(String(err)) }
   }
@@ -157,33 +163,33 @@ export function EmulatorDetail() {
           <p className="emu-hero-console">{e.console}</p>
           <h2 className="emu-hero-name">{e.name}</h2>
           <div className="emu-hero-tags">
-            <span className={`tag ${verdictClass[e.verdict]}`}>{verdictText[e.verdict]} en tu PC</span>
-            {e.trust === 'experimental' && <span className="tag steam">Experimental</span>}
-            <span className="tag">{e.installed ? `Instalado · ${e.installed}` : 'Sin instalar'}</span>
+            <span className={`tag ${verdictClass[e.verdict]}`}>{t(`emulators.verdictPc.${e.verdict}`)}</span>
+            {e.trust === 'experimental' && <span className="tag steam">{t('emulators.experimental')}</span>}
+            <span className="tag">{e.installed ? t('emulators.installed', { version: e.installed }) : t('emulators.notInstalled')}</span>
           </div>
         </div>
       </section>
 
       {e.note && <p className="notice info">{e.note}</p>}
       {e.trust === 'experimental' && !e.installed && (
-        <p className="notice error">Proyecto experimental: puede fallar o cambiar mucho entre versiones.</p>
+        <p className="notice error">{t('emulators.experimentalWarn')}</p>
       )}
 
       <div className="hero-actions">
         {e.installed && (
-          <button className="btn-primary" data-nav="open" data-nav-default="" onClick={open} disabled={busy}><Play size={18} weight="fill" /> Jugar</button>
+          <button className="btn-primary" data-nav="open" data-nav-default="" onClick={open} disabled={busy}><Play size={18} weight="fill" /> {t('emulators.play')}</button>
         )}
         <button className={e.installed ? 'btn-ghost' : 'btn-primary'} data-nav="install" data-nav-default={e.installed ? undefined : ''} onClick={install} disabled={busy}>
-          <DownloadSimple size={18} weight="light" /> {busy ? 'Descargando…' : e.installed ? 'Buscar actualización' : 'Instalar'}
+          <DownloadSimple size={18} weight="light" /> {busy ? t('emulators.downloading') : e.installed ? t('emulators.checkUpdate') : t('emulators.install')}
         </button>
         {e.canRollback && (
-          <button className="btn-ghost" data-nav="rollback" onClick={rollback} disabled={busy}><ArrowCounterClockwise size={18} weight="light" /> Versión anterior</button>
+          <button className="btn-ghost" data-nav="rollback" onClick={rollback} disabled={busy}><ArrowCounterClockwise size={18} weight="light" /> {t('emulators.rollback')}</button>
         )}
       </div>
       {msg && <p className="notice ok">{msg}</p>}
       {error && <p className="notice error">{error}</p>}
 
-      <h3 className="label" style={{ marginTop: 32 }}>Carpetas</h3>
+      <h3 className="label" style={{ marginTop: 32 }}>{t('emulators.folders')}</h3>
       <div className="emu-folders">
         {e.folders.map((fo) => {
           const Icon = folderIcon[fo.key]
@@ -198,18 +204,26 @@ export function EmulatorDetail() {
                 </span>
                 <FolderOpen size={20} />
               </button>
-              <button className="option emu-folder-win" data-nav={`folder-${fo.key}-win`} onClick={() => folder(fo.key, true)} aria-label={`Abrir «${fo.label}» en el explorador de Windows`}>
+              <button className="option emu-folder-win" data-nav={`folder-${fo.key}-bring`} onClick={() => folder(fo.key, 'traer')} aria-label={t('emulators.bringAria', { folder: fo.label })}>
+                <ArrowLineDown size={18} /> {t('emulators.bring')}
+              </button>
+              <button className="option emu-folder-win" data-nav={`folder-${fo.key}-win`} onClick={() => folder(fo.key, 'windows')} aria-label={t('emulators.windowsAria', { folder: fo.label })}>
                 <ArrowSquareOut size={18} /> Windows
               </button>
             </div>
           )
         })}
       </div>
-      {!e.installed && <p className="hero-meta" style={{ marginTop: 10, fontSize: 13 }}>Al instalarlo aparecen también las carpetas de BIOS y de partidas.</p>}
+      {!e.installed && <p className="hero-meta" style={{ marginTop: 10, fontSize: 13 }}>{t('emulators.foldersLater')}</p>}
+      {e.installed && (
+        <button className="btn-ghost emu-send" data-nav="send" onClick={() => navigate(`/recibir/navegador?d=${encodeURIComponent(`${e.id}.juegos`)}`)}>
+          <DeviceMobile size={18} weight="light" /> {t('emulators.send')}
+        </button>
+      )}
 
-      <h3 className="label" style={{ marginTop: 28 }}>Tu BIOS, firmware o claves</h3>
+      <h3 className="label" style={{ marginTop: 28 }}>{t('emulators.biosTitle')}</h3>
       <p className="bios-text">{e.bios}</p>
-      <p className="hero-meta" style={{ marginTop: 14, fontSize: 13 }}>Se actualiza solo al arrancar la consola. Tus partidas, BIOS y ajustes pasan a la versión nueva, y la anterior se guarda por si falla.</p>
+      <p className="hero-meta" style={{ marginTop: 14, fontSize: 13 }}>{t('emulators.autoUpdate')}</p>
     </Page>
   )
 }

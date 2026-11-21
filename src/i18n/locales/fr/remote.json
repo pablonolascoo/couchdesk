@@ -1,0 +1,9 @@
+{
+  "remote.title": "Manette mobile",
+  "remote.intro": "Scanne le code avec l’appareil photo du téléphone. Une page s’ouvre et le transforme en souris, clavier ou manette. Plusieurs peuvent se connecter à la fois.",
+  "remote.connected": "Connectés",
+  "remote.none": "Personne pour l’instant.",
+  "remote.note": "Le téléphone et le PC doivent être sur le même réseau Wi-Fi. La première fois, Windows peut demander une autorisation pour « Consola » : accepte sur les réseaux privés.",
+  "remote.back": "Revenir",
+  "remote.noNetwork": "Pas de connexion réseau."
+}

@@ -1,0 +1,23 @@
+{
+  "music.title": "Musik",
+  "music.loading": "Suche, was läuft…",
+  "music.empty.title": "Es läuft nichts",
+  "music.empty.text": "Öffne Spotify und wähl einen Song. Hier kannst du ihn pausieren, wechseln und leiser machen.",
+  "music.openSpotify": "Spotify öffnen",
+  "music.openSpotifyHint": "PC-App oder, falls nicht da, die Website",
+  "music.openSpotifyWeb": "Spotify im Browser öffnen",
+  "music.openApple": "Apple Music öffnen",
+  "music.opening": "{name} wird im Konsolen-Browser geöffnet.",
+  "music.openingSpotify": "Die Spotify-App am PC wird geöffnet. Wähl einen Song und komm zurück.",
+  "music.noSpotify": "Spotify ist auf diesem PC nicht installiert. Die Website wird geöffnet.",
+  "music.volumePc": "PC-Lautstärke",
+  "music.volumeApp": "Lautstärke von {app}",
+  "music.systemVolume": "Diese App hat keine eigene Lautstärke. Es ändert sich die des PCs.",
+  "music.hint.select": "Auswählen",
+  "music.hint.pause": "Pause",
+  "music.previous": "Zurück",
+  "music.pause": "Pausieren",
+  "music.play": "Abspielen",
+  "music.next": "Weiter",
+  "music.nowPlaying": "Läuft gerade"
+}

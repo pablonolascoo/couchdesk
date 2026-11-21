@@ -1,0 +1,20 @@
+{
+  "browser.title": "Browser",
+  "browser.placeholder": "Type a website or anything to search",
+  "browser.go": "Go",
+  "browser.group.movies": "Movies and series",
+  "browser.group.live": "Sports, live streams and music",
+  "browser.group.cloud": "Cloud gaming",
+  "browser.group.shopping": "Shopping and lookups",
+  "browser.openInSystem": "Open in the Windows browser (Chrome, Edge…)",
+  "browser.inside": "Inside a website",
+  "browser.key.dpad": "D-pad",
+  "browser.key.rstick": "Right stick",
+  "browser.key.orXbox": "or Xbox button",
+  "browser.do.dpad": "Jump between links and buttons",
+  "browser.do.scroll": "Scroll the page",
+  "browser.do.b": "Previous page (on the first one, back to the console)",
+  "browser.do.home": "Back to the console",
+  "browser.do.esc": "Hold it for 1 second (or press it 3 times) to go back to the console from any website",
+  "browser.phoneNote": "If your phone is connected as a controller, it switches to touchpad mode and opens the keyboard when the site asks you to type."
+}

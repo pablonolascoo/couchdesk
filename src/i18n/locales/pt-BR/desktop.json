@@ -1,0 +1,12 @@
+{
+  "desktop.title": "Área de trabalho",
+  "desktop.heading": "Como você quer voltar?",
+  "desktop.now.title": "Ir para a área de trabalho só agora",
+  "desktop.now.text": "O console fecha e você vê a área de trabalho do Windows.",
+  "desktop.now.boots": "Ao ligar de novo, o console aparece outra vez.",
+  "desktop.normal.title": "Voltar ao modo normal do Windows",
+  "desktop.normal.confirm": "Aperte de novo para confirmar.",
+  "desktop.normal.already": "O Windows já inicia na área de trabalho de sempre. Só o console vai fechar.",
+  "desktop.normal.text": "Ao ligar, o Windows vai abrir a área de trabalho normal. O console continua no menu Iniciar.",
+  "desktop.foot": "Para voltar a usar o console ao ligar: abra-o pelo menu Iniciar → Configurações → Inicialização."
+}

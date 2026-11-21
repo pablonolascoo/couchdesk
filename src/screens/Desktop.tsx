@@ -3,9 +3,11 @@ import { ArrowUpRight, ArrowCounterClockwise, Desktop as DesktopIcon } from '@ph
 import { TopBar } from '../components/TopBar'
 import { HintBar } from '../components/HintBar'
 import { call, exitToDesktop, isDesktopApp } from '../native'
+import { useT } from '../i18n'
 import './Desktop.css'
 
 export function Desktop() {
+  const t = useT()
   const [consoleBoots, setConsoleBoots] = useState<boolean | null>(null)
   const [confirm, setConfirm] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -21,43 +23,43 @@ export function Desktop() {
 
   return (
     <div className="screen">
-      <TopBar title="Escritorio" />
+      <TopBar title={t('desktop.title')} />
       <section className="desk">
         <span className="eyebrow reveal">Windows</span>
-        <h2 className="hero-title reveal" style={{ ['--i' as string]: 1 }}>¿Cómo quieres volver?</h2>
-        {!isDesktopApp && <p className="hero-meta">Esto solo funciona en la consola instalada.</p>}
+        <h2 className="hero-title reveal" style={{ ['--i' as string]: 1 }}>{t('desktop.heading')}</h2>
+        {!isDesktopApp && <p className="hero-meta">{t('shell.onlyInstalled')}</p>}
 
         <div className="desk-options">
           <button className="desk-card reveal" style={{ ['--i' as string]: 2 }} data-nav="now" data-nav-default="" onClick={() => exitToDesktop().catch((e) => setError(String(e)))} disabled={!isDesktopApp}>
             <span className="desk-icon"><DesktopIcon size={28} /></span>
-            <span className="desk-title">Ir al escritorio solo ahora</span>
+            <span className="desk-title">{t('desktop.now.title')}</span>
             <span className="desk-text">
-              La consola se cierra y ves el escritorio de Windows.
-              {consoleBoots ? ' Al volver a encender, aparece la consola otra vez.' : ''}
+              {t('desktop.now.text')}
+              {consoleBoots ? ` ${t('desktop.now.boots')}` : ''}
             </span>
             <span className="desk-go"><ArrowUpRight size={18} /></span>
           </button>
 
           <button className={`desk-card${confirm ? ' desk-warn' : ''} reveal`} style={{ ['--i' as string]: 3 }} data-nav="normal" onClick={goNormal} disabled={!isDesktopApp}>
             <span className="desk-icon"><ArrowCounterClockwise size={28} /></span>
-            <span className="desk-title">Volver al modo normal de Windows</span>
+            <span className="desk-title">{t('desktop.normal.title')}</span>
             <span className="desk-text">
               {confirm
-                ? 'Pulsa otra vez para confirmar.'
+                ? t('desktop.normal.confirm')
                 : consoleBoots === false
-                  ? 'Windows ya arranca en su escritorio de siempre. Solo se cerrará la consola.'
-                  : 'Al encender, Windows abrirá su escritorio normal. La consola seguirá en el menú Inicio.'}
+                  ? t('desktop.normal.already')
+                  : t('desktop.normal.text')}
             </span>
             <span className="desk-go"><ArrowUpRight size={18} /></span>
           </button>
         </div>
 
         <p className="desk-foot reveal" style={{ ['--i' as string]: 4 }}>
-          Para volver a usar la consola al encender: ábrela desde el menú Inicio → Ajustes → Arranque.
+          {t('desktop.foot')}
         </p>
         {error && <p className="notice error">{error}</p>}
       </section>
-      <HintBar hints={[['A', 'Seleccionar'], ['B', 'Atrás']]} />
+      <HintBar hints={[['A', t('shell.hint.select')], ['B', t('common.back')]]} />
     </div>
   )
 }

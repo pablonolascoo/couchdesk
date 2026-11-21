@@ -1,0 +1,20 @@
+{
+  "browser.title": "Browser",
+  "browser.placeholder": "Scrivi un sito o quello che vuoi cercare",
+  "browser.go": "Vai",
+  "browser.group.movies": "Film e serie",
+  "browser.group.live": "Sport, dirette e musica",
+  "browser.group.cloud": "Giochi in cloud",
+  "browser.group.shopping": "Acquisti e ricerche",
+  "browser.openInSystem": "Apri nel browser di Windows (Chrome, Edge…)",
+  "browser.inside": "Dentro un sito",
+  "browser.key.dpad": "Croce",
+  "browser.key.rstick": "Stick destro",
+  "browser.key.orXbox": "o tasto Xbox",
+  "browser.do.dpad": "Passa tra link e pulsanti",
+  "browser.do.scroll": "Scorri la pagina",
+  "browser.do.b": "Pagina precedente (sulla prima, torna alla console)",
+  "browser.do.home": "Torna alla console",
+  "browser.do.esc": "Tienilo premuto 1 secondo (o premilo 3 volte) per tornare alla console, da qualsiasi sito",
+  "browser.phoneNote": "Se il telefono è collegato come controller, passa da solo in modalità touchpad e apre la tastiera quando il sito chiede di scrivere."
+}

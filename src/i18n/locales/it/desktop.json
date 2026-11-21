@@ -1,0 +1,12 @@
+{
+  "desktop.title": "Desktop",
+  "desktop.heading": "Come vuoi tornare?",
+  "desktop.now.title": "Vai al desktop solo per ora",
+  "desktop.now.text": "La console si chiude e vedi il desktop di Windows.",
+  "desktop.now.boots": "Alla prossima accensione, la console ricompare.",
+  "desktop.normal.title": "Torna alla modalità normale di Windows",
+  "desktop.normal.confirm": "Premi di nuovo per confermare.",
+  "desktop.normal.already": "Windows si avvia già sul solito desktop. Si chiuderà solo la console.",
+  "desktop.normal.text": "All’accensione, Windows aprirà il desktop normale. La console resterà nel menu Start.",
+  "desktop.foot": "Per riusare la console all’accensione: aprila dal menu Start → Impostazioni → Avvio."
+}

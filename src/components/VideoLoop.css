@@ -1,0 +1,32 @@
+/* Vídeo en bucle que cubre su hueco (como object-fit: cover, también para YouTube) */
+.vl {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+  background: #0b0a09;
+}
+.vl-poster,
+.vl-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.vl-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* 16:9 que siempre cubre: el lado que sobra se recorta */
+  width: max(100cqw, 177.78cqh);
+  height: max(100cqh, 56.25cqw);
+  transform: translate(-50%, -50%);
+  border: 0;
+  pointer-events: none;
+}
+/* El vídeo aparece despacio cuando ya se mueve; mientras, se ve la portada */
+.vl-video,
+.vl-frame { opacity: 0; transition: opacity 1400ms var(--ease, ease); }
+.vl-ready .vl-video,
+.vl-ready .vl-frame { opacity: 1; }

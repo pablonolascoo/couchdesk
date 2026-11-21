@@ -6,9 +6,13 @@ import '@fontsource/instrument-serif'
 import './index.css'
 import './ui/shared.css'
 import App from './App.tsx'
+import { initI18n } from './i18n'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+// Primero el idioma (del sistema o el elegido en Ajustes), luego la consola
+initI18n().finally(() =>
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  ),
 )

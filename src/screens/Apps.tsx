@@ -4,6 +4,7 @@ import { AppWindow, ArrowLeft, ArrowUpRight, GameController, Wrench } from '@pho
 import { TopBar } from '../components/TopBar'
 import { HintBar } from '../components/HintBar'
 import { useApps, iconSrc, launchGame, markAsGame, type App } from '../data/games'
+import { useT } from '../i18n'
 import './Apps.css'
 
 function AppIcon({ app, size }: { app: App; size: number }) {
@@ -36,30 +37,32 @@ function Grid({ apps, offset, first }: { apps: App[]; offset: number; first?: bo
 
 // Todo lo demás que hay instalado en el PC
 export function Apps() {
+  const t = useT()
   const apps = useApps()
   const mine = apps?.filter((a) => !a.system) ?? []
   const tools = apps?.filter((a) => a.system) ?? []
   return (
     <div className="screen">
-      <TopBar title="Aplicaciones" />
+      <TopBar title={t('apps.title')} />
       <p className="library-count">
-        {apps === null ? 'Buscando aplicaciones…' : `${apps.length} aplicaciones · si alguna es un juego, ábrela y márcala`}
+        {apps === null ? t('apps.searching') : t('apps.count', { n: apps.length })}
       </p>
       <div className="apps-scroll">
         {mine.length > 0 && <Grid apps={mine} offset={0} first />}
         {tools.length > 0 && (
           <>
-            <h3 className="label apps-section">Herramientas de Windows</h3>
+            <h3 className="label apps-section">{t('apps.windowsTools')}</h3>
             <Grid apps={tools} offset={mine.length} first={mine.length === 0} />
           </>
         )}
       </div>
-      <HintBar hints={[['A', 'Ver'], ['B', 'Atrás']]} />
+      <HintBar hints={[['A', t('shell.hint.view')], ['B', t('common.back')]]} />
     </div>
   )
 }
 
 export function AppDetail() {
+  const t = useT()
   const { id = '' } = useParams()
   const navigate = useNavigate()
   const apps = useApps()
@@ -68,12 +71,12 @@ export function AppDetail() {
   if (!app) {
     return (
       <div className="screen">
-        <TopBar title="Aplicación" />
+        <TopBar title={t('apps.app')} />
         <section className="app-detail">
-          <p className="hero-meta">{apps === null ? 'Cargando…' : 'Esta aplicación ya no está aquí.'}</p>
+          <p className="hero-meta">{apps === null ? t('shell.loading') : t('apps.gone')}</p>
           <div className="hero-actions">
             <button className="pill" data-nav="back" data-nav-default="" onClick={() => navigate(-1)}>
-              Volver <span className="pill-icon"><ArrowLeft size={16} /></span>
+              {t('shell.goBack')} <span className="pill-icon"><ArrowLeft size={16} /></span>
             </button>
           </div>
         </section>
@@ -83,30 +86,30 @@ export function AppDetail() {
 
   return (
     <div className="screen">
-      <TopBar title={app.system ? 'Herramienta de Windows' : 'Aplicación'} />
+      <TopBar title={app.system ? t('apps.windowsTool') : t('apps.app')} />
       <section className="app-detail">
         <div className="app-detail-icon reveal"><AppIcon app={app} size={96} /></div>
-        <span className="eyebrow reveal" style={{ '--i': 1 } as CSSProperties}>{app.system ? 'Windows' : 'Aplicación'}</span>
+        <span className="eyebrow reveal" style={{ '--i': 1 } as CSSProperties}>{app.system ? 'Windows' : t('apps.app')}</span>
         <h2 className="hero-title reveal" style={{ '--i': 2 } as CSSProperties}>{app.name}</h2>
         <div className="hero-actions reveal" style={{ '--i': 3 } as CSSProperties}>
           <button className="pill pill-dark" data-nav="open" data-nav-default="" onClick={() => launchGame(app.id)}>
-            Abrir
+            {t('common.open')}
             <span className="pill-icon"><ArrowUpRight size={16} /></span>
           </button>
           <button className="pill" data-nav="game" onClick={() => markAsGame(app.id, true).then(() => navigate(`/juego/${encodeURIComponent(app.id)}`, { replace: true }))}>
-            Marcar como juego
+            {t('apps.markGame')}
             <span className="pill-icon"><GameController size={16} /></span>
           </button>
           <button className="pill" data-nav="back" onClick={() => navigate(-1)}>
-            Volver
+            {t('shell.goBack')}
             <span className="pill-icon"><ArrowLeft size={16} /></span>
           </button>
         </div>
         <p className="hero-meta reveal" style={{ '--i': 4 } as CSSProperties}>
-          Si la marcas como juego, saldrá en tu biblioteca y en Inicio.
+          {t('apps.markGame.note')}
         </p>
       </section>
-      <HintBar hints={[['A', 'Seleccionar'], ['B', 'Atrás']]} />
+      <HintBar hints={[['A', t('shell.hint.select')], ['B', t('common.back')]]} />
     </div>
   )
 }

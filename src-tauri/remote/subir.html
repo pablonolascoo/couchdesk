@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbf8f2">
+<link rel="icon" href="/icon.svg">
+<title>Enviar a CouchDesk</title>
+<style>
+  :root {
+    --bg: #fbf8f2; --surface: #fffdf9; --text: #1c1712; --text2: #4a4037; --muted: #8a7f72;
+    --hair: rgba(58, 42, 24, .1); --green: #3f6440; --red: #93362f; --track: rgba(58, 42, 24, .08);
+    --ease: cubic-bezier(.32, .72, 0, 1);
+    --shell: inset 0 1px 1px #fff, 0 0 0 1px var(--hair), 0 14px 28px -18px rgba(80, 56, 30, .35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #15120f; --surface: #1f1b17; --text: #f3ece2; --text2: #cfc4b6; --muted: #948878;
+      --hair: rgba(243, 236, 226, .1); --green: #8fbf8f; --red: #e08a80; --track: rgba(243, 236, 226, .08);
+      --shell: inset 0 1px 0 rgba(255, 255, 255, .04), 0 0 0 1px var(--hair), 0 14px 28px -18px rgba(0, 0, 0, .6);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100dvh; background: var(--bg); color: var(--text);
+    font: 15px/1.4 -apple-system, "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+  main { max-width: 760px; margin: 0 auto; padding: max(24px, env(safe-area-inset-top)) 16px 48px; }
+  header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  header svg { width: 36px; height: 36px; flex: none; }
+  h1 { font-size: 24px; font-weight: 650; letter-spacing: -.02em; }
+  h2 { font-size: 12px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 28px 0 12px; }
+
+  /* Destinos */
+  .groups { display: flex; flex-direction: column; gap: 10px; }
+  .group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 12px 12px 18px; border-radius: 20px; background: var(--surface); box-shadow: var(--shell); }
+  .group-name { flex: 1 1 140px; font-weight: 600; }
+  .chip {
+    min-height: 40px; padding: 0 16px; border-radius: 999px; font-size: 14px; font-weight: 550;
+    color: var(--text2); box-shadow: inset 0 0 0 1px var(--hair);
+    transition: background-color .3s var(--ease), color .3s var(--ease);
+  }
+  .chip:hover { background: var(--track); }
+  .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); box-shadow: none; }
+  .chip:focus-visible, .pick:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+  /* Zona para soltar */
+  .drop {
+    display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center;
+    padding: 36px 20px; border-radius: 24px; background: var(--surface); box-shadow: var(--shell);
+    outline: 2px dashed transparent; outline-offset: -10px; transition: outline-color .3s var(--ease), transform .3s var(--ease);
+  }
+  .drop.over { outline-color: var(--text); transform: scale(1.01); }
+  .drop.off { opacity: .45; pointer-events: none; }
+  .drop svg { width: 40px; height: 40px; color: var(--muted); }
+  .drop-title { font-size: 18px; font-weight: 600; }
+  .drop-sub { color: var(--muted); font-size: 14px; }
+  .picks { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .pick { min-height: 46px; padding: 0 22px; border-radius: 999px; font-weight: 600; box-shadow: inset 0 0 0 1px var(--hair); }
+  .pick.main { background: var(--text); color: var(--bg); box-shadow: none; }
+  input[type=file] { display: none; }
+
+  /* Cola */
+  .summary { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; margin-bottom: 10px; }
+  .list { display: flex; flex-direction: column; gap: 8px; }
+  .item { padding: 12px 16px; border-radius: 16px; background: var(--surface); box-shadow: var(--shell); }
+  .item-top { display: flex; align-items: baseline; gap: 12px; }
+  .item-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 550; }
+  .item-state { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .item.ok .item-state { color: var(--green); }
+  .item.err .item-state { color: var(--red); }
+  .bar { height: 4px; margin-top: 10px; border-radius: 4px; background: var(--track); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--text); transition: width .2s linear; }
+  .item.ok .bar i { background: var(--green); }
+  .item.err .bar i { background: var(--red); }
+  .empty { color: var(--muted); font-size: 14px; }
+  .note { margin-top: 28px; color: var(--muted); font-size: 13px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <svg viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="112" fill="currentColor" opacity=".08"/><circle cx="256" cy="256" r="150" fill="none" stroke="currentColor" stroke-width="18"/><circle cx="256" cy="256" r="58" fill="currentColor"/></svg>
+    <h1 data-i18n="title">Enviar a CouchDesk</h1>
+  </header>
+
+  <h2 data-i18n="where">1 · ¿Dónde van?</h2>
+  <div class="groups" id="groups"><p class="empty" data-i18n="loading">Cargando carpetas…</p></div>
+
+  <h2 data-i18n="pick">2 · Elige los archivos</h2>
+  <div class="drop off" id="drop">
+    <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224 144v64a8 8 0 0 1-8 8H40a8 8 0 0 1-8-8v-64a8 8 0 0 1 16 0v56h160v-56a8 8 0 0 1 16 0ZM93.66 77.66 120 51.31V144a8 8 0 0 0 16 0V51.31l26.34 26.35a8 8 0 0 0 11.32-11.32l-40-40a8 8 0 0 0-11.32 0l-40 40a8 8 0 0 0 11.32 11.32Z"/></svg>
+    <div>
+      <p class="drop-title" id="drop-title" data-i18n="dropTitle">Arrastra los archivos aquí</p>
+      <p class="drop-sub" id="drop-sub" data-i18n="dropSub">Primero elige una carpeta arriba</p>
+    </div>
+    <div class="picks">
+      <button class="pick main" id="pick-files" type="button" data-i18n="pickFiles">Elegir archivos</button>
+      <button class="pick" id="pick-dir" type="button" data-i18n="pickDir">Elegir una carpeta entera</button>
+    </div>
+    <input type="file" id="files" multiple>
+    <input type="file" id="dir" webkitdirectory multiple>
+  </div>
+
+  <div id="queue-wrap" hidden>
+    <h2 data-i18n="sends">Envíos</h2>
+    <div class="summary"><span id="sum-left"></span><span id="sum-right"></span></div>
+    <div class="list" id="list"></div>
+  </div>
+
+  <p class="note" data-i18n="note">Solo funciona en tu red de casa. Nada se sobrescribe: si ya existe un archivo con ese nombre, se guarda como «nombre (2)».</p>
+</main>
+
+<script>
+// --- Idioma: el del dispositivo (es, en, pt-BR, fr, de, it; otro → inglés) ---
+const DICT = {
+  es: { title: 'Enviar a CouchDesk', where: '1 · ¿Dónde van?', pick: '2 · Elige los archivos', loading: 'Cargando carpetas…',
+    dropTitle: 'Arrastra los archivos aquí', dropSub: 'Primero elige una carpeta arriba', pickFiles: 'Elegir archivos', pickDir: 'Elegir una carpeta entera',
+    sends: 'Envíos', note: 'Solo funciona en tu red de casa. Nada se sobrescribe: si ya existe un archivo con ese nombre, se guarda como «nombre (2)».',
+    noConn: 'No se pudo conectar con la consola. Vuelve a escanear el QR.', here: 'Aquí', games: 'Juegos', saves: 'Partidas',
+    toReceived: 'Irán a la carpeta Recibidos', to: 'Irán a {dest}', waiting: 'En espera', doneAs: 'Hecho · guardado como {name}', done: 'Hecho · {size}',
+    error: 'Error', cut: 'Se cortó la conexión', sendingOne: 'Enviando {n} archivo · {sent} de {total}', sendingMany: 'Enviando {n} archivos · {sent} de {total}', allSent: 'Todo enviado · {size}' },
+  en: { title: 'Send to CouchDesk', where: '1 · Where do they go?', pick: '2 · Choose the files', loading: 'Loading folders…',
+    dropTitle: 'Drag the files here', dropSub: 'First pick a folder above', pickFiles: 'Choose files', pickDir: 'Choose a whole folder',
+    sends: 'Transfers', note: "Only works on your home network. Nothing gets overwritten: if a file with that name already exists, it's saved as “name (2)”.",
+    noConn: "Couldn't connect to CouchDesk. Scan the QR code again.", here: 'Here', games: 'Games', saves: 'Saves',
+    toReceived: "They'll go to the Received folder", to: "They'll go to {dest}", waiting: 'Waiting', doneAs: 'Done · saved as {name}', done: 'Done · {size}',
+    error: 'Error', cut: 'The connection dropped', sendingOne: 'Sending {n} file · {sent} of {total}', sendingMany: 'Sending {n} files · {sent} of {total}', allSent: 'All sent · {size}' },
+  pt: { title: 'Enviar para o CouchDesk', where: '1 · Para onde vão?', pick: '2 · Escolha os arquivos', loading: 'Carregando pastas…',
+    dropTitle: 'Arraste os arquivos para cá', dropSub: 'Primeiro escolha uma pasta acima', pickFiles: 'Escolher arquivos', pickDir: 'Escolher uma pasta inteira',
+    sends: 'Envios', note: 'Só funciona na sua rede de casa. Nada é substituído: se já existir um arquivo com esse nome, ele é salvo como “nome (2)”.',
+    noConn: 'Não foi possível conectar ao CouchDesk. Escaneie o QR de novo.', here: 'Aqui', games: 'Jogos', saves: 'Saves',
+    toReceived: 'Vão para a pasta Recebidos', to: 'Vão para {dest}', waiting: 'Na fila', doneAs: 'Pronto · salvo como {name}', done: 'Pronto · {size}',
+    error: 'Erro', cut: 'A conexão caiu', sendingOne: 'Enviando {n} arquivo · {sent} de {total}', sendingMany: 'Enviando {n} arquivos · {sent} de {total}', allSent: 'Tudo enviado · {size}' },
+  fr: { title: 'Envoyer vers CouchDesk', where: '1 · Où vont-ils ?', pick: '2 · Choisis les fichiers', loading: 'Chargement des dossiers…',
+    dropTitle: 'Glisse les fichiers ici', dropSub: "Choisis d'abord un dossier plus haut", pickFiles: 'Choisir des fichiers', pickDir: 'Choisir un dossier entier',
+    sends: 'Envois', note: "Ça ne marche que sur ton réseau domestique. Rien n'est écrasé : si un fichier du même nom existe déjà, il est enregistré sous « nom (2) ».",
+    noConn: 'Impossible de se connecter à CouchDesk. Scanne à nouveau le QR code.', here: 'Ici', games: 'Jeux', saves: 'Sauvegardes',
+    toReceived: 'Ils iront dans le dossier Reçus', to: 'Ils iront dans {dest}', waiting: 'En attente', doneAs: 'Terminé · enregistré sous {name}', done: 'Terminé · {size}',
+    error: 'Erreur', cut: 'La connexion a été coupée', sendingOne: 'Envoi de {n} fichier · {sent} sur {total}', sendingMany: 'Envoi de {n} fichiers · {sent} sur {total}', allSent: 'Tout est envoyé · {size}' },
+  de: { title: 'An CouchDesk senden', where: '1 · Wohin damit?', pick: '2 · Dateien auswählen', loading: 'Ordner werden geladen…',
+    dropTitle: 'Zieh die Dateien hierher', dropSub: 'Wähl zuerst oben einen Ordner', pickFiles: 'Dateien auswählen', pickDir: 'Ganzen Ordner auswählen',
+    sends: 'Übertragungen', note: 'Funktioniert nur in deinem Heimnetz. Nichts wird überschrieben: Gibt es schon eine Datei mit dem Namen, wird sie als „Name (2)“ gespeichert.',
+    noConn: 'Keine Verbindung zu CouchDesk. Scanne den QR-Code noch mal.', here: 'Hier', games: 'Spiele', saves: 'Spielstände',
+    toReceived: 'Sie landen im Ordner Empfangen', to: 'Sie landen in {dest}', waiting: 'Wartet', doneAs: 'Fertig · gespeichert als {name}', done: 'Fertig · {size}',
+    error: 'Fehler', cut: 'Die Verbindung wurde unterbrochen', sendingOne: 'Sende {n} Datei · {sent} von {total}', sendingMany: 'Sende {n} Dateien · {sent} von {total}', allSent: 'Alles gesendet · {size}' },
+  it: { title: 'Invia a CouchDesk', where: '1 · Dove vanno?', pick: '2 · Scegli i file', loading: 'Caricamento cartelle…',
+    dropTitle: 'Trascina qui i file', dropSub: 'Prima scegli una cartella qui sopra', pickFiles: 'Scegli file', pickDir: "Scegli un'intera cartella",
+    sends: 'Invii', note: 'Funziona solo sulla tua rete di casa. Non si sovrascrive niente: se esiste già un file con quel nome, viene salvato come «nome (2)».',
+    noConn: 'Impossibile connettersi a CouchDesk. Scansiona di nuovo il QR.', here: 'Qui', games: 'Giochi', saves: 'Salvataggi',
+    toReceived: 'Andranno nella cartella Ricevuti', to: 'Andranno in {dest}', waiting: 'In attesa', doneAs: 'Fatto · salvato come {name}', done: 'Fatto · {size}',
+    error: 'Errore', cut: 'La connessione si è interrotta', sendingOne: 'Invio di {n} file · {sent} di {total}', sendingMany: 'Invio di {n} file · {sent} di {total}', allSent: 'Tutto inviato · {size}' },
+}
+const LANG_TAG = ((navigator.languages && navigator.languages[0]) || navigator.language || 'en').toLowerCase()
+const LANG = Object.keys(DICT).find((c) => LANG_TAG.startsWith(c)) || 'en'
+const T = DICT[LANG]
+const fmt = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k])
+document.documentElement.lang = LANG === 'pt' ? 'pt-BR' : LANG
+document.title = T.title
+document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = T[el.dataset.i18n] })
+
+const TOKEN = '__TOKEN__'
+const PARALLEL = 3
+const $ = (id) => document.getElementById(id)
+const params = new URLSearchParams(location.search)
+let dests = [], current = null
+const queue = [], running = new Set()
+let sentBytes = 0, totalBytes = 0, startedAt = 0
+
+const size = (b) => b >= 1e9 ? (b / 1e9).toFixed(2) + ' GB' : b >= 1e6 ? (b / 1e6).toFixed(1) + ' MB' : b >= 1e3 ? Math.round(b / 1e3) + ' KB' : b + ' B'
+const store = { get: () => { try { return localStorage.getItem('consola-destino') } catch { return null } }, set: (v) => { try { localStorage.setItem('consola-destino', v) } catch {} } }
+
+async function loadDests() {
+  try {
+    const r = await fetch(`/api/destinos?t=${TOKEN}`)
+    if (!r.ok) throw new Error()
+    dests = await r.json()
+  } catch { $('groups').innerHTML = '<p class="empty"></p>'; $('groups').firstChild.textContent = T.noConn; return }
+  const groups = new Map()
+  for (const d of dests) { if (!groups.has(d.group)) groups.set(d.group, []); groups.get(d.group).push(d) }
+  $('groups').innerHTML = ''
+  for (const [name, list] of groups) {
+    const g = document.createElement('div'); g.className = 'group'
+    const n = document.createElement('span'); n.className = 'group-name'; n.textContent = name; g.append(n)
+    for (const d of list) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.dataset.id = d.id
+      b.textContent = d.id === 'recibidos' ? T.here : short(d)
+      b.title = d.label
+      b.onclick = () => select(d.id)
+      g.append(b)
+    }
+    $('groups').append(g)
+  }
+  const wanted = params.get('d') || store.get()
+  select(dests.some((d) => d.id === wanted) ? wanted : 'recibidos')
+}
+const short = (d) => ({ juegos: T.games, bios: 'BIOS', datos: T.saves })[d.id.split('.').pop()] || d.label
+
+function select(id) {
+  current = dests.find((d) => d.id === id)
+  store.set(id)
+  document.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.id === id)))
+  $('drop').classList.remove('off')
+  $('drop-sub').textContent = current.id === 'recibidos' ? T.toReceived : fmt(T.to, { dest: `${current.group} · ${current.label}` })
+}
+
+// --- Elegir y soltar ---
+$('pick-files').onclick = () => $('files').click()
+$('pick-dir').onclick = () => $('dir').click()
+$('files').onchange = (e) => { add([...e.target.files].map((f) => [f, f.name])); e.target.value = '' }
+$('dir').onchange = (e) => { add([...e.target.files].map((f) => [f, f.webkitRelativePath || f.name])); e.target.value = '' }
+const drop = $('drop')
+drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('over') })
+drop.addEventListener('dragleave', () => drop.classList.remove('over'))
+drop.addEventListener('drop', async (e) => {
+  e.preventDefault(); drop.classList.remove('over')
+  const entries = [...e.dataTransfer.items].map((i) => i.webkitGetAsEntry && i.webkitGetAsEntry()).filter(Boolean)
+  if (entries.length) add((await Promise.all(entries.map(walk))).flat())
+  else add([...e.dataTransfer.files].map((f) => [f, f.name]))
+})
+// Carpetas soltadas: recorrerlas para mantener su estructura
+function walk(entry, prefix = '') {
+  return new Promise((done) => {
+    if (entry.isFile) return entry.file((f) => done([[f, prefix + f.name]]), () => done([]))
+    const reader = entry.createReader(), all = []
+    const next = () => reader.readEntries(async (batch) => {
+      if (!batch.length) return done((await Promise.all(all.map((x) => walk(x, prefix + entry.name + '/')))).flat())
+      all.push(...batch); next()
+    }, () => done([]))
+    next()
+  })
+}
+
+// --- Cola: varios a la vez ---
+function add(files) {
+  if (!current || !files.length) return
+  $('queue-wrap').hidden = false
+  if (!running.size && !queue.length) { sentBytes = 0; totalBytes = 0; startedAt = performance.now() }
+  for (const [file, rel] of files) {
+    const el = document.createElement('div'); el.className = 'item'
+    el.innerHTML = '<div class="item-top"><span class="item-name"></span><span class="item-state"></span></div><div class="bar"><i></i></div>'
+    el.querySelector('.item-state').textContent = T.waiting
+    el.querySelector('.item-name').textContent = rel
+    el.querySelector('.item-name').title = `${rel} → ${current.group} · ${current.label}`
+    $('list').prepend(el)
+    totalBytes += file.size
+    queue.push({ file, rel, dest: current.id, el, sent: 0 })
+  }
+  pump(); summary()
+}
+
+function pump() {
+  while (running.size < PARALLEL && queue.length) send(queue.shift())
+}
+
+function send(job) {
+  running.add(job)
+  const state = job.el.querySelector('.item-state'), bar = job.el.querySelector('.bar i')
+  const xhr = new XMLHttpRequest()
+  xhr.open('PUT', `/api/subir?t=${TOKEN}&d=${encodeURIComponent(job.dest)}&n=${encodeURIComponent(job.rel)}`)
+  xhr.upload.onprogress = (e) => {
+    sentBytes += e.loaded - job.sent; job.sent = e.loaded
+    const p = job.file.size ? e.loaded / job.file.size : 1
+    bar.style.width = (p * 100).toFixed(1) + '%'
+    state.textContent = Math.floor(p * 100) + ' %'
+    summary()
+  }
+  const finish = (ok, text) => {
+    running.delete(job)
+    job.el.classList.add(ok ? 'ok' : 'err')
+    bar.style.width = '100%'
+    state.textContent = text
+    if (ok) { sentBytes += job.file.size - job.sent; job.sent = job.file.size }
+    pump(); summary()
+  }
+  xhr.onload = () => xhr.status === 200 ? finish(true, xhr.responseText && xhr.responseText !== job.rel.split('/').pop() ? fmt(T.doneAs, { name: xhr.responseText }) : fmt(T.done, { size: size(job.file.size) })) : finish(false, xhr.responseText || T.error)
+  xhr.onerror = () => finish(false, T.cut)
+  xhr.send(job.file)
+}
+
+function summary() {
+  const left = running.size + queue.length
+  const secs = (performance.now() - startedAt) / 1000
+  const speed = secs > 0.5 ? sentBytes / secs : 0
+  $('sum-left').textContent = left ? fmt(left === 1 ? T.sendingOne : T.sendingMany, { n: left, sent: size(sentBytes), total: size(totalBytes) }) : fmt(T.allSent, { size: size(totalBytes) })
+  $('sum-right').textContent = speed ? size(speed) + '/s' : ''
+}
+
+addEventListener('beforeunload', (e) => { if (running.size || queue.length) { e.preventDefault(); e.returnValue = '' } })
+loadDests()
+</script>
+</body>
+</html>

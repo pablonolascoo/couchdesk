@@ -1,0 +1,12 @@
+{
+  "cloud.title": "Cloud",
+  "cloud.eyebrow": "Spielen ohne Installation",
+  "cloud.heading": "Was spielst du heute?",
+  "cloud.xbox.text": "Game-Pass-Spiele sofort. Beim ersten Mal meldest du dich mit deinem Microsoft-Konto an.",
+  "cloud.xbox.error": "Öffnen fehlgeschlagen",
+  "cloud.ps.text": "Spiel deine PS5 von hier aus. Beim ersten Mal verknüpfst du sie mit deinem PlayStation-Konto.",
+  "cloud.ps.busy": "Wird vorbereitet… (beim ersten Mal wird es geladen)",
+  "cloud.ps.error": "PS5 Remote Play ließ sich nicht öffnen",
+  "cloud.foot": "Zurück zur Konsole aus einem Cloud-Spiel: LB + RB + View halten (oder L1 + R1 + SHARE) oder die PS-Taste drücken.",
+  "cloud.hint.play": "Spielen"
+}

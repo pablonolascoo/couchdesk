@@ -1,6 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { sound, setPadKind } from '../ui/sound'
+import {
+  getConfig, subscribe, profileFor, effectiveButtons, threshold, repeatTiming,
+  isNavLocked, navState, isTextField, requestKeyboard, type PadKey, type PadButton,
+} from './padConfig'
 
 type Dir = 'up' | 'down' | 'left' | 'right'
 
@@ -17,7 +21,8 @@ function setFocus(el: HTMLElement | null, path: string, remember = true) {
   // Atributo (no clase) para que React no lo borre al volver a pintar
   items().forEach((n) => n.removeAttribute('data-focused'))
   el.setAttribute('data-focused', '')
-  el.focus({ preventScroll: true })
+  navState.focusing = true
+  try { el.focus({ preventScroll: true }) } finally { navState.focusing = false }
   el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' })
   if (remember) lastFocus.set(path, el.dataset.nav!)
   el.dispatchEvent(new CustomEvent('navfocus', { bubbles: true }))
@@ -92,13 +97,19 @@ export function useSpatialNav() {
       const next = (forced && document.querySelector<HTMLElement>(`[data-nav="${CSS.escape(forced)}"]`)) || nearest(c, dir)
       if (next) { sound.move(); setFocus(next, pathRef.current) }
     }
-    const accept = () => { const c = current(); if (c) { sound.select(); c.click() } }
+    // Con mando, A sobre un campo de texto abre el teclado en pantalla
+    const accept = (fromPad = false) => {
+      const c = current()
+      if (!c) return
+      sound.select()
+      if (fromPad && isTextField(c)) { c.focus(); requestKeyboard(c) } else c.click()
+    }
     const back = () => { if (pathRef.current !== '/') { sound.back(); navigate(-1) } }
 
     const keys: Record<string, () => void> = {
       ArrowUp: () => move('up'), ArrowDown: () => move('down'),
       ArrowLeft: () => move('left'), ArrowRight: () => move('right'),
-      Enter: accept, Escape: back, Backspace: back,
+      Enter: () => accept(), Escape: back, Backspace: back,
       Home: () => { if (pathRef.current !== '/') { sound.back(); navigate('/') } },
     }
     // Tab / Mayús+Tab: siguiente o anterior en orden de lectura
@@ -112,6 +123,7 @@ export function useSpatialNav() {
 
     const onKey = (e: KeyboardEvent) => {
       if (e.altKey || e.ctrlKey || e.metaKey) return // atajos del sistema intactos
+      if (isNavLocked()) return // teclado en pantalla o reasignando un botón: ellos mandan
       // Escribiendo en un campo de texto: solo arriba/abajo/Esc/Tab sirven para salir de él
       const typing = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement
       if (typing && !['ArrowUp', 'ArrowDown', 'Escape', 'Tab'].includes(e.key)) return
@@ -128,51 +140,92 @@ export function useSpatialNav() {
     window.addEventListener('keydown', onKey)
     window.addEventListener('keyup', onKeyUp)
 
-    // Mando: A=0, B=1, cruceta 12-15, stick izquierdo ejes 0/1
-    const held = new Map<string, number>()
+    // Mando (API Gamepad estándar): cualquier mando conectado vale, cada uno con su perfil.
+    // Por defecto A=0, B=1, LB=4, RB=5, START=9, central=16, cruceta 12-15, stick izquierdo ejes 0/1.
+    let cfg = getConfig()
+    const unsubscribe = subscribe((c) => { cfg = c })
+    const held = new Map<string, number>() // "índice:acción" → cuándo empezó (o tocaba repetir)
+    const prevRaw = new Map<number, boolean[]>()
+    const emit = (name: string, detail?: unknown) => window.dispatchEvent(new CustomEvent(name, { detail }))
+    const fire = (k: PadKey) => {
+      emit('padkey', k) // siempre: el teclado en pantalla la usa aunque la navegación esté en pausa
+      if (isNavLocked()) return
+      if (k === 'accept') accept(true)
+      else if (k === 'back') back()
+      else if (k === 'home') keys.Home()
+      else if (k === 'menu') emit('padmenu')
+      else if (k === 'pagePrev') emit('padpage', -1)
+      else if (k === 'pageNext') emit('padpage', 1)
+      else if (k !== 'x' && k !== 'y') move(k)
+    }
     let raf = 0
     const tick = (t: number) => {
-      const pad = navigator.getGamepads().find((p) => p)
+      const pads = navigator.getGamepads().filter((p): p is Gamepad => !!p)
       // Si hay un juego o el navegador delante, la consola no reacciona al mando
-      if (pad && document.hasFocus()) {
-        setPadKind(pad.id)
-        const b = (i: number) => pad.buttons[i]?.pressed ?? false
-        // START (9) + BACK (8) = xTend cambia de modo: mando → ratón → teclado → mando
-        // (en PlayStation, OPTIONS + SHARE: lo cambia el proceso de fondo de la consola)
-        const combo = b(8) && b(9)
-        if (combo && !held.has('combo')) {
-          held.set('combo', t)
-          padMode = (padMode + 1) % 3
-          window.dispatchEvent(new CustomEvent('padmode', { detail: padMode }))
-        } else if (!combo) held.delete('combo')
-        // En modo ratón o teclado el mando lo usa xTend, no la consola
-        if (padMode !== 0) { raf = requestAnimationFrame(tick); return }
-        const [lx = 0, ly = 0] = pad.axes
-        const input: Record<string, boolean> = {
-          up: b(12) || ly < -0.6, down: b(13) || ly > 0.6,
-          left: b(14) || lx < -0.6, right: b(15) || lx > 0.6,
-          a: b(0), b: b(1), home: b(16), // 16 = botón Xbox / PS central
-        }
-        for (const [k, on] of Object.entries(input)) {
-          const since = held.get(k)
-          if (!on) { held.delete(k); continue }
-          const repeatable = k !== 'a' && k !== 'b' && k !== 'home'
-          if (since === undefined) {
-            held.set(k, t)
-            window.dispatchEvent(new Event('padinput'))
-            if (k === 'a') accept()
-            else if (k === 'b') back()
-            else if (k === 'home') keys.Home()
-            else move(k as Dir)
-          } else if (repeatable && t - since > 350) {
-            held.set(k, t - 350 + 120)
-            move(k as Dir)
+      if (pads.length && document.hasFocus()) {
+        if (!document.documentElement.dataset.pad) setPadKind(pads[0].id)
+        for (const pad of pads) {
+          const p = pad.index
+          const b = (i: number) => pad.buttons[i]?.pressed ?? false
+          // Botones crudos (para reasignar): al pulsar y al soltar
+          const prev = prevRaw.get(p) ?? []
+          const now = pad.buttons.map((x) => x.pressed)
+          now.forEach((on, button) => {
+            if (on === !!prev[button]) return
+            emit('padbutton', { pad: p, id: pad.id, button, pressed: on } satisfies PadButton)
+            if (on) setPadKind(pad.id) // la leyenda enseña los botones del último mando usado
+          })
+          prevRaw.set(p, now)
+
+          // START (9) + BACK (8) = xTend cambia de modo: mando → ratón → teclado → mando
+          // (en PlayStation, OPTIONS + SHARE: lo cambia el proceso de fondo de la consola)
+          const combo = b(8) && b(9)
+          if (combo && !held.has(`${p}:combo`)) {
+            held.set(`${p}:combo`, t)
+            if (!held.has(`${p}:menu`)) held.set(`${p}:menu`, t) // START del combo no abre el menú
+            padMode = (padMode + 1) % 3
+            emit('padmode', padMode)
+          } else if (!combo) held.delete(`${p}:combo`)
+          // En modo ratón o teclado el mando lo usa xTend, no la consola
+          if (padMode !== 0) continue
+
+          const prof = profileFor(cfg, pad.id)
+          const btn = effectiveButtons(prof)
+          const th = threshold(prof.deadzone)
+          const rep = repeatTiming(prof.repeat)
+          // Zurdo: se navega con el stick derecho (ejes 2/3)
+          const ax = (prof.leftHanded ? pad.axes[2] : pad.axes[0]) ?? 0
+          const ayRaw = (prof.leftHanded ? pad.axes[3] : pad.axes[1]) ?? 0
+          const ay = prof.invertY ? -ayRaw : ayRaw
+          const input: [PadKey, boolean][] = [
+            ['up', b(12) || ay < -th], ['down', b(13) || ay > th],
+            ['left', b(14) || ax < -th], ['right', b(15) || ax > th],
+            ['accept', b(btn.accept)], ['back', b(btn.back)], ['home', b(btn.home)],
+            ['menu', b(btn.menu) && !(btn.menu === 9 && b(8))], // START sin BACK
+            ['pagePrev', b(btn.pagePrev)], ['pageNext', b(btn.pageNext)],
+            ['x', b(2)], ['y', b(3)],
+          ]
+          for (const [k, on] of input) {
+            const key = `${p}:${k}`
+            const since = held.get(key)
+            if (!on) { held.delete(key); continue }
+            // Direcciones siempre; borrar y mover el cursor solo con el teclado en pantalla abierto
+            const repeatable = k === 'up' || k === 'down' || k === 'left' || k === 'right' ||
+              ((k === 'x' || k === 'pagePrev' || k === 'pageNext') && isNavLocked())
+            if (since === undefined) {
+              held.set(key, t)
+              window.dispatchEvent(new Event('padinput'))
+              fire(k)
+            } else if (repeatable && t - since > rep.delay) {
+              held.set(key, t - rep.delay + rep.rate)
+              fire(k)
+            }
           }
         }
       }
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
-    return () => { window.removeEventListener('keydown', onKey); window.removeEventListener('keyup', onKeyUp); cancelAnimationFrame(raf) }
+    return () => { window.removeEventListener('keydown', onKey); window.removeEventListener('keyup', onKeyUp); cancelAnimationFrame(raf); unsubscribe() }
   }, [navigate])
 }

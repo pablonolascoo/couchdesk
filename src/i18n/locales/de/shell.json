@@ -1,0 +1,22 @@
+{
+  "shell.hint.select": "Auswählen",
+  "shell.hint.view": "Ansehen",
+  "shell.hint.next": "Weiter",
+  "shell.key.enter": "Enter",
+  "shell.key.space": "Leertaste",
+  "shell.key.home": "Pos1",
+  "shell.goBack": "Zurück",
+  "shell.loading": "Lädt…",
+  "shell.opening": "Wird geöffnet…",
+  "shell.onlyInstalled": "Das geht nur in der installierten App.",
+  "shell.online": "Mit dem Internet verbunden",
+  "shell.offline": "Kein Internet",
+  "shell.remote.aria": "Handy als Controller nutzen",
+  "shell.remote.title": "Handy-Controller",
+  "shell.remote.connected": "{n} verbunden|{n} verbunden",
+  "shell.remote.scan": "Scannen",
+  "shell.padMode.nav": "Controller: steuert die Konsole",
+  "shell.padMode.mouse": "Controller als Maus",
+  "shell.padMode.keyboard": "Controller als Tastatur",
+  "shell.padMode.switch": "({keys} zum Wechseln)"
+}

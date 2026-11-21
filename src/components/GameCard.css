@@ -15,8 +15,8 @@
   display: block;
   padding: 5px;
   border-radius: var(--radius);
-  background: rgba(255, 253, 249, 0.6);
-  box-shadow: 0 0 0 1px var(--hair), 0 30px 50px -32px rgba(80, 56, 30, 0.35);
+  background: rgb(var(--surface-rgb) / 0.6);
+  box-shadow: 0 0 0 1px var(--hair), 0 30px 50px -32px rgb(var(--shadow-rgb) / 0.35);
   transition: box-shadow 420ms var(--ease), background-color 420ms var(--ease);
 }
 .card[data-focused] .card-shell { box-shadow: var(--bezel-focus); background: var(--surface); }

@@ -1,0 +1,9 @@
+{
+  "remote.title": "Controle pelo celular",
+  "remote.intro": "Escaneie o código com a câmera do celular. Abre uma página que transforma o celular em mouse, teclado ou controle. Vários podem se conectar ao mesmo tempo.",
+  "remote.connected": "Conectados",
+  "remote.none": "Ninguém ainda.",
+  "remote.note": "O celular e o PC precisam estar na mesma rede Wi-Fi. Na primeira vez, o Windows pode pedir permissão para “Consola”: aceite em redes privadas.",
+  "remote.back": "Voltar",
+  "remote.noNetwork": "Sem conexão de rede."
+}

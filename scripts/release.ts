@@ -63,7 +63,7 @@ await $`git commit -m ${`release: ${label}`}`.nothrow()
 await $`git tag -a ${tag} -m ${label}`
 const pushed = await $`git push origin main --follow-tags`.nothrow()
 if (pushed.exitCode !== 0) { console.error('\n✖  No se pudo subir a GitHub. La etiqueta queda en local.'); process.exit(1) }
-await $`gh release create ${tag} ${installer} --title ${`Consola ${version} · ${meta.codename}`} --notes-file ${notesFile} --latest`
+await $`gh release create ${tag} ${installer} --title ${`CouchDesk ${version} · ${meta.codename}`} --notes-file ${notesFile} --latest`
 // Avisar a los buscadores de que hay versión nueva (si la web ya está publicada)
 await $`bun scripts/indexnow.ts`.nothrow()
 console.log(`\n✔  ${label} publicada: https://github.com/pablonolascoo/couchdesk/releases/tag/${tag}\n`)

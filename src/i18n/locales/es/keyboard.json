@@ -1,0 +1,11 @@
+{
+  "keyboard.label": "Teclado en pantalla",
+  "keyboard.placeholder": "Escribe",
+  "keyboard.shift": "Mayúsculas",
+  "keyboard.delete": "Borrar",
+  "keyboard.space": "Espacio",
+  "keyboard.done": "Listo",
+  "keyboard.hint.type": "Escribir",
+  "keyboard.hint.caret": "Mover cursor",
+  "keyboard.hint.close": "Cerrar"
+}

@@ -11,7 +11,7 @@
 <link rel="manifest" href="/manifest.json?t=__TOKEN__">
 <link rel="icon" href="/icon.svg">
 <link rel="apple-touch-icon" href="/icon.svg">
-<title>Mando de la Consola</title>
+<title>Mando de CouchDesk</title>
 <style>
   :root {
     --bg: #fbf8f2; --bg2: #f1ebe0; --surface: #fffdf9; --text: #1c1712; --muted: #8a7f72;
@@ -173,15 +173,15 @@
 <body>
 <div id="app">
   <div class="row top">
-    <button class="shoulder" data-k="voldown">LB <small>Volumen −</small></button>
+    <button class="shoulder" data-k="voldown">LB <small data-i18n="volDown">Volumen −</small></button>
     <div class="center">
       <div class="tabs-in">
-        <button data-tab="gp" class="on">Mando</button>
-        <button data-tab="mouse">Touchpad<span class="long"> y teclado</span></button>
+        <button data-tab="gp" class="on" data-i18n="pad">Mando</button>
+        <button data-tab="mouse"><span data-i18n="touchpad">Touchpad</span><span class="long" data-i18n="andKeyboard"> y teclado</span></button>
       </div>
-      <span id="state">Conectando</span>
+      <span id="state" data-i18n="connecting">Conectando</span>
     </div>
-    <button class="shoulder" data-k="volup">RB <small>Volumen +</small></button>
+    <button class="shoulder" data-k="volup">RB <small data-i18n="volUp">Volumen +</small></button>
   </div>
 
   <main>
@@ -196,8 +196,8 @@
         </div>
       </div>
       <div class="mid">
-        <button id="home" data-k="home" aria-label="Ir al inicio"><span></span></button>
-        <small>Inicio</small>
+        <button id="home" data-k="home" aria-label="Ir al inicio" data-i18n-aria="homeAria"><span></span></button>
+        <small data-i18n="home">Inicio</small>
       </div>
       <div class="zone">
         <div class="face" id="abxy">
@@ -214,42 +214,85 @@
     <section id="mouse">
       <div class="padcol">
         <div class="typebar" id="typebar">
-          <input id="kbd" placeholder="Escribe: aparece en el PC al momento" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send">
+          <input id="kbd" placeholder="Escribe: aparece en el PC al momento" data-i18n-ph="kbdPh" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send">
           <button data-k="backspace">⌫</button>
-          <button data-k="enter">Intro</button>
+          <button data-k="enter" data-i18n="enter">Intro</button>
           <button data-k="tab">Tab</button>
-          <button id="kbdClose">Cerrar</button>
+          <button id="kbdClose" data-i18n="close">Cerrar</button>
         </div>
-        <div id="pad">Desliza para mover · toca para hacer clic<br>Dos dedos: desplazar · toque con dos dedos: clic derecho</div>
+        <div id="pad"><span><span data-i18n="pad1">Desliza para mover · toca para hacer clic</span><br><span data-i18n="pad2">Dos dedos: desplazar · toque con dos dedos: clic derecho</span></span></div>
       </div>
       <div class="clicks">
-        <button data-k="click">Clic</button>
-        <button data-k="click-right">Clic derecho</button>
-        <button id="kbdOpen" class="kbtn">⌨ Teclado</button>
+        <button data-k="click" data-i18n="click">Clic</button>
+        <button data-k="click-right" data-i18n="rightClick">Clic derecho</button>
+        <button id="kbdOpen" class="kbtn">⌨ <span data-i18n="keyboard">Teclado</span></button>
       </div>
     </section>
   </main>
 
   <div class="row bottom">
-    <button class="shoulder" data-k="click-right">LT <small>Clic derecho</small></button>
+    <button class="shoulder" data-k="click-right">LT <small data-i18n="rightClick">Clic derecho</small></button>
     <div class="center">
-      <button class="chip" id="style">Estilo <b>Xbox</b></button>
-      <button class="chip" id="fs">Pantalla completa</button>
+      <button class="chip" id="style"><span data-i18n="style">Estilo</span> <b>Xbox</b></button>
+      <button class="chip" id="fs" data-i18n="fullscreen">Pantalla completa</button>
     </div>
-    <button class="shoulder" data-k="click">RT <small>Clic</small></button>
+    <button class="shoulder" data-k="click">RT <small data-i18n="click">Clic</small></button>
   </div>
 </div>
 
 <div id="start">
   <span class="mark"></span>
-  <h1>Mando</h1>
-  <input id="name" maxlength="20" placeholder="Tu nombre" autocomplete="off">
-  <button id="go">Empezar <i>→</i></button>
-  <p>Se pondrá a pantalla completa y en horizontal.</p>
+  <h1 data-i18n="pad">Mando</h1>
+  <input id="name" maxlength="20" placeholder="Tu nombre" data-i18n-ph="name" autocomplete="off">
+  <button id="go"><span data-i18n="start">Empezar</span> <i>→</i></button>
+  <p data-i18n="startNote">Se pondrá a pantalla completa y en horizontal.</p>
 </div>
 
 <script>
 (() => {
+  // ---------- Idioma: el del móvil (es, en, pt-BR, fr, de, it; otro → inglés) ----------
+  const DICT = {
+    es: { title: 'Mando de CouchDesk', pad: 'Mando', volDown: 'Volumen −', volUp: 'Volumen +', touchpad: 'Touchpad', andKeyboard: ' y teclado',
+      connecting: 'Conectando', connected: 'Conectado', reconnecting: 'Reconectando', homeAria: 'Ir al inicio', home: 'Inicio',
+      kbdPh: 'Escribe: aparece en el PC al momento', enter: 'Intro', close: 'Cerrar', pad1: 'Desliza para mover · toca para hacer clic',
+      pad2: 'Dos dedos: desplazar · toque con dos dedos: clic derecho', click: 'Clic', rightClick: 'Clic derecho', keyboard: 'Teclado',
+      style: 'Estilo', fullscreen: 'Pantalla completa', name: 'Tu nombre', start: 'Empezar', startNote: 'Se pondrá a pantalla completa y en horizontal.', phone: 'Móvil' },
+    en: { title: 'CouchDesk Controller', pad: 'Controller', volDown: 'Volume −', volUp: 'Volume +', touchpad: 'Touchpad', andKeyboard: ' & keyboard',
+      connecting: 'Connecting', connected: 'Connected', reconnecting: 'Reconnecting', homeAria: 'Go to Home', home: 'Home',
+      kbdPh: 'Type: it shows up on the PC right away', enter: 'Enter', close: 'Close', pad1: 'Swipe to move · tap to click',
+      pad2: 'Two fingers: scroll · two-finger tap: right-click', click: 'Click', rightClick: 'Right-click', keyboard: 'Keyboard',
+      style: 'Style', fullscreen: 'Full screen', name: 'Your name', start: 'Start', startNote: "It'll go full screen and landscape.", phone: 'Phone' },
+    pt: { title: 'Controle do CouchDesk', pad: 'Controle', volDown: 'Volume −', volUp: 'Volume +', touchpad: 'Touchpad', andKeyboard: ' e teclado',
+      connecting: 'Conectando', connected: 'Conectado', reconnecting: 'Reconectando', homeAria: 'Ir para o início', home: 'Início',
+      kbdPh: 'Digite: aparece no PC na hora', enter: 'Enter', close: 'Fechar', pad1: 'Deslize para mover · toque para clicar',
+      pad2: 'Dois dedos: rolar · toque com dois dedos: clique direito', click: 'Clique', rightClick: 'Clique direito', keyboard: 'Teclado',
+      style: 'Estilo', fullscreen: 'Tela cheia', name: 'Seu nome', start: 'Começar', startNote: 'Vai ficar em tela cheia e na horizontal.', phone: 'Celular' },
+    fr: { title: 'Manette CouchDesk', pad: 'Manette', volDown: 'Volume −', volUp: 'Volume +', touchpad: 'Pavé tactile', andKeyboard: ' et clavier',
+      connecting: 'Connexion', connected: 'Connecté', reconnecting: 'Reconnexion', homeAria: "Aller à l'accueil", home: 'Accueil',
+      kbdPh: "Écris : ça s'affiche tout de suite sur le PC", enter: 'Entrée', close: 'Fermer', pad1: 'Glisse pour déplacer · touche pour cliquer',
+      pad2: 'Deux doigts : défiler · appui à deux doigts : clic droit', click: 'Clic', rightClick: 'Clic droit', keyboard: 'Clavier',
+      style: 'Style', fullscreen: 'Plein écran', name: 'Ton nom', start: 'Commencer', startNote: "Ça passera en plein écran et à l'horizontale.", phone: 'Téléphone' },
+    de: { title: 'CouchDesk-Controller', pad: 'Controller', volDown: 'Lautstärke −', volUp: 'Lautstärke +', touchpad: 'Touchpad', andKeyboard: ' und Tastatur',
+      connecting: 'Verbinde', connected: 'Verbunden', reconnecting: 'Verbinde neu', homeAria: 'Zum Start', home: 'Start',
+      kbdPh: 'Tippe: Es erscheint sofort auf dem PC', enter: 'Enter', close: 'Schließen', pad1: 'Wischen zum Bewegen · Tippen zum Klicken',
+      pad2: 'Zwei Finger: scrollen · mit zwei Fingern tippen: Rechtsklick', click: 'Klick', rightClick: 'Rechtsklick', keyboard: 'Tastatur',
+      style: 'Stil', fullscreen: 'Vollbild', name: 'Dein Name', start: "Los geht's", startNote: 'Es wechselt zu Vollbild und Querformat.', phone: 'Handy' },
+    it: { title: 'Controller CouchDesk', pad: 'Controller', volDown: 'Volume −', volUp: 'Volume +', touchpad: 'Touchpad', andKeyboard: ' e tastiera',
+      connecting: 'Connessione', connected: 'Connesso', reconnecting: 'Riconnessione', homeAria: 'Vai alla home', home: 'Home',
+      kbdPh: 'Scrivi: appare subito sul PC', enter: 'Invio', close: 'Chiudi', pad1: 'Scorri per muovere · tocca per fare clic',
+      pad2: 'Due dita: scorri · tocco con due dita: clic destro', click: 'Clic', rightClick: 'Clic destro', keyboard: 'Tastiera',
+      style: 'Stile', fullscreen: 'Schermo intero', name: 'Il tuo nome', start: 'Inizia', startNote: 'Andrà a schermo intero e in orizzontale.', phone: 'Telefono' },
+  };
+  const langTag = ((navigator.languages && navigator.languages[0]) || navigator.language || 'en').toLowerCase();
+  const lang = Object.keys(DICT).find((c) => langTag.startsWith(c)) || 'en';
+  const T = DICT[lang];
+  document.documentElement.lang = lang === 'pt' ? 'pt-BR' : lang;
+  document.title = T.title;
+  document.querySelector('meta[name=apple-mobile-web-app-title]').content = T.pad;
+  document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = T[el.dataset.i18n]; });
+  document.querySelectorAll('[data-i18n-ph]').forEach((el) => { el.placeholder = T[el.dataset.i18nPh]; });
+  document.querySelectorAll('[data-i18n-aria]').forEach((el) => el.setAttribute('aria-label', T[el.dataset.i18nAria]));
+
   const token = new URLSearchParams(location.search).get('t');
   const $ = (s) => document.querySelector(s);
   const app = $('#app'), state = $('#state'), nameInput = $('#name'), kbd = $('#kbd');
@@ -311,12 +354,12 @@
   // ---------- Conexión ----------
   try { nameInput.value = localStorage.getItem('mando-nombre') || '' } catch {}
   const send = (o) => ws && ws.readyState === 1 && ws.send(JSON.stringify(o));
-  const hello = () => send({ t: 'hello', name: nameInput.value.trim() || 'Móvil' });
+  const hello = () => send({ t: 'hello', name: nameInput.value.trim() || T.phone });
   function connect() {
     ws = new WebSocket(`ws://${location.host}/ws?t=${encodeURIComponent(token)}`);
     ws.binaryType = 'arraybuffer';
-    ws.onopen = () => { state.textContent = 'Conectado'; state.classList.add('on'); hello(); };
-    ws.onclose = () => { state.textContent = 'Reconectando'; state.classList.remove('on'); setTimeout(connect, 1000); };
+    ws.onopen = () => { state.textContent = T.connected; state.classList.add('on'); hello(); };
+    ws.onclose = () => { state.textContent = T.reconnecting; state.classList.remove('on'); setTimeout(connect, 1000); };
     // Órdenes de la consola: qué pantalla enseñar y si hace falta escribir
     ws.onmessage = (e) => {
       if (typeof e.data !== 'string') return;

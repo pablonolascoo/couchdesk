@@ -1,0 +1,102 @@
+/* Fondo de toda la consola. Va detrás de todo (z-index -1 dentro de #root).
+   Solo anima transform y opacity: lo mueve la tarjeta gráfica, sin JavaScript por fotograma. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--bg);
+}
+.bd-layer { position: absolute; inset: 0; animation: bd-in 1200ms var(--ease) both; }
+@keyframes bd-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Velo crema: cuanto más alto, más se lee el texto sobre una imagen o un vídeo */
+.bd-veil { position: absolute; inset: 0; background: var(--bg); transition: opacity 420ms var(--ease); }
+
+/* ---------- Imagen, vídeo, YouTube y 3D ---------- */
+.bd-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.bd-youtube {
+  /* Tapa toda la pantalla manteniendo 16:9, como object-fit: cover */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 177.78vh);
+  height: max(100%, 56.25vw);
+  transform: translate(-50%, -50%);
+  border: 0;
+  pointer-events: none;
+}
+.bd-model { position: absolute; inset: 0; }
+.bd-model canvas { width: 100% !important; height: 100% !important; display: block; }
+
+/* ---------- Animados ---------- */
+.bd-anim {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size; /* los tamaños siguen a la caja: sirve igual en miniatura */
+  background:
+    radial-gradient(55% 45% at 85% 0%, rgb(var(--bd-tint-1) / 0.24), transparent 70%),
+    radial-gradient(45% 40% at 0% 100%, rgb(var(--bd-tint-3) / 0.18), transparent 70%),
+    linear-gradient(172deg, var(--bd-top) 0%, var(--bd-mid) 55%, var(--bd-bottom) 100%);
+}
+.bd-anim > i { position: absolute; display: block; will-change: transform; }
+.backdrop.is-paused .bd-anim > i { animation-play-state: paused; }
+
+/* Ondas: bandas de luz con forma de ola que pasan muy despacio */
+.bd-wave {
+  left: 0;
+  bottom: 0;
+  width: 200%;
+  /* Una ola por cada mitad: al moverse media anchura vuelve al principio sin saltos */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 400' preserveAspectRatio='none'%3E%3Cpath d='M0 200C266 60 533 60 800 200S1333 340 1600 200V400H0Z'/%3E%3C/svg%3E") 0 0 / 50% 100% repeat-x;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 400' preserveAspectRatio='none'%3E%3Cpath d='M0 200C266 60 533 60 800 200S1333 340 1600 200V400H0Z'/%3E%3C/svg%3E") 0 0 / 50% 100% repeat-x;
+  animation: bd-slide var(--t, 90s) linear infinite, bd-bob var(--b, 24s) ease-in-out infinite alternate;
+}
+.bd-wave.w1 { height: 58%; --t: 110s; --b: 26s; background: linear-gradient(to bottom, rgb(var(--bd-tint-1) / 0.42), rgb(var(--bd-tint-1) / 0) 85%); }
+.bd-wave.w2 { height: 46%; --t: 80s; --b: 19s; animation-direction: reverse, alternate; background: linear-gradient(to bottom, rgb(var(--bd-tint-2) / 0.30), rgb(var(--bd-tint-2) / 0) 85%); }
+.bd-wave.w3 { height: 34%; --t: 64s; --b: 15s; background: linear-gradient(to bottom, rgb(var(--bd-light) / 0.75), rgb(var(--bd-light) / 0.25) 90%); }
+@keyframes bd-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes bd-bob { from { translate: 0 0; } to { translate: 0 6cqh; } }
+
+/* Aurora: manchas grandes de color cálido que flotan */
+.bd-blob {
+  width: 75cqmax;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: bd-float var(--t, 44s) ease-in-out infinite alternate;
+}
+.bd-blob.b1 { left: 40%; top: -35%; --t: 46s; background: radial-gradient(closest-side, rgb(var(--bd-tint-1) / 0.55), transparent); }
+.bd-blob.b2 { left: -25%; top: 25%; --t: 58s; animation-delay: -20s; background: radial-gradient(closest-side, rgb(var(--bd-tint-2) / 0.38), transparent); }
+.bd-blob.b3 { left: 30%; top: 45%; --t: 38s; animation-delay: -9s; background: radial-gradient(closest-side, rgb(var(--bd-tint-3) / 0.34), transparent); }
+@keyframes bd-float {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-12cqw, 8cqh) scale(1.12); }
+  100% { transform: translate(8cqw, -6cqh) scale(0.94); }
+}
+
+/* Partículas suaves: puntos de luz que suben y se apagan */
+.bd-particulas .bd-blob.b1 { opacity: 0.7; }
+.bd-dot {
+  left: var(--x);
+  top: 100%;
+  width: calc(var(--s) * 1.4cqmin);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(var(--bd-light) / 0.95), rgb(var(--bd-tint-1) / 0.55) 55%, transparent);
+  opacity: 0;
+  animation: bd-rise var(--d) linear var(--delay) infinite;
+}
+@keyframes bd-rise {
+  0% { transform: translateY(0); opacity: 0; }
+  12% { opacity: 0.85; }
+  80% { opacity: 0.6; }
+  100% { transform: translateY(-112cqh); opacity: 0; }
+}
+
+/* Sin movimiento: imagen quieta (pisa la regla global de 1 ms, que haría parpadear los bucles) */
+@media (prefers-reduced-motion: reduce) {
+  .backdrop *, .bd-anim > i { animation: none !important; }
+  .bd-dot { opacity: 0.6; transform: translateY(calc(var(--y) * -1cqh)); }
+}

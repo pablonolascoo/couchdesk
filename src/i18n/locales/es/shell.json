@@ -1,0 +1,22 @@
+{
+  "shell.hint.select": "Seleccionar",
+  "shell.hint.view": "Ver",
+  "shell.hint.next": "Siguiente",
+  "shell.key.enter": "Intro",
+  "shell.key.space": "Espacio",
+  "shell.key.home": "Inicio",
+  "shell.goBack": "Volver",
+  "shell.loading": "Cargando…",
+  "shell.opening": "Abriendo…",
+  "shell.onlyInstalled": "Esto solo funciona en la consola instalada.",
+  "shell.online": "Conectado a internet",
+  "shell.offline": "Sin internet",
+  "shell.remote.aria": "Conectar el móvil como mando",
+  "shell.remote.title": "Mando móvil",
+  "shell.remote.connected": "{n} conectado|{n} conectados",
+  "shell.remote.scan": "Escanea",
+  "shell.padMode.nav": "Mando: controla la consola",
+  "shell.padMode.mouse": "Mando como ratón",
+  "shell.padMode.keyboard": "Mando como teclado",
+  "shell.padMode.switch": "({keys} para cambiar)"
+}

@@ -1,7 +1,611 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://pablonolascoo.github.io/couchdesk/</loc>
     <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/en/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/pt-br/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/fr/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/de/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/it/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/descargar/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/descargar/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/baixar/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/telecharger/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/download/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/scarica/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/en/download/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/descargar/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/baixar/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/telecharger/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/download/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/scarica/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/pt-br/baixar/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/descargar/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/baixar/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/telecharger/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/download/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/scarica/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/fr/telecharger/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/descargar/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/baixar/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/telecharger/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/download/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/scarica/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/de/download/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/descargar/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/baixar/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/telecharger/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/download/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/scarica/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/it/scarica/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/descargar/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/baixar/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/telecharger/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/download/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/scarica/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/download/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/novedades/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/novedades/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/changelog/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/changelog/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/en/changelog/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/novedades/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/changelog/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/changelog/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/comparativa/modo-xbox/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/mode-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/xbox-modus/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/modalita-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/mode-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/xbox-modus/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/modalita-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/modo-xbox/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/mode-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/xbox-modus/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/modalita-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/fr/comparatif/mode-xbox/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/mode-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/xbox-modus/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/modalita-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/de/vergleich/xbox-modus/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/mode-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/xbox-modus/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/modalita-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/it/confronto/modalita-xbox/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/modo-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/mode-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/xbox-modus/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/modalita-xbox/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/comparativa/steam-big-picture/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/steam-big-picture/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/fr/comparatif/steam-big-picture/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/de/vergleich/steam-big-picture/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/it/confronto/steam-big-picture/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/steam-big-picture/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/comparativa/playnite/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/en/vs/playnite/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/playnite/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/fr/comparatif/playnite/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/de/vergleich/playnite/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/it/confronto/playnite/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/comparativa/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/comparatif/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/vergleich/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/confronto/playnite/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/vs/playnite/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/guias/arrancar-windows-en-modo-consola/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/arrancar-windows-en-modo-consola/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/iniciar-windows-no-modo-console/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/demarrer-windows-en-mode-console/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/windows-im-konsolenmodus-starten/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/avviare-windows-in-modalita-console/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/arrancar-windows-en-modo-consola/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/iniciar-windows-no-modo-console/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/demarrer-windows-en-mode-console/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/windows-im-konsolenmodus-starten/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/avviare-windows-in-modalita-console/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/pt-br/guias/iniciar-windows-no-modo-console/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/arrancar-windows-en-modo-consola/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/iniciar-windows-no-modo-console/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/demarrer-windows-en-mode-console/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/windows-im-konsolenmodus-starten/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/avviare-windows-in-modalita-console/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/fr/guides/demarrer-windows-en-mode-console/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/arrancar-windows-en-modo-consola/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/iniciar-windows-no-modo-console/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/demarrer-windows-en-mode-console/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/windows-im-konsolenmodus-starten/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/avviare-windows-in-modalita-console/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/de/anleitungen/windows-im-konsolenmodus-starten/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/arrancar-windows-en-modo-consola/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/iniciar-windows-no-modo-console/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/demarrer-windows-en-mode-console/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/windows-im-konsolenmodus-starten/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/avviare-windows-in-modalita-console/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/it/guide/avviare-windows-in-modalita-console/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/arrancar-windows-en-modo-consola/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/iniciar-windows-no-modo-console/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/demarrer-windows-en-mode-console/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/windows-im-konsolenmodus-starten/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/avviare-windows-in-modalita-console/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/guias/ps5-remote-play-pc-mando/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/ps5-remote-play-pc-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/ps5-remote-play-pc-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/ps5-remote-play-pc-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/ps5-remote-play-pc-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/ps5-remote-play-pc-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/ps5-remote-play-pc-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/pt-br/guias/ps5-remote-play-pc-controle/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/ps5-remote-play-pc-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/ps5-remote-play-pc-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/ps5-remote-play-pc-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/fr/guides/ps5-remote-play-pc-manette/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/ps5-remote-play-pc-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/ps5-remote-play-pc-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/ps5-remote-play-pc-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-remote-play-pc-controller/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/ps5-remote-play-pc-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/ps5-remote-play-pc-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/ps5-remote-play-pc-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/it/guide/ps5-remote-play-pc-controller/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/ps5-remote-play-pc-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/ps5-remote-play-pc-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/ps5-remote-play-pc-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/ps5-remote-play-pc-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/guias/mando-ps5-ps4-pc-sin-drivers/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/mando-ps5-ps4-pc-sin-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/controle-ps5-ps4-pc-sem-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/manette-ps5-ps4-pc-sans-pilotes/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-ps4-controller-pc-ohne-treiber/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/controller-ps5-ps4-pc-senza-driver/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/mando-ps5-ps4-pc-sin-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/controle-ps5-ps4-pc-sem-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/manette-ps5-ps4-pc-sans-pilotes/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-ps4-controller-pc-ohne-treiber/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/controller-ps5-ps4-pc-senza-driver/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/pt-br/guias/controle-ps5-ps4-pc-sem-drivers/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/mando-ps5-ps4-pc-sin-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/controle-ps5-ps4-pc-sem-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/manette-ps5-ps4-pc-sans-pilotes/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-ps4-controller-pc-ohne-treiber/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/controller-ps5-ps4-pc-senza-driver/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/fr/guides/manette-ps5-ps4-pc-sans-pilotes/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/mando-ps5-ps4-pc-sin-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/controle-ps5-ps4-pc-sem-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/manette-ps5-ps4-pc-sans-pilotes/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-ps4-controller-pc-ohne-treiber/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/controller-ps5-ps4-pc-senza-driver/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-ps4-controller-pc-ohne-treiber/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/mando-ps5-ps4-pc-sin-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/controle-ps5-ps4-pc-sem-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/manette-ps5-ps4-pc-sans-pilotes/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-ps4-controller-pc-ohne-treiber/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/controller-ps5-ps4-pc-senza-driver/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/it/guide/controller-ps5-ps4-pc-senza-driver/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/mando-ps5-ps4-pc-sin-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/controle-ps5-ps4-pc-sem-drivers/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/manette-ps5-ps4-pc-sans-pilotes/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-ps4-controller-pc-ohne-treiber/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/controller-ps5-ps4-pc-senza-driver/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/guias/emuladores-windows-con-mando/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/emuladores-windows-con-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/emuladores-windows-com-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/emulateurs-windows-a-la-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/emulatoren-windows-mit-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/emulatori-windows-con-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/emuladores-windows-con-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/emuladores-windows-com-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/emulateurs-windows-a-la-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/emulatoren-windows-mit-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/emulatori-windows-con-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/pt-br/guias/emuladores-windows-com-controle/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/emuladores-windows-con-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/emuladores-windows-com-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/emulateurs-windows-a-la-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/emulatoren-windows-mit-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/emulatori-windows-con-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/fr/guides/emulateurs-windows-a-la-manette/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/emuladores-windows-con-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/emuladores-windows-com-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/emulateurs-windows-a-la-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/emulatoren-windows-mit-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/emulatori-windows-con-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/de/anleitungen/emulatoren-windows-mit-controller/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/emuladores-windows-con-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/emuladores-windows-com-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/emulateurs-windows-a-la-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/emulatoren-windows-mit-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/emulatori-windows-con-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
+  </url>
+  <url>
+    <loc>https://pablonolascoo.github.io/couchdesk/it/guide/emulatori-windows-con-controller/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pablonolascoo.github.io/couchdesk/guias/emuladores-windows-con-mando/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://pablonolascoo.github.io/couchdesk/pt-br/guias/emuladores-windows-com-controle/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://pablonolascoo.github.io/couchdesk/fr/guides/emulateurs-windows-a-la-manette/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://pablonolascoo.github.io/couchdesk/de/anleitungen/emulatoren-windows-mit-controller/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://pablonolascoo.github.io/couchdesk/it/guide/emulatori-windows-con-controller/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/"/>
   </url>
 </urlset>

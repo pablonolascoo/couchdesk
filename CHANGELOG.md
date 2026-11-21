@@ -2,16 +2,45 @@
 
 Todas las versiones de CouchDesk (antes «Consola»). Formato: [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) · versiones [SemVer](https://semver.org/lang/es/) con nombre en clave.
 
-## [Sin publicar]
+## [1.1.0] — Brasa — 2026-11-21
+
+La consola se llama ahora **CouchDesk**, con marca propia, en 6 idiomas y con temas.
 
 ### Añadido
+- **Marca CouchDesk:** logo «Standby» (una C con la luz de encendido), icono nuevo y arranque animado.
+- **6 idiomas:** español, inglés, portugués (Brasil), francés, alemán e italiano. Usa el idioma del sistema y se cambia en Ajustes → Idioma. Cualquiera puede añadir el suyo (TRANSLATING.md).
+- **Temas:** Salón, Noche, Cine, Bosque, Costa y Alto contraste. Puedes crear el tuyo y compartirlo con un código.
+- **Música de menú:** suave e infinita, creada en el momento. Se calla sola al abrir un juego, una web, Spotify o un vídeo.
+- **Fondo animado** tipo PS5 que apenas gasta, o tu propia imagen, vídeo, vídeo de YouTube o modelo 3D.
+- **Salvapantallas** con paisajes en movimiento, hora, fecha y el tiempo de tu ciudad. Modo bajo consumo. Puede ser el salvapantallas de Windows.
+- **Modo ambiente:** chimenea, lluvia, cascada, olas, acuario, auroras… a pantalla completa.
+- **Música:** Spotify o cualquier reproductor. Qué suena, pausa, siguiente y volumen solo de la música.
+- **Mandos:** todos los conectados a la vez con su batería, prueba de botones, perfiles (estándar, estilo Nintendo, zurdo o el tuyo) y cambio de botones.
+- **Teclado en pantalla** para escribir con el mando, con las letras de cada idioma.
+- **Claude como agente:** voz, conversaciones guardadas, conectores, extensiones y ventana flotante encima de todo (Ctrl+Alt+Espacio o Vista+Y). Abre pantallas, webs, apps y controla la música.
 - **Más accesos en el navegador, agrupados por tipo:**
   - Cine y series: Disney+, HBO Max, Apple TV, Movistar Plus+, SkyShowtime, Filmin, RTVE Play, Atresplayer, Mitele y Crunchyroll.
   - Deporte, directos y música: DAZN, Kick, Spotify y Apple Music.
   - Juegos en la nube: Boosteroid.
+- **Pasar archivos a los emuladores:**
+  - Botón «Traer» en cada carpeta del emulador (juegos, BIOS, partidas). Eliges un USB o cualquier carpeta, marcas los archivos y los copias o mueves allí.
+  - «Traer archivos aquí» en cualquier carpeta del explorador. Los USB salen primero en la lista.
+  - Enviar desde el navegador del móvil u otro PC: escaneas un QR, eliges el emulador y la carpeta, y arrastras archivos o carpetas enteras. Envía varios a la vez, sin instalar nada.
+  - El FTP crea una carpeta por emulador («PCSX2 - BIOS»…). Lo que dejas ahí se coloca solo en su sitio.
+- **Recibir con LocalSend:** la consola aparece sola en la app gratuita LocalSend del móvil o de otro PC.
+  - Con la pantalla «Recibir con LocalSend» abierta, los envíos se aceptan solos. Si no, la consola se abre ahí y pregunta «Aceptar» o «Rechazar».
+  - Eliges dónde se guarda: Recibidos o los juegos, la BIOS o las partidas de cada emulador.
+  - Solo red de casa. Nombres saneados y nada se sobrescribe.
 
 ### Cambiado
+- «Recibir archivos» es ahora un menú con tres opciones: navegador, FTP y LocalSend.
 - El proyecto se llama ahora **CouchDesk**: [github.com/pablonolascoo/couchdesk](https://github.com/pablonolascoo/couchdesk).
+- Transiciones nuevas en toda la app: entrada del Inicio, cambio de pantalla y foco del mando.
+- Si la app cambia de carpeta al actualizarse, el arranque en CouchDesk se repara solo.
+
+### Arreglado
+- Al abrir la app ya no parpadea una ventana de terminal.
+- En el Inicio, los nombres de las secciones ya no se cortan.
 
 ## [1.0.0] — Salón — 2026-11-21
 

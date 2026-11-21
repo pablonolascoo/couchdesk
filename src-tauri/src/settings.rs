@@ -156,7 +156,7 @@ pub(crate) fn plan_set(guid: String) -> Result<(), String> {
     // Solo GUIDs que existen de verdad, nada que venga sin comprobar
     let plans = run("powercfg", &["/list"]).map(|t| parse_power_plans(&t))?;
     if !plans.iter().any(|p| p.guid == guid) {
-        return Err("Plan de energía no encontrado".into());
+        return Err(crate::i18n::tr("settings.plan_not_found").into());
     }
     run("powercfg", &["/setactive", &guid]).map(|_| ())
 }
@@ -167,7 +167,7 @@ pub fn power_action(action: String) -> Result<(), String> {
         "apagar" => ("shutdown", &["/s", "/t", "0"]),
         "reiniciar" => ("shutdown", &["/r", "/t", "0"]),
         "suspender" => ("rundll32.exe", &["powrprof.dll,SetSuspendState", "0,1,0"]),
-        _ => return Err("Acción no válida".into()),
+        _ => return Err(crate::i18n::tr("common.bad_action").into()),
     };
     Command::new(exe).args(args).creation_flags(NO_WINDOW).spawn().map(|_| ()).map_err(|e| e.to_string())
 }
@@ -222,7 +222,7 @@ pub async fn connect_wifi(name: String) -> Result<(), String> {
     // Solo redes ya guardadas en Windows
     let saved = run("netsh", &["wlan", "show", "profiles"]).map(|t| parse_profiles(&t))?;
     if !saved.contains(&name) {
-        return Err("Esa red no está guardada en este PC".into());
+        return Err(crate::i18n::tr("settings.wifi_not_saved").into());
     }
     run("netsh", &["wlan", "connect", &format!("name={name}")]).map(|_| ())
 }

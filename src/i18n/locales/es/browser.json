@@ -1,0 +1,20 @@
+{
+  "browser.title": "Navegador",
+  "browser.placeholder": "Escribe una web o lo que quieras buscar",
+  "browser.go": "Ir",
+  "browser.group.movies": "Cine y series",
+  "browser.group.live": "Deporte, directos y música",
+  "browser.group.cloud": "Juegos en la nube",
+  "browser.group.shopping": "Compras y consultas",
+  "browser.openInSystem": "Abrir en el navegador de Windows (Chrome, Edge…)",
+  "browser.inside": "Dentro de una web",
+  "browser.key.dpad": "Cruceta",
+  "browser.key.rstick": "Stick der.",
+  "browser.key.orXbox": "o botón Xbox",
+  "browser.do.dpad": "Saltar entre enlaces y botones",
+  "browser.do.scroll": "Desplazar la página",
+  "browser.do.b": "Página anterior (en la primera, vuelve a la consola)",
+  "browser.do.home": "Volver a la consola",
+  "browser.do.esc": "Mantenlo 1 segundo (o púlsalo 3 veces) para volver a la consola, desde cualquier web",
+  "browser.phoneNote": "Si tienes el móvil conectado como mando, se pone solo en modo touchpad y abre el teclado cuando la web pide escribir."
+}

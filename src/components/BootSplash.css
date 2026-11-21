@@ -1,3 +1,6 @@
+/* Arranque: la C se dibuja (0-0,75 s), la luz se enciende (0,75 s) y respira,
+   el nombre sube letra a letra (0,9 s) y todo se disuelve en el Inicio (2 s).
+   Solo transform, opacity y un desenfoque corto en piezas que desaparecen. */
 .boot {
   position: fixed;
   inset: 0;
@@ -6,72 +9,102 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 28px;
+  gap: 26px;
   background:
-    radial-gradient(50% 50% at 50% 45%, rgba(226, 196, 150, 0.28), transparent 70%),
+    radial-gradient(48% 46% at 50% 44%, rgb(var(--accent-rgb) / 0.07), transparent 70%),
+    radial-gradient(60% 55% at 50% 40%, rgb(var(--bd-tint-1) / 0.22), transparent 72%),
     var(--bg);
-  transition: opacity 900ms var(--ease), transform 900ms var(--ease), filter 900ms var(--ease);
+  color: var(--text);
+  transition:
+    opacity 720ms var(--ease-in-soft),
+    transform 720ms var(--ease-in-soft),
+    filter 720ms var(--ease-in-soft);
 }
-.boot-out { opacity: 0; transform: scale(1.04); filter: blur(14px); pointer-events: none; }
+.boot-out { opacity: 0; transform: scale(1.03); filter: blur(10px); pointer-events: none; }
 
-/* Marca: dos aros que se abren y un punto central */
-.boot-mark { position: relative; width: 74px; height: 74px; }
-.boot-ring, .boot-dot {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
+/* ---------- Símbolo ---------- */
+.boot-mark { overflow: visible; }
+.boot-c-draw {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 38;
+  stroke-linecap: round;
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 1;
+  animation:
+    boot-draw 760ms var(--ease-out-expo) 80ms forwards,
+    boot-fade-out 260ms var(--ease-glide) 760ms forwards;
 }
-.boot-ring {
-  box-shadow: inset 0 0 0 1.5px var(--text);
+.boot-c-fill {
+  fill: var(--text);
   opacity: 0;
-  transform: scale(0.4);
-  animation: boot-ring 1200ms var(--out) 80ms forwards;
+  animation: boot-fade-in 300ms var(--ease-glide) 700ms forwards;
 }
-.boot-ring-2 {
-  inset: -14px;
-  box-shadow: inset 0 0 0 1px rgba(28, 23, 18, 0.18);
-  animation-delay: 260ms;
+@keyframes boot-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes boot-fade-in { to { opacity: 1; } }
+@keyframes boot-fade-out { to { opacity: 0; } }
+
+/* La luz: se enciende con un brillo suave, una respiración y sigue latiendo despacio */
+.boot-dot, .boot-bloom {
+  transform-box: fill-box;
+  transform-origin: center;
 }
 .boot-dot {
-  inset: 30px;
-  background: var(--text);
-  transform: scale(0);
-  animation: boot-dot 700ms var(--spring) 380ms forwards;
+  fill: var(--brand-brasa);
+  opacity: 0;
+  transform: scale(0.3);
+  animation:
+    boot-power 620ms var(--ease-settle) 760ms forwards,
+    boot-breathe 2400ms var(--ease-glide) 1400ms infinite;
 }
-@keyframes boot-ring { to { opacity: 1; transform: scale(1); } }
-@keyframes boot-dot { to { transform: scale(1); } }
+.boot-bloom {
+  fill: var(--brand-brasa);
+  opacity: 0;
+  filter: blur(14px);
+  animation: boot-bloom 1300ms var(--ease-out-expo) 780ms forwards;
+}
+@keyframes boot-power {
+  0% { opacity: 0; transform: scale(0.3); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes boot-bloom {
+  0% { opacity: 0; transform: scale(0.6); }
+  35% { opacity: 0.55; transform: scale(2.1); }
+  100% { opacity: 0.18; transform: scale(1.6); }
+}
+/* BRAND.md: opacidad 1 → 0,55 → 1 en 2,4 s */
+@keyframes boot-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
 
+/* ---------- Nombre ---------- */
 .boot-word {
-  font-family: var(--serif);
+  font-family: 'Instrument Serif', Georgia, serif;
   font-weight: 400;
-  font-size: 64px;
+  font-size: 68px;
   letter-spacing: -0.03em;
   line-height: 1;
   display: flex;
-  overflow: hidden;
-  padding-bottom: 6px;
 }
+.boot-char-mask { display: inline-block; overflow: hidden; padding: 0 0.01em 0.1em; margin: 0 -0.01em; }
 .boot-char {
   display: inline-block;
   transform: translateY(105%);
   opacity: 0;
-  animation: boot-char 900ms var(--ease) forwards;
+  filter: blur(6px);
+  animation: boot-char 820ms var(--ease-out-expo) forwards;
 }
-@keyframes boot-char { to { transform: none; opacity: 1; } }
+@keyframes boot-char {
+  60% { filter: blur(0); }
+  to { transform: none; opacity: 1; filter: blur(0); }
+}
 
-.boot-line {
-  width: 160px;
-  height: 2px;
-  border-radius: 2px;
-  background: rgba(28, 23, 18, 0.08);
-  overflow: hidden;
+@media (prefers-reduced-motion: reduce) {
+  .boot-c-draw { display: none; }
+  .boot-c-fill, .boot-dot, .boot-char { opacity: 1; transform: none; filter: none; animation: none; }
+  .boot-bloom { display: none; }
 }
-.boot-line span {
-  display: block;
-  height: 100%;
-  background: var(--text);
-  transform-origin: left;
-  transform: scaleX(0);
-  animation: boot-line 1500ms var(--ease) 500ms forwards;
-}
-@keyframes boot-line { to { transform: scaleX(1); } }

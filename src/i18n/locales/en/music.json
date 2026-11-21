@@ -1,0 +1,23 @@
+{
+  "music.title": "Music",
+  "music.loading": "Checking what’s playing…",
+  "music.empty.title": "Nothing is playing",
+  "music.empty.text": "Open Spotify and pick a song. Here you can pause it, skip it and turn it down.",
+  "music.openSpotify": "Open Spotify",
+  "music.openSpotifyHint": "PC app or, if missing, the website",
+  "music.openSpotifyWeb": "Open Spotify in the browser",
+  "music.openApple": "Open Apple Music",
+  "music.opening": "Opening {name} in the console browser.",
+  "music.openingSpotify": "Opening the Spotify app on the PC. Pick a song and come back here.",
+  "music.noSpotify": "Spotify isn’t installed on this PC. Opening the website.",
+  "music.volumePc": "PC volume",
+  "music.volumeApp": "{app} volume",
+  "music.systemVolume": "This app has no volume of its own. The PC volume changes instead.",
+  "music.hint.select": "Select",
+  "music.hint.pause": "Pause",
+  "music.previous": "Previous",
+  "music.pause": "Pause",
+  "music.play": "Play",
+  "music.next": "Next",
+  "music.nowPlaying": "Now playing"
+}

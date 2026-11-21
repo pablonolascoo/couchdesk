@@ -1,0 +1,11 @@
+{
+  "apps.title": "Aplicativos",
+  "apps.searching": "Procurando aplicativos…",
+  "apps.count": "{n} aplicativo · se algum for um jogo, abra e marque|{n} aplicativos · se algum for um jogo, abra e marque",
+  "apps.windowsTools": "Ferramentas do Windows",
+  "apps.windowsTool": "Ferramenta do Windows",
+  "apps.app": "Aplicativo",
+  "apps.gone": "Este aplicativo não está mais aqui.",
+  "apps.markGame": "Marcar como jogo",
+  "apps.markGame.note": "Se você marcar como jogo, ele vai aparecer na sua biblioteca e no Início."
+}

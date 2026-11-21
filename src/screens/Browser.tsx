@@ -4,6 +4,7 @@ import { GameController, MagnifyingGlass, ArrowSquareOut, AmazonLogo, Television
 import { BrandLogo, type Brand } from '../ui/brands'
 import { Page } from '../components/Page'
 import { call, isDesktopApp } from '../native'
+import { useT } from '../i18n'
 import './Browser.css'
 
 interface Favorite { name: string; url: string; tone: string; brand?: Brand; logoColor?: string; icon?: ReactNode }
@@ -11,9 +12,10 @@ interface Preview { url: string; image?: string | null; icon?: string | null }
 
 // Cada acceso con su logo (SVG oficial si lo hay; si no, el icono grande de la propia web) y su color.
 // De fondo, la imagen de compartir de cada web cuando la tiene. Agrupados por tipo.
-const groups: { title: string; items: Favorite[] }[] = [
+// El título de cada grupo se traduce al pintar: browser.group.<id>
+const groups: { id: string; items: Favorite[] }[] = [
   {
-    title: 'Cine y series',
+    id: 'movies',
     items: [
       { name: 'Netflix', url: 'https://www.netflix.com/es/', brand: 'netflix', tone: '#e50914' },
       { name: 'Prime Video', url: 'https://www.primevideo.com/', tone: '#1a98ff', icon: <Television size={30} weight="fill" /> },
@@ -30,7 +32,7 @@ const groups: { title: string; items: Favorite[] }[] = [
     ],
   },
   {
-    title: 'Deporte, directos y música',
+    id: 'live',
     items: [
       { name: 'YouTube', url: 'https://www.youtube.com/', brand: 'youtube', tone: '#ff0000' },
       { name: 'DAZN', url: 'https://www.dazn.com/es-ES', brand: 'dazn', logoColor: '#0c161c', tone: '#c9d600' },
@@ -41,7 +43,7 @@ const groups: { title: string; items: Favorite[] }[] = [
     ],
   },
   {
-    title: 'Juegos en la nube',
+    id: 'cloud',
     items: [
       { name: 'Xbox Cloud Gaming', url: 'https://www.xbox.com/es-ES/play', tone: '#107c10', icon: <GameController size={32} weight="fill" /> },
       { name: 'GeForce NOW', url: 'https://play.geforcenow.com/', brand: 'nvidia', tone: '#76b900' },
@@ -49,7 +51,7 @@ const groups: { title: string; items: Favorite[] }[] = [
     ],
   },
   {
-    title: 'Compras y consultas',
+    id: 'shopping',
     items: [
       { name: 'Amazon', url: 'https://www.amazon.es/', tone: '#ff9900', icon: <AmazonLogo size={32} weight="bold" /> },
       { name: 'Google', url: 'https://www.google.com/', brand: 'google', tone: '#4285f4' },
@@ -62,6 +64,7 @@ const favorites = groups.flatMap((g) => g.items)
 const host = (url: string) => new URL(url).hostname.replace(/^www\./, '')
 
 export function Browser() {
+  const t = useT()
   const [text, setText] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [previews, setPreviews] = useState<Record<string, Preview>>({})
@@ -76,15 +79,16 @@ export function Browser() {
   }, [])
 
   return (
-    <Page title="Navegador" hints={[['A', 'Abrir'], ['B', 'Atrás']]}>
+    <Page wide title={t('browser.title')} hints={[['A', t('common.open')], ['B', t('common.back')]]}>
       <form className="ask" style={{ marginTop: 0 }} onSubmit={(e) => { e.preventDefault(); if (text.trim()) open(text) }}>
-        <input className="ask-input" data-nav="url" value={text} onChange={(e) => setText(e.target.value)} placeholder="Escribe una web o lo que quieras buscar" />
-        <button className="btn-primary" data-nav="go" type="submit" disabled={!text.trim()}><MagnifyingGlass size={18} weight="light" /> Ir</button>
+        <input className="ask-input" data-nav="url" value={text} onChange={(e) => setText(e.target.value)} placeholder={t('browser.placeholder')} />
+        <button className="btn-primary" data-nav="go" type="submit" disabled={!text.trim()}><MagnifyingGlass size={18} weight="light" /> {t('browser.go')}</button>
       </form>
 
+      <div className="web-groups">
       {groups.map((g) => (
-        <section key={g.title}>
-          <h3 className="label" style={{ marginTop: 28 }}>{g.title}</h3>
+        <section key={g.id} className={g.items.length <= 3 ? 'web-group half' : 'web-group'}>
+          <h3 className="label" style={{ marginTop: 28 }}>{t(`browser.group.${g.id}`)}</h3>
           <div className="web-grid">
             {g.items.map((f, j) => {
               const i = favorites.indexOf(f)
@@ -117,21 +121,22 @@ export function Browser() {
           </div>
         </section>
       ))}
+      </div>
 
       <button className="option tool" style={{ marginTop: 22 }} data-nav="system" onClick={() => call('browser_in_system', { url: text || 'https://www.google.com' })}>
-        <ArrowSquareOut size={18} weight="light" /> Abrir en el navegador de Windows (Chrome, Edge…)
+        <ArrowSquareOut size={18} weight="light" /> {t('browser.openInSystem')}
       </button>
 
-      <h3 className="label" style={{ marginTop: 28 }}>Dentro de una web</h3>
+      <h3 className="label" style={{ marginTop: 28 }}>{t('browser.inside')}</h3>
       <dl className="detail-facts">
-        <dt><kbd>Cruceta</kbd></dt><dd>Saltar entre enlaces y botones</dd>
-        <dt><kbd>Stick der.</kbd></dt><dd>Desplazar la página</dd>
-        <dt><kbd>A</kbd></dt><dd>Abrir</dd>
-        <dt><kbd>B</kbd></dt><dd>Página anterior (en la primera, vuelve a la consola)</dd>
-        <dt><kbd>Y</kbd> o botón Xbox</dt><dd>Volver a la consola</dd>
-        <dt><kbd>Esc</kbd></dt><dd>Mantenlo 1 segundo (o púlsalo 3 veces) para volver a la consola, desde cualquier web</dd>
+        <dt><kbd>{t('browser.key.dpad')}</kbd></dt><dd>{t('browser.do.dpad')}</dd>
+        <dt><kbd>{t('browser.key.rstick')}</kbd></dt><dd>{t('browser.do.scroll')}</dd>
+        <dt><kbd>A</kbd></dt><dd>{t('common.open')}</dd>
+        <dt><kbd>B</kbd></dt><dd>{t('browser.do.b')}</dd>
+        <dt><kbd>Y</kbd> {t('browser.key.orXbox')}</dt><dd>{t('browser.do.home')}</dd>
+        <dt><kbd>Esc</kbd></dt><dd>{t('browser.do.esc')}</dd>
       </dl>
-      <p className="notice info">Si tienes el móvil conectado como mando, se pone solo en modo touchpad y abre el teclado cuando la web pide escribir.</p>
+      <p className="notice info">{t('browser.phoneNote')}</p>
       {error && <p className="notice error">{error}</p>}
     </Page>
   )

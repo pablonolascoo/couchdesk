@@ -1,0 +1,12 @@
+{
+  "desktop.title": "Desktop",
+  "desktop.heading": "Wie willst du zurück?",
+  "desktop.now.title": "Nur jetzt zum Desktop",
+  "desktop.now.text": "Die Konsole schließt sich und du siehst den Windows-Desktop.",
+  "desktop.now.boots": "Beim nächsten Einschalten erscheint die Konsole wieder.",
+  "desktop.normal.title": "Zurück zum normalen Windows",
+  "desktop.normal.confirm": "Zum Bestätigen noch mal drücken.",
+  "desktop.normal.already": "Windows startet schon mit dem gewohnten Desktop. Nur die Konsole wird geschlossen.",
+  "desktop.normal.text": "Beim Einschalten öffnet Windows den normalen Desktop. Die Konsole bleibt im Startmenü.",
+  "desktop.foot": "Um die Konsole wieder beim Einschalten zu nutzen: Öffne sie im Startmenü → Einstellungen → Autostart."
+}

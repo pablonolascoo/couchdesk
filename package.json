@@ -1,7 +1,7 @@
 {
   "name": "consola",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,9 @@
     "app:dev": "tauri dev",
     "app:build": "tauri build",
     "release": "bun scripts/release.ts",
-    "indexnow": "bun scripts/indexnow.ts"
+    "indexnow": "bun scripts/indexnow.ts",
+    "site": "node scripts/build-site.mjs",
+    "i18n:check": "node scripts/i18n-check.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
@@ -24,7 +26,8 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router-dom": "^7.18.5",
-    "simple-icons": "^16.38.0"
+    "simple-icons": "^16.38.0",
+    "three": "^0.181.2"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.12.5",
@@ -32,6 +35,7 @@
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.181.0",
     "@vitejs/plugin-react": "^6.1.2",
     "oxlint": "^1.90.0",
     "typescript": "~7.0.2",

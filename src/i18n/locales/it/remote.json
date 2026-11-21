@@ -1,0 +1,9 @@
+{
+  "remote.title": "Telefono come controller",
+  "remote.intro": "Scansiona il codice con la fotocamera del telefono. Si apre una pagina che trasforma il telefono in mouse, tastiera o controller. Possono collegarsi più telefoni insieme.",
+  "remote.connected": "Collegati",
+  "remote.none": "Ancora nessuno.",
+  "remote.note": "Il telefono e il PC devono essere sulla stessa rete Wi-Fi. La prima volta, Windows potrebbe chiedere il permesso per “Consola”: accetta sulle reti private.",
+  "remote.back": "Torna indietro",
+  "remote.noNetwork": "Nessuna connessione di rete."
+}

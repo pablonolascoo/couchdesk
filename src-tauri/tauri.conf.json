@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Consola",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "identifier": "es.consola.app",
   "build": {
     "frontendDist": "../dist",
@@ -12,13 +12,13 @@
   "app": {
     "windows": [
       {
-        "title": "Consola",
+        "title": "CouchDesk",
         "width": 1600,
         "height": 900,
         "fullscreen": true,
         "decorations": false,
         "resizable": false,
-        "backgroundColor": "#fbf8f2",
+        "backgroundColor": "#F3ECE1",
         "additionalBrowserArgs": "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --autoplay-policy=no-user-gesture-required"
       }
     ],
@@ -26,7 +26,7 @@
       "csp": null,
       "assetProtocol": {
         "enable": true,
-        "scope": ["**/appcache/librarycache/**", "**/Consola/iconos/**", "**/Consola/webs/**"]
+        "scope": ["**/appcache/librarycache/**", "**/Consola/iconos/**", "**/Consola/webs/**", "**/Consola/fondos/**", "**/Consola/musica/**", "**/Consola/temas/**"]
       }
     }
   },

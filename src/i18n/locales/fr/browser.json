@@ -1,0 +1,20 @@
+{
+  "browser.title": "Navigateur",
+  "browser.placeholder": "Tape un site ou ce que tu veux chercher",
+  "browser.go": "Aller",
+  "browser.group.movies": "Films et séries",
+  "browser.group.live": "Sport, direct et musique",
+  "browser.group.cloud": "Jeux dans le cloud",
+  "browser.group.shopping": "Achats et recherches",
+  "browser.openInSystem": "Ouvrir dans le navigateur de Windows (Chrome, Edge…)",
+  "browser.inside": "Dans un site",
+  "browser.key.dpad": "Croix",
+  "browser.key.rstick": "Stick droit",
+  "browser.key.orXbox": "ou bouton Xbox",
+  "browser.do.dpad": "Passer d’un lien ou bouton à l’autre",
+  "browser.do.scroll": "Faire défiler la page",
+  "browser.do.b": "Page précédente (sur la première, retour à la console)",
+  "browser.do.home": "Revenir à la console",
+  "browser.do.esc": "Maintiens-la 1 seconde (ou appuie 3 fois) pour revenir à la console, depuis n’importe quel site",
+  "browser.phoneNote": "Si ton téléphone est connecté comme manette, il passe tout seul en mode pavé tactile et ouvre le clavier quand le site demande d’écrire."
+}

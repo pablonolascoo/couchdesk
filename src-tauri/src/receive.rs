@@ -175,18 +175,35 @@ fn status(state: &ReceiveState) -> ReceiveStatus {
     }
 }
 
+/// Lo que llega a «PCSX2 - BIOS/…» se coloca solo en la carpeta real del emulador
+#[derive(Debug)]
+struct PlaceUploads { root: PathBuf, map: Vec<(String, PathBuf)> }
+
+#[async_trait]
+impl libunftp::notification::DataListener for PlaceUploads {
+    async fn receive_data_event(&self, e: libunftp::notification::DataEvent, _m: libunftp::notification::EventMeta) {
+        if let libunftp::notification::DataEvent::Put { path, .. } = e {
+            let (root, map) = (self.root.clone(), self.map.clone());
+            let _ = tokio::task::spawn_blocking(move || crate::transfer::route_ftp_upload(&root, &map, &path)).await;
+        }
+    }
+}
+
 fn build_server(
     folder: PathBuf,
+    map: Vec<(String, PathBuf)>,
     password: String,
     cert: PathBuf,
     key: PathBuf,
     stop: oneshot::Receiver<()>,
 ) -> Result<libunftp::Server<unftp_sbe_fs::Filesystem, unftp_core::auth::DefaultUser>, String> {
+    let listener = PlaceUploads { root: folder.clone(), map };
     libunftp::ServerBuilder::with_authenticator(
         Box::new(move || unftp_sbe_fs::Filesystem::new(folder.clone()).unwrap()),
         Arc::new(OneUser { password }),
     )
-    .greeting("Consola - Recibir archivos")
+    .notify_data(listener)
+    .greeting(crate::i18n::tr("receive.greeting"))
     .passive_ports(50000..=50100)
     .ftps(cert, key)
     .shutdown_indicator(async move {
@@ -213,10 +230,11 @@ pub async fn receive_start(app: tauri::AppHandle, state: tauri::State<'_, Receiv
     let (cert, key) = ensure_cert(&data_dir)?;
     let password = random_password();
     let (tx, rx) = oneshot::channel::<()>();
-    let server = build_server(folder, password.clone(), cert, key, rx)?;
+    let map = crate::transfer::prepare_ftp_root(&folder);
+    let server = build_server(folder, map, password.clone(), cert, key, rx)?;
 
     // Comprobar que el puerto está libre antes de anunciarlo
-    std::net::TcpListener::bind(("0.0.0.0", PORT)).map_err(|_| format!("El puerto {PORT} está ocupado"))?;
+    std::net::TcpListener::bind(("0.0.0.0", PORT)).map_err(|_| crate::i18n::trf("receive.port_busy", &[("port", &PORT.to_string())]))?;
     tauri::async_runtime::spawn(async move {
         if let Err(e) = server.listen(format!("0.0.0.0:{PORT}")).await {
             log::error!("FTP: {e}");
@@ -269,7 +287,10 @@ mod tests {
 
         let rt = tokio::runtime::Runtime::new().unwrap();
         let (tx, rx) = oneshot::channel();
-        let server = build_server(inbox.clone(), "clave123".into(), cert, key, rx).unwrap();
+        let bios = base.join("emu").join("bios");
+        std::fs::create_dir_all(inbox.join("PCSX2 - BIOS")).unwrap();
+        let map = vec![("PCSX2 - BIOS".to_string(), bios.clone())];
+        let server = build_server(inbox.clone(), map, "clave123".into(), cert, key, rx).unwrap();
         rt.spawn(async move { server.listen("127.0.0.1:2122").await.unwrap() });
         std::thread::sleep(std::time::Duration::from_millis(800));
 
@@ -281,6 +302,12 @@ mod tests {
         // FTPS (cifrado; -k porque el certificado es propio)
         assert!(curl(&["-s", "-k", "--ssl-reqd", "-T", &s, "ftp://consola:clave123@127.0.0.1:2122/cifrado.txt"]));
         assert!(inbox.join("cifrado.txt").exists());
+        // A la carpeta de un emulador: se coloca sola en su sitio real
+        assert!(curl(&["-s", "-T", &s, "ftp://consola:clave123@127.0.0.1:2122/PCSX2%20-%20BIOS/scph.bin"]));
+        let placed = bios.join("scph.bin");
+        for _ in 0..50 { if placed.exists() { break } std::thread::sleep(std::time::Duration::from_millis(50)); }
+        assert_eq!(std::fs::read_to_string(&placed).unwrap(), "hola desde el movil");
+        assert!(!inbox.join("PCSX2 - BIOS").join("scph.bin").exists());
         // Contraseña mala: rechazado
         assert!(!curl(&["-s", "-T", &s, "ftp://consola:mala@127.0.0.1:2122/malo.txt"]));
         assert!(!inbox.join("malo.txt").exists());

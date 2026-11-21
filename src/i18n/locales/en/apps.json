@@ -1,0 +1,11 @@
+{
+  "apps.title": "Apps",
+  "apps.searching": "Looking for apps…",
+  "apps.count": "{n} app · if one is a game, open it and mark it|{n} apps · if one is a game, open it and mark it",
+  "apps.windowsTools": "Windows tools",
+  "apps.windowsTool": "Windows tool",
+  "apps.app": "App",
+  "apps.gone": "This app is no longer here.",
+  "apps.markGame": "Mark as game",
+  "apps.markGame.note": "If you mark it as a game, it’ll show up in your library and on Home."
+}

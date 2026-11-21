@@ -1,26 +1,106 @@
 # CouchDesk
 
-> CouchDesk es una app gratis y de código abierto (licencia MIT) para Windows 10 y 11 de 64 bits. Cambia el escritorio de Windows por una interfaz tipo consola, como la de una PS5 o Steam Big Picture, que se maneja con un mando, el teclado o el móvil. Primera versión: 1.0.0 «Salón». Hecha con Tauri 2 y React por Pablo Nolasco.
+> CouchDesk is a free, open-source (MIT) app for 64-bit Windows 10 and 11. It replaces the Windows desktop with a console-style living-room interface, like a PS5 or Steam Big Picture, run with a gamepad, the keyboard or a phone. Current version: 1.1.0 "Brasa". Built with Tauri 2 and React by Pablo Nolasco. No account, no ads, no telemetry.
 
-## Qué hace
+## Features
 
-- Una biblioteca con los juegos de Steam, Epic, GOG y Xbox o Game Pass, más los de otras tiendas que salen del menú Inicio ("Marcar como juego").
-- Todas las aplicaciones instaladas, con sus iconos reales.
-- Juego en la nube: Xbox Cloud Gaming a pantalla completa y Remote Play de PS5 con chiaki-ng.
-- Emuladores que se instalan y se actualizan solos, con vuelta a la versión anterior. No descarga juegos, BIOS ni claves.
-- Mandos de Xbox, PS4 y PS5 por cable o Bluetooth, sin drivers. El touchpad de PlayStation hace de ratón y el mando maneja ratón y teclado en todo Windows.
-- El móvil como mando con un código QR: mando, touchpad o teclado.
-- Un navegador que se maneja con el mando, con accesos a YouTube, Netflix, Prime Video y más.
-- Siempre hay salida: mantén Esc o pulsa el botón Xbox para volver a la consola.
-- Puede arrancar en lugar del escritorio de Windows, con un botón para volver al escritorio normal.
-- Explorador de archivos, recepción de archivos por FTP en la red de casa, ajustes de sonido, brillo, energía y Wi-Fi, y el asistente Claude.
+- One game library: Steam, Epic, GOG and Xbox / Game Pass, plus games from other launchers found in the Start menu ("Mark as game"). All installed apps with their real icons.
+- Cloud: Xbox Cloud Gaming in full screen and PS5 Remote Play with chiaki-ng.
+- Emulators installed and updated with one click, with game, BIOS and save folders per emulator, and rollback to the previous version. It never downloads games, BIOS files or keys.
+- A controller-friendly web browser with 24 streaming shortcuts (Netflix, Prime Video, Disney+, HBO Max, DAZN, Movistar Plus+, YouTube, Twitch, Spotify and more) and safe exits (hold Esc, Xbox/PS button, phone Home).
+- Phone as gamepad, touchpad or keyboard via QR code, switching mode automatically.
+- Xbox, PS4 and PS5 controllers, wired or Bluetooth, several at once; PlayStation touchpad as a mouse; button mapping profiles; on-screen keyboard.
+- Music control for Spotify and any player (now playing, play/pause, next, per-app volume), also by voice.
+- Claude AI assistant built in: voice, saved conversations, connectors (MCP), extensions, floating window over games (Ctrl+Alt+Space or View+Y).
+- Animated PS5-like backgrounds or your own image, video, YouTube link or 3D model; built-in and custom themes with menu music.
+- Apple TV-style screensaver with clock, date and weather, low-power mode, can replace the Windows screensaver. Ambient mode (fireplace, waterfall, rain videos).
+- Can boot straight into CouchDesk instead of the Windows desktop (per user), with one button to go back.
+- File explorer; receive files from a phone or PC by browser upload, FTP or LocalSend; sound, brightness, power and Wi-Fi settings.
+- Languages: Spanish, English, Brazilian Portuguese, French, German, Italian, with community translations.
+- Works on Windows 10 and 11. Microsoft's Xbox mode needs Windows 11 24H2 or later.
 
-## Enlaces
+## Links
 
-- [Descargar para Windows](https://github.com/pablonolascoo/couchdesk/releases/latest)
-- [Código en GitHub](https://github.com/pablonolascoo/couchdesk)
-- [Licencia MIT](https://github.com/pablonolascoo/couchdesk/blob/main/LICENSE)
+- [Download (GitHub Releases)](https://github.com/pablonolascoo/couchdesk/releases/latest)
+- [Source code](https://github.com/pablonolascoo/couchdesk)
+- [License (MIT)](https://github.com/pablonolascoo/couchdesk/blob/main/LICENSE)
 
-## Nota
+## Pages (English)
 
-El instalador aún no está firmado. Windows SmartScreen puede avisar: pulsa "Más información" y luego "Ejecutar de todas formas".
+- [CouchDesk: Free Console Mode for Your Windows PC](https://pablonolascoo.github.io/couchdesk/en/)
+- [Download CouchDesk for Windows 10 and 11 (free)](https://pablonolascoo.github.io/couchdesk/en/download/)
+- [CouchDesk Changelog: What's New in Each Release](https://pablonolascoo.github.io/couchdesk/en/changelog/)
+- [Xbox Mode Alternative for Windows 10 and 11 | CouchDesk](https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/)
+- [Steam Big Picture Alternative for All Your Games | CouchDesk](https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/)
+- [CouchDesk vs Playnite: Which Console Mode Fits You?](https://pablonolascoo.github.io/couchdesk/en/vs/playnite/)
+- [Boot Windows Straight into Console Mode](https://pablonolascoo.github.io/couchdesk/en/guides/boot-windows-into-console-mode/)
+- [PS5 Remote Play on PC with a Controller (chiaki-ng)](https://pablonolascoo.github.io/couchdesk/en/guides/ps5-remote-play-pc-controller/)
+- [Use a PS5 or PS4 Controller on PC Without Drivers](https://pablonolascoo.github.io/couchdesk/en/guides/ps5-ps4-controller-pc-no-drivers/)
+- [Emulators on Windows, Run with a Controller](https://pablonolascoo.github.io/couchdesk/en/guides/emulators-windows-controller/)
+
+## Other languages
+
+### Español
+
+- [CouchDesk: modo consola gratis para tu PC con Windows](https://pablonolascoo.github.io/couchdesk/)
+- [Descargar CouchDesk para Windows 10 y 11 (gratis)](https://pablonolascoo.github.io/couchdesk/descargar/)
+- [Novedades de CouchDesk: registro de cambios](https://pablonolascoo.github.io/couchdesk/novedades/)
+- [Alternativa al modo Xbox de Windows 11 (y para Windows 10)](https://pablonolascoo.github.io/couchdesk/comparativa/modo-xbox/)
+- [Alternativa a Steam Big Picture para todos tus juegos](https://pablonolascoo.github.io/couchdesk/comparativa/steam-big-picture/)
+- [CouchDesk vs Playnite: ¿qué modo consola elegir?](https://pablonolascoo.github.io/couchdesk/comparativa/playnite/)
+- [Arrancar Windows directamente en modo consola](https://pablonolascoo.github.io/couchdesk/guias/arrancar-windows-en-modo-consola/)
+- [PS5 Remote Play en el PC con mando: guía con chiaki-ng](https://pablonolascoo.github.io/couchdesk/guias/ps5-remote-play-pc-mando/)
+- [Usar el mando de PS5 o PS4 en el PC sin drivers](https://pablonolascoo.github.io/couchdesk/guias/mando-ps5-ps4-pc-sin-drivers/)
+- [Emuladores en Windows manejados con mando](https://pablonolascoo.github.io/couchdesk/guias/emuladores-windows-con-mando/)
+
+### Português (Brasil)
+
+- [CouchDesk: modo console grátis para PC com Windows](https://pablonolascoo.github.io/couchdesk/pt-br/)
+- [Baixar o CouchDesk para Windows 10 e 11 (grátis)](https://pablonolascoo.github.io/couchdesk/pt-br/baixar/)
+- [Alternativa ao modo Xbox para Windows 10 e 11 | CouchDesk](https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/modo-xbox/)
+- [Alternativa ao Steam Big Picture | CouchDesk](https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/steam-big-picture/)
+- [CouchDesk vs Playnite: qual modo console combina com você?](https://pablonolascoo.github.io/couchdesk/pt-br/comparacao/playnite/)
+- [Inicie o Windows direto no modo console](https://pablonolascoo.github.io/couchdesk/pt-br/guias/iniciar-windows-no-modo-console/)
+- [PS5 Remote Play no PC com controle (chiaki-ng)](https://pablonolascoo.github.io/couchdesk/pt-br/guias/ps5-remote-play-pc-controle/)
+- [Controle de PS5 ou PS4 no PC sem drivers](https://pablonolascoo.github.io/couchdesk/pt-br/guias/controle-ps5-ps4-pc-sem-drivers/)
+- [Emuladores no Windows: jogue com controle](https://pablonolascoo.github.io/couchdesk/pt-br/guias/emuladores-windows-com-controle/)
+
+### Français
+
+- [CouchDesk : mode console gratuit pour PC Windows](https://pablonolascoo.github.io/couchdesk/fr/)
+- [Télécharger CouchDesk pour Windows 10 et 11 (gratuit)](https://pablonolascoo.github.io/couchdesk/fr/telecharger/)
+- [Alternative au mode Xbox sur Windows 10 et 11 | CouchDesk](https://pablonolascoo.github.io/couchdesk/fr/comparatif/mode-xbox/)
+- [Alternative à Steam Big Picture pour tous vos jeux](https://pablonolascoo.github.io/couchdesk/fr/comparatif/steam-big-picture/)
+- [CouchDesk ou Playnite : quel mode console choisir ?](https://pablonolascoo.github.io/couchdesk/fr/comparatif/playnite/)
+- [Démarrer Windows directement en mode console](https://pablonolascoo.github.io/couchdesk/fr/guides/demarrer-windows-en-mode-console/)
+- [PS5 Remote Play sur PC avec une manette (chiaki-ng)](https://pablonolascoo.github.io/couchdesk/fr/guides/ps5-remote-play-pc-manette/)
+- [Manette PS5 ou PS4 sur PC sans pilotes](https://pablonolascoo.github.io/couchdesk/fr/guides/manette-ps5-ps4-pc-sans-pilotes/)
+- [Émulateurs sous Windows, à la manette](https://pablonolascoo.github.io/couchdesk/fr/guides/emulateurs-windows-a-la-manette/)
+
+### Deutsch
+
+- [CouchDesk: kostenloser Konsolenmodus für Windows-PCs](https://pablonolascoo.github.io/couchdesk/de/)
+- [CouchDesk für Windows 10 und 11 herunterladen (kostenlos)](https://pablonolascoo.github.io/couchdesk/de/download/)
+- [Xbox-Modus Alternative für Windows 10 und 11 | CouchDesk](https://pablonolascoo.github.io/couchdesk/de/vergleich/xbox-modus/)
+- [Steam Big Picture Alternative für alle Spiele | CouchDesk](https://pablonolascoo.github.io/couchdesk/de/vergleich/steam-big-picture/)
+- [CouchDesk gegen Playnite: Welcher Konsolenmodus passt?](https://pablonolascoo.github.io/couchdesk/de/vergleich/playnite/)
+- [Windows direkt im Konsolenmodus starten](https://pablonolascoo.github.io/couchdesk/de/anleitungen/windows-im-konsolenmodus-starten/)
+- [PS5 Remote Play am PC mit Controller (chiaki-ng)](https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-remote-play-pc-controller/)
+- [PS5- oder PS4-Controller am PC ohne Treiber nutzen](https://pablonolascoo.github.io/couchdesk/de/anleitungen/ps5-ps4-controller-pc-ohne-treiber/)
+- [Emulatoren unter Windows, mit Controller spielen](https://pablonolascoo.github.io/couchdesk/de/anleitungen/emulatoren-windows-mit-controller/)
+
+### Italiano
+
+- [CouchDesk: modalità console gratis per PC Windows](https://pablonolascoo.github.io/couchdesk/it/)
+- [Scarica CouchDesk per Windows 10 e 11 (gratis)](https://pablonolascoo.github.io/couchdesk/it/scarica/)
+- [Alternativa alla modalità Xbox per Windows | CouchDesk](https://pablonolascoo.github.io/couchdesk/it/confronto/modalita-xbox/)
+- [Alternativa a Steam Big Picture per ogni gioco | CouchDesk](https://pablonolascoo.github.io/couchdesk/it/confronto/steam-big-picture/)
+- [CouchDesk contro Playnite: quale modalità console scegliere?](https://pablonolascoo.github.io/couchdesk/it/confronto/playnite/)
+- [Avviare Windows direttamente in modalità console](https://pablonolascoo.github.io/couchdesk/it/guide/avviare-windows-in-modalita-console/)
+- [PS5 Remote Play su PC con il controller (chiaki-ng)](https://pablonolascoo.github.io/couchdesk/it/guide/ps5-remote-play-pc-controller/)
+- [Usare un controller PS5 o PS4 su PC senza driver](https://pablonolascoo.github.io/couchdesk/it/guide/controller-ps5-ps4-pc-senza-driver/)
+- [Emulatori su Windows, da usare con il controller](https://pablonolascoo.github.io/couchdesk/it/guide/emulatori-windows-con-controller/)
+
+## Note
+
+The installer is not signed yet. Windows SmartScreen may warn: click "More info", then "Run anyway".

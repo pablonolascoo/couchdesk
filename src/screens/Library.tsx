@@ -4,17 +4,19 @@ import { TopBar } from '../components/TopBar'
 import { HintBar } from '../components/HintBar'
 import { GameCard } from '../components/GameCard'
 import { useGames } from '../data/games'
+import { useT } from '../i18n'
 import './Library.css'
 
 export function Library() {
+  const t = useT()
   const navigate = useNavigate()
   const games = useGames()
 
   return (
     <div className="screen">
-      <TopBar title="Biblioteca" />
+      <TopBar title={t('library.title')} />
       <p className="library-count">
-        {games === null ? 'Buscando juegos…' : `${games.length} ${games.length === 1 ? 'juego instalado' : 'juegos instalados'}`}
+        {games === null ? t('library.searching') : t('library.count', { n: games.length })}
       </p>
       <div className="library-grid">
         {games?.map((g, i) => (
@@ -23,16 +25,16 @@ export function Library() {
         {games?.length === 0 && (
           <div className="empty-state">
             <span className="empty-icon"><GameController size={26} /></span>
-            <h2>Aún no hay juegos</h2>
-            <p>Los juegos de Steam, Epic, GOG y Xbox aparecen aquí solos en cuanto los instalas. Mientras, puedes jugar con emuladores.</p>
+            <h2>{t('library.empty.title')}</h2>
+            <p>{t('library.empty.text')}</p>
             <button className="pill pill-dark" data-nav="emus" data-nav-default="" onClick={() => navigate('/emuladores')}>
-              Ir a Emuladores
+              {t('library.empty.emulators')}
               <span className="pill-icon"><ArrowUpRight size={16} /></span>
             </button>
           </div>
         )}
       </div>
-      <HintBar hints={[['A', 'Abrir'], ['B', 'Atrás']]} />
+      <HintBar hints={[['A', t('common.open')], ['B', t('common.back')]]} />
     </div>
   )
 }

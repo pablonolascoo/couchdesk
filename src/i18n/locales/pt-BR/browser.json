@@ -1,0 +1,20 @@
+{
+  "browser.title": "Navegador",
+  "browser.placeholder": "Digite um site ou o que quiser buscar",
+  "browser.go": "Ir",
+  "browser.group.movies": "Filmes e séries",
+  "browser.group.live": "Esportes, lives e música",
+  "browser.group.cloud": "Jogos na nuvem",
+  "browser.group.shopping": "Compras e pesquisas",
+  "browser.openInSystem": "Abrir no navegador do Windows (Chrome, Edge…)",
+  "browser.inside": "Dentro de um site",
+  "browser.key.dpad": "Direcional",
+  "browser.key.rstick": "Analógico dir.",
+  "browser.key.orXbox": "ou botão Xbox",
+  "browser.do.dpad": "Pular entre links e botões",
+  "browser.do.scroll": "Rolar a página",
+  "browser.do.b": "Página anterior (na primeira, volta ao console)",
+  "browser.do.home": "Voltar ao console",
+  "browser.do.esc": "Segure por 1 segundo (ou aperte 3 vezes) para voltar ao console, de qualquer site",
+  "browser.phoneNote": "Se o celular estiver conectado como controle, ele muda sozinho para o modo touchpad e abre o teclado quando o site pede para digitar."
+}

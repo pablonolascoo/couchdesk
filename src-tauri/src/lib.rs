@@ -1,6 +1,7 @@
 use tauri::Manager;
 
 mod apps;
+mod backdrop;
 mod browser;
 mod claude;
 mod emulators;
@@ -9,12 +10,21 @@ mod files;
 mod games;
 mod hardware;
 mod hotkeys;
+mod i18n;
+mod idle;
 mod input;
+mod localsend;
+pub mod media;
+mod pads;
 pub mod psmando;
 mod receive;
 mod remote;
 mod settings;
+mod transfer;
 pub mod startup;
+mod scr;
+mod voice;
+mod weather;
 mod webs;
 
 /// Cierra la consola y deja ver el escritorio normal de Windows
@@ -32,22 +42,77 @@ fn exit_to_desktop(app: tauri::AppHandle, normal: Option<bool>) -> Result<(), St
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+  // Salvapantallas de Windows: /s enseñar, /c ajustes, /p miniatura (no la hacemos)
+  let mode = scr::parse_args(&std::env::args().collect::<Vec<_>>());
+  if mode == scr::LaunchMode::Preview {
+    return;
+  }
+  scr::set_saver_only(mode == scr::LaunchMode::Saver);
+  if mode == scr::LaunchMode::Config {
+    scr::set_launch_route(scr::SAVER_ROUTE);
+  }
+  let mut context = tauri::generate_context!();
+  if scr::saver_only() {
+    // Solo el salvapantallas: la ventana principal ni se ve
+    context.config_mut().app.windows.iter_mut().for_each(|w| w.visible = false);
+  }
   tauri::Builder::default()
     // Debe ir primero: una segunda consola se cierra al instante y despierta a la primera
-    .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-      // Abrirla otra vez (menú Inicio, botón PS…) = volver al Inicio de la que ya está
-      browser::go_home(app);
+    .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
+      use tauri::Emitter;
+      match scr::parse_args(&args) {
+        // Windows pide el salvapantallas y la consola ya está abierta: se enseña el suyo
+        scr::LaunchMode::Saver => {
+          let app = app.clone();
+          std::thread::spawn(move || idle::show(&app, false));
+        }
+        scr::LaunchMode::Preview => {}
+        scr::LaunchMode::Config => {
+          scr::set_saver_only(false);
+          browser::go_home(app);
+          let _ = app.emit("claude-navigate", scr::SAVER_ROUTE);
+        }
+        // Abrirla otra vez (menú Inicio, botón PS…) = volver al Inicio de la que ya está
+        scr::LaunchMode::Normal => {
+          scr::set_saver_only(false);
+          browser::go_home(app);
+        }
+      }
     }))
     .manage(games::GameCache::default())
     .manage(games::Launchables::default())
     .manage(receive::ReceiveState::default())
     .manage(claude::ClaudeState::default())
     .setup(|app| {
+      // Abierta por Windows solo como salvapantallas: nada más que eso
+      if scr::saver_only() {
+        let handle = app.handle().clone();
+        idle::start(handle.clone());
+        std::thread::spawn(move || {
+          std::thread::sleep(std::time::Duration::from_millis(150));
+          idle::show(&handle, false);
+          if let Some(main) = handle.get_webview_window("main") {
+            let _ = main.close();
+          }
+        });
+        return Ok(());
+      }
+      // Si el arranque de Windows apunta a una consola vieja (actualizada o movida), se arregla
+      startup::heal_shell();
+      std::thread::spawn(scr::refresh_copy);
       // Mando móvil siempre disponible (solo red local + código secreto del QR)
       let hub = remote::Hub::new(Some(app.handle().clone()));
       app.manage(hub.clone());
+      // LocalSend: la consola aparece en la app LocalSend del móvil o de otro PC
+      let ls = localsend::LocalSend::new(Some(app.handle().clone()));
+      app.manage(ls.clone());
+      tauri::async_runtime::spawn(localsend::serve(ls));
       // Salidas de emergencia: Esc mantenido / 3 veces y el botón Xbox del mando
       hotkeys::start(app.handle().clone());
+      // Salvapantallas: vigila cuánto tiempo lleva el PC sin tocarse
+      idle::start(app.handle().clone());
+      // Claude: recoge los pedidos de su servidor MCP (abrir pantallas, webs, Inicio)
+      claude::start(app.handle().clone());
       // Actualizar emuladores instalados en segundo plano, un rato después de arrancar
       // Si la consola es el escritorio, arrancar los programas de inicio (RustDesk, WARP, audio…)
       if !startup::explorer_running() {
@@ -79,6 +144,13 @@ pub fn run() {
     })
     .invoke_handler(tauri::generate_handler![
       exit_to_desktop,
+      i18n::set_locale,
+      media::media_now_playing,
+      media::media_control,
+      media::media_volume_get,
+      media::media_volume_set,
+      media::media_open_spotify,
+      pads::pads_list,
       games::list_games,
       games::launch_game,
       games::list_everything,
@@ -104,9 +176,15 @@ pub fn run() {
       receive::receive_status,
       receive::receive_start,
       receive::receive_stop,
+      localsend::localsend_status,
+      localsend::localsend_destinations,
+      localsend::localsend_set_dest,
+      localsend::localsend_answer,
       remote::remote_status,
       remote::remote_mode,
       webs::site_previews,
+      backdrop::backdrop_list_media,
+      backdrop::backdrop_import,
       hardware::get_hardware,
       emulators::list_emulators,
       emulators::install_emulator,
@@ -115,14 +193,46 @@ pub fn run() {
       claude::claude_available,
       claude::claude_ask,
       claude::claude_reset,
+      claude::claude_status,
+      claude::claude_conversations,
+      claude::claude_conversation,
+      claude::claude_conversation_delete,
+      claude::claude_connectors,
+      claude::claude_connector_add,
+      claude::claude_connector_toggle,
+      claude::claude_connector_remove,
+      claude::claude_plugins,
+      claude::claude_plugin_install,
+      claude::claude_plugin_remove,
+      claude::assistant_toggle,
+      claude::assistant_show,
+      claude::assistant_hide,
+      voice::voice_start,
+      voice::voice_stop,
+      voice::voice_open_settings,
       browser::browser_open,
       browser::browser_in_system,
       browser::cloud_open,
       emulators::open_remote_play,
       emulators::emu_folder,
       startup::shell_status,
-      startup::shell_set
+      startup::shell_set,
+      scr::launch_route_take,
+      scr::windows_saver_status,
+      scr::windows_saver_set,
+      scr::open_windows_settings,
+      scr::run_optimizer,
+      idle::screensaver_settings_get,
+      idle::screensaver_settings_set,
+      idle::screensaver_show,
+      idle::screensaver_preview,
+      idle::screensaver_hide,
+      idle::screensaver_status,
+      idle::screensaver_inhibit,
+      weather::weather_search,
+      weather::weather_now,
+      weather::weather_locate
     ])
-    .run(tauri::generate_context!())
+    .run(context)
     .expect("error while building tauri application");
 }

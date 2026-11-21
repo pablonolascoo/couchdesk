@@ -1,0 +1,12 @@
+{
+  "desktop.title": "Bureau",
+  "desktop.heading": "Comment veux-tu revenir ?",
+  "desktop.now.title": "Aller au bureau juste pour cette fois",
+  "desktop.now.text": "La console se ferme et tu vois le bureau Windows.",
+  "desktop.now.boots": "Au prochain démarrage, la console revient.",
+  "desktop.normal.title": "Revenir au mode normal de Windows",
+  "desktop.normal.confirm": "Appuie encore pour confirmer.",
+  "desktop.normal.already": "Windows démarre déjà sur son bureau habituel. Seule la console va se fermer.",
+  "desktop.normal.text": "Au démarrage, Windows ouvrira son bureau normal. La console reste dans le menu Démarrer.",
+  "desktop.foot": "Pour retrouver la console au démarrage : ouvre-la depuis le menu Démarrer → Paramètres → Démarrage."
+}

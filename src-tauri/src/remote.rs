@@ -8,7 +8,8 @@ use axum::extract::ws::{Message, WebSocket, WebSocketUpgrade};
 use axum::extract::{ConnectInfo, Query, State};
 use axum::http::{header, StatusCode};
 use axum::response::{Html, IntoResponse, Response};
-use axum::routing::get;
+use axum::extract::DefaultBodyLimit;
+use axum::routing::{get, put};
 use axum::Router;
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
@@ -70,6 +71,20 @@ impl Hub {
         lan_ip().map(|ip| format!("http://{ip}:{PORT}/?t={}", self.token))
     }
 
+    /// Página para enviar archivos desde el navegador de otro dispositivo
+    pub fn upload_url(&self) -> Option<String> {
+        lan_ip().map(|ip| format!("http://{ip}:{PORT}/subir?t={}", self.token))
+    }
+
+    pub fn token(&self) -> &str {
+        &self.token
+    }
+
+    /// Solo la red de casa y con el código del QR
+    pub fn allowed(&self, addr: SocketAddr, t: Option<&str>) -> bool {
+        is_lan(addr.ip()) && t == Some(self.token.as_str())
+    }
+
     fn emit(&self, force: bool) {
         // Como mucho ~60 avisos por segundo a la pantalla
         let mut last = self.last_emit.lock().unwrap();
@@ -115,7 +130,7 @@ enum Msg {
 
 async fn page(State(hub): State<Arc<Hub>>, ConnectInfo(addr): ConnectInfo<SocketAddr>, Query(q): Query<TokenQuery>) -> Response {
     if !is_lan(addr.ip()) || q.t.as_deref() != Some(hub.token.as_str()) {
-        return (StatusCode::FORBIDDEN, "Escanea el QR de la consola").into_response();
+        return (StatusCode::FORBIDDEN, crate::i18n::tr("remote.scan_qr")).into_response();
     }
     (
         [(header::CACHE_CONTROL, "no-store"), (header::CONTENT_TYPE, "text/html; charset=utf-8")],
@@ -129,9 +144,10 @@ async fn manifest(State(hub): State<Arc<Hub>>, ConnectInfo(addr): ConnectInfo<So
     if !is_lan(addr.ip()) || q.t.as_deref() != Some(hub.token.as_str()) {
         return StatusCode::FORBIDDEN.into_response();
     }
+    let json_str = |k: &'static str| serde_json::to_string(crate::i18n::tr(k)).unwrap_or_default();
     let body = format!(
-        r##"{{"name":"Mando de la Consola","short_name":"Mando","display":"fullscreen","orientation":"landscape","background_color":"#fbf8f2","theme_color":"#fbf8f2","start_url":"/?t={}","icons":[{{"src":"/icon.svg?t={}","sizes":"any","type":"image/svg+xml"}}]}}"##,
-        hub.token, hub.token
+        r##"{{"name":{},"short_name":{},"display":"fullscreen","orientation":"landscape","background_color":"#fbf8f2","theme_color":"#fbf8f2","start_url":"/?t={}","icons":[{{"src":"/icon.svg?t={}","sizes":"any","type":"image/svg+xml"}}]}}"##,
+        json_str("remote.app_name"), json_str("remote.app_short"), hub.token, hub.token
     );
     ([(header::CONTENT_TYPE, "application/manifest+json")], body).into_response()
 }
@@ -161,7 +177,7 @@ async fn session(hub: Arc<Hub>, mut socket: WebSocket) {
         let mut clients = hub.clients.lock().unwrap();
         clients.insert(id, Cursor {
             id,
-            name: format!("Móvil {id}"),
+            name: crate::i18n::trf("remote.phone", &[("n", &id.to_string())]),
             color: COLORS[(id as usize - 1) % COLORS.len()].into(),
             x: f64::from(w) / 2.0,
             y: f64::from(h) / 2.0,
@@ -246,6 +262,10 @@ pub fn router(hub: Arc<Hub>) -> Router {
         .route("/manifest.json", get(manifest))
         .route("/icon.svg", get(icon))
         .route("/ws", get(ws))
+        .route("/subir", get(crate::transfer::page))
+        .route("/api/destinos", get(crate::transfer::list))
+        // Archivos de varios GB: sin límite de tamaño, se escriben a disco mientras llegan
+        .route("/api/subir", put(crate::transfer::upload).layer(DefaultBodyLimit::disable()))
         .with_state(hub)
 }
 
@@ -270,11 +290,11 @@ pub fn remote_mode(hub: tauri::State<Arc<Hub>>, tab: Option<String>, kbd: Option
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct RemoteStatus { url: Option<String>, clients: Vec<Cursor> }
+pub struct RemoteStatus { url: Option<String>, upload_url: Option<String>, clients: Vec<Cursor> }
 
 #[tauri::command(async)]
 pub fn remote_status(hub: tauri::State<Arc<Hub>>) -> RemoteStatus {
-    RemoteStatus { url: hub.url(), clients: hub.clients.lock().unwrap().values().cloned().collect() }
+    RemoteStatus { url: hub.url(), upload_url: hub.upload_url(), clients: hub.clients.lock().unwrap().values().cloned().collect() }
 }
 
 #[cfg(test)]
@@ -330,5 +350,48 @@ mod tests {
         };
         assert_eq!(ws_code("http://127.0.0.1:7790/ws?t=mal"), "403");
         assert_eq!(ws_code(&format!("http://127.0.0.1:7790/ws?t={token}")), "101");
+    }
+
+    /// Subir desde el navegador: un archivo grande de verdad, sin cargarlo en memoria, y nada fuera de su carpeta
+    #[test]
+    fn subir_archivos_desde_el_navegador() {
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        let hub = Hub::new(None);
+        let token = hub.token.clone();
+        rt.spawn(serve(hub, 7791));
+        std::thread::sleep(Duration::from_millis(500));
+
+        let base = std::env::temp_dir().join(format!("consola-subir-{}", std::process::id()));
+        std::fs::create_dir_all(&base).unwrap();
+        let src = base.join("grande.bin");
+        let data: Vec<u8> = (0..200u32 * 1024 * 1024).map(|i| (i % 251) as u8).collect();
+        std::fs::write(&src, &data).unwrap();
+        let name = format!("prueba-consola-{}.bin", std::process::id());
+        let put = |q: &str| {
+            let out = std::process::Command::new("curl.exe")
+                .args(["-s", "-o", "NUL", "-w", "%{http_code} %{speed_upload}", "-T", &src.to_string_lossy(), &format!("http://127.0.0.1:7791/api/subir?{q}")])
+                .output().unwrap();
+            String::from_utf8_lossy(&out.stdout).into_owned()
+        };
+        // Sin código: rechazado
+        assert!(put(&format!("t=mal&d=recibidos&n={name}")).starts_with("403"));
+        // Intento de salir de la carpeta: rechazado
+        assert!(put(&format!("t={token}&d=recibidos&n=..%2F..%2Fmalo.bin")).starts_with("400"));
+        // Carpeta inventada: rechazada
+        assert!(put(&format!("t={token}&d=no.existe&n={name}")).starts_with("404"));
+        // 200 MB a Recibidos
+        let r = put(&format!("t={token}&d=recibidos&n={name}"));
+        assert!(r.starts_with("200"), "{r}");
+        let saved = crate::receive::received_dir().join(&name);
+        assert_eq!(std::fs::read(&saved).unwrap(), data);
+        let mb_s = r.split(' ').nth(1).unwrap().parse::<f64>().unwrap() / 1e6;
+        println!("Velocidad de subida en local: {mb_s:.0} MB/s");
+        assert!(mb_s > 100.0, "demasiado lento: {mb_s} MB/s");
+        // Lista de carpetas: Recibidos siempre está
+        let out = std::process::Command::new("curl.exe").args(["-s", &format!("http://127.0.0.1:7791/api/destinos?t={token}")]).output().unwrap();
+        assert!(String::from_utf8_lossy(&out.stdout).contains(r#""id":"recibidos""#));
+
+        let _ = std::fs::remove_file(saved);
+        let _ = std::fs::remove_dir_all(&base);
     }
 }

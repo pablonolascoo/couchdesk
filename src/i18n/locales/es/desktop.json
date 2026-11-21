@@ -1,0 +1,12 @@
+{
+  "desktop.title": "Escritorio",
+  "desktop.heading": "¿Cómo quieres volver?",
+  "desktop.now.title": "Ir al escritorio solo ahora",
+  "desktop.now.text": "La consola se cierra y ves el escritorio de Windows.",
+  "desktop.now.boots": "Al volver a encender, aparece la consola otra vez.",
+  "desktop.normal.title": "Volver al modo normal de Windows",
+  "desktop.normal.confirm": "Pulsa otra vez para confirmar.",
+  "desktop.normal.already": "Windows ya arranca en su escritorio de siempre. Solo se cerrará la consola.",
+  "desktop.normal.text": "Al encender, Windows abrirá su escritorio normal. La consola seguirá en el menú Inicio.",
+  "desktop.foot": "Para volver a usar la consola al encender: ábrela desde el menú Inicio → Ajustes → Arranque."
+}

@@ -1,0 +1,11 @@
+{
+  "apps.title": "App",
+  "apps.searching": "Cerco app…",
+  "apps.count": "{n} app · se è un gioco, aprila e segnala come gioco|{n} app · se una è un gioco, aprila e segnala come gioco",
+  "apps.windowsTools": "Strumenti di Windows",
+  "apps.windowsTool": "Strumento di Windows",
+  "apps.app": "App",
+  "apps.gone": "Questa app non c’è più.",
+  "apps.markGame": "Segna come gioco",
+  "apps.markGame.note": "Se la segni come gioco, comparirà nella tua libreria e in Home."
+}

@@ -1,0 +1,9 @@
+{
+  "remote.title": "Handy als Controller",
+  "remote.intro": "Scanne den Code mit der Handykamera. Es öffnet sich eine Seite, die das Handy zu Maus, Tastatur oder Controller macht. Mehrere können sich gleichzeitig verbinden.",
+  "remote.connected": "Verbunden",
+  "remote.none": "Noch niemand.",
+  "remote.note": "Handy und PC müssen im selben WLAN sein. Beim ersten Mal fragt Windows evtl. nach einer Erlaubnis für „Consola“: Für private Netzwerke zulassen.",
+  "remote.back": "Zurück",
+  "remote.noNetwork": "Keine Netzwerkverbindung."
+}

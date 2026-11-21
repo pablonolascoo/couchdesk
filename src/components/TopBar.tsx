@@ -4,11 +4,13 @@ import { WifiHigh, WifiSlash, BatteryHigh, BatteryMedium, BatteryLow, BatteryCha
 import { Qr } from './Qr'
 import { useRemote } from '../data/remote'
 import { call } from '../native'
+import { useT, fmt } from '../i18n'
 import './TopBar.css'
 
 interface Battery { hasBattery: boolean; percent: number | null; pluggedIn: boolean }
 
 export function TopBar({ title }: { title: string }) {
+  const t = useT()
   const [now, setNow] = useState(() => new Date())
   const [battery, setBattery] = useState<Battery | null>(null)
   const [online, setOnline] = useState(navigator.onLine)
@@ -28,7 +30,7 @@ export function TopBar({ title }: { title: string }) {
     return () => { clearInterval(id); window.removeEventListener('online', on); window.removeEventListener('offline', on) }
   }, [])
 
-  const time = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+  const time = fmt.time(now)
   const pct = battery?.percent ?? 0
   const BatIcon = battery?.pluggedIn ? BatteryCharging : pct > 60 ? BatteryHigh : pct > 25 ? BatteryMedium : BatteryLow
 
@@ -40,16 +42,16 @@ export function TopBar({ title }: { title: string }) {
       </div>
       <div className="topbar-right">
         <div className="topbar-status">
-          {online ? <WifiHigh size={18} aria-label="Conectado a internet" /> : <WifiSlash size={18} aria-label="Sin internet" />}
+          {online ? <WifiHigh size={18} aria-label={t('shell.online')} /> : <WifiSlash size={18} aria-label={t('shell.offline')} />}
           {battery?.hasBattery && (
             <span className="battery"><BatIcon size={20} aria-hidden /> {battery.percent ?? '—'}%</span>
           )}
           <span className="status-sep" aria-hidden />
-          <span className="clock">{time}</span>
+          <span className="clock" title={fmt.date(now)}>{time}</span>
         </div>
-        <button className="qr" data-nav="qr" onClick={() => navigate('/mando-movil')} aria-label="Conectar el móvil como mando">
+        <button className="qr" data-nav="qr" onClick={() => navigate('/mando-movil')} aria-label={t('shell.remote.aria')}>
           {remote?.url ? <Qr text={remote.url} size={40} /> : null}
-          <span>Mando móvil<small>{remote?.clients.length ? `${remote.clients.length} conectado${remote.clients.length > 1 ? 's' : ''}` : 'Escanea'}</small></span>
+          <span>{t('shell.remote.title')}<small>{remote?.clients.length ? t('shell.remote.connected', { n: remote.clients.length }) : t('shell.remote.scan')}</small></span>
         </button>
       </div>
     </header>

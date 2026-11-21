@@ -1,0 +1,22 @@
+{
+  "shell.hint.select": "Select",
+  "shell.hint.view": "View",
+  "shell.hint.next": "Next",
+  "shell.key.enter": "Enter",
+  "shell.key.space": "Space",
+  "shell.key.home": "Home",
+  "shell.goBack": "Go back",
+  "shell.loading": "Loading…",
+  "shell.opening": "Opening…",
+  "shell.onlyInstalled": "This only works in the installed app.",
+  "shell.online": "Connected to the internet",
+  "shell.offline": "No internet",
+  "shell.remote.aria": "Use your phone as a controller",
+  "shell.remote.title": "Phone controller",
+  "shell.remote.connected": "{n} connected|{n} connected",
+  "shell.remote.scan": "Scan",
+  "shell.padMode.nav": "Controller: controls the console",
+  "shell.padMode.mouse": "Controller as mouse",
+  "shell.padMode.keyboard": "Controller as keyboard",
+  "shell.padMode.switch": "({keys} to switch)"
+}

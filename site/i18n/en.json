@@ -1,0 +1,785 @@
+{
+  "lang": "en",
+  "hreflang": "en",
+  "ogLocale": "en_US",
+  "name": "English",
+  "dir": "en/",
+  "ui": {
+    "skip": "Skip to content",
+    "menu": "Menu",
+    "mainNav": "Main",
+    "navFeatures": "Features",
+    "navCompare": "Compare",
+    "navGuides": "Guides",
+    "navChangelog": "Changelog",
+    "download": "Download for Windows",
+    "downloadShort": "Download",
+    "github": "GitHub",
+    "language": "Language",
+    "quickActions": "Quick actions",
+    "home": "Home",
+    "footerLede": "A free, open-source console mode for Windows 10 and 11, made by Pablo Nolasco.",
+    "footerProject": "Project",
+    "footerCompare": "Compare",
+    "footerGuides": "Guides",
+    "releases": "Releases",
+    "issues": "Issues",
+    "translate": "Help translate",
+    "license": "MIT License",
+    "trademarks": "Product names and logos are trademarks of their owners.",
+    "related": "More about CouchDesk",
+    "reviewed": "Reviewed in November 2026.",
+    "sources": "Sources",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "shots": {
+    "inicio": "The CouchDesk home screen: games along the top and Library, Cloud, Emulators, Browser and Settings below",
+    "biblioteca": "The CouchDesk library with Steam, Epic and GOG games, each labelled with its store",
+    "nube": "The CouchDesk Cloud screen with Xbox Cloud Gaming and PS5 Remote Play",
+    "navegador": "The CouchDesk browser with shortcuts to Netflix, YouTube, Prime Video and other services",
+    "emuladores": "The CouchDesk emulator list, each one with its console",
+    "musica": "The CouchDesk music screen with the song now playing and its controls",
+    "ambiente": "CouchDesk ambient mode with fireplace, rain and waterfall videos",
+    "ajustes": "CouchDesk settings: sound, display, power, Wi-Fi and startup",
+    "mandos": "CouchDesk controller settings with an Xbox controller and a DualSense connected",
+    "claude": "The Claude assistant inside CouchDesk",
+    "salvapantallas": "The CouchDesk screensaver with the time, date and weather over a landscape"
+  },
+  "pages": {
+    "home": {
+      "slug": "",
+      "title": "CouchDesk: Free Console Mode for Your Windows PC",
+      "description": "Turn your Windows 10/11 PC into a console: Steam, Epic, GOG and Xbox games in one library, played with an Xbox or PS5 controller or your phone. Free.",
+      "ogTitle": "CouchDesk: your Windows PC in console mode",
+      "shareAlt": "The CouchDesk logo and the line: your Windows PC in console mode",
+      "shareLine": "Your Windows PC in console mode",
+      "kicker": "Version {version} “{codename}” · free and open source",
+      "h1": "Console mode for your Windows PC",
+      "lead": "CouchDesk swaps the desktop for a console screen you run with a controller, keyboard or phone. It runs on Windows 10 too, where Xbox mode can't.",
+      "ghButton": "View the code on GitHub",
+      "libraryH2": "All your games in the CouchDesk library",
+      "libraryP": "CouchDesk gathers what you have installed from Steam, Epic, GOG and Xbox or Game Pass. EA, Ubisoft or Battle.net games come from the Start menu: open one and press “Mark as game”. Your apps are there too, with their real icons.",
+      "libraryLink": "Compare with Playnite",
+      "insideH2": "Cloud, browser and emulators in CouchDesk",
+      "cloudH3": "Xbox Cloud Gaming and PS5 Remote Play",
+      "cloudP": "Xbox Cloud Gaming in full screen and Remote Play for your PS5 with chiaki-ng.",
+      "browserH3": "Netflix, YouTube and DAZN in the console browser",
+      "browserP": "24 shortcuts: Netflix, Prime Video, Disney+, HBO Max, DAZN, YouTube, Twitch, Spotify and more. Hold Esc or press the Xbox button to leave.",
+      "emuH3": "Emulators the console installs with one button",
+      "emuP": "They install and update themselves, with folders for games, BIOS and saves. If a new version breaks, roll back.",
+      "padsH2": "Xbox and PlayStation controllers, or your phone, for all of Windows",
+      "padsCardH3": "Xbox and PlayStation controllers",
+      "padsCardP": "Xbox, PS4 and PS5, wired or Bluetooth, all at once. The touchpad works as a mouse. Button profiles and an on-screen keyboard.",
+      "phoneCardH3": "Your phone as a controller",
+      "phoneCardP": "Scan the QR code: your phone becomes a gamepad, touchpad or keyboard, and switches mode by itself.",
+      "dgHubAlt": "CouchDesk in the middle, linked to Xbox, PS4 and PS5 controllers, the keyboard and a phone.",
+      "dgLanesAlt": "A phone joins CouchDesk with a QR code and works as a gamepad, touchpad or keyboard across Windows.",
+      "dgPhone": "Phone",
+      "dgKeyboard": "Keyboard",
+      "dgQr": "QR code",
+      "dgPad": "Gamepad",
+      "dgTouchpad": "Touchpad",
+      "roomH2": "Screensaver, ambient mode, music and Claude",
+      "screensaverH3": "A Windows screensaver with clock and weather",
+      "screensaverP": "Time, date and weather, Apple TV style. Low power, and it can replace the Windows screensaver.",
+      "ambienceH3": "Ambient mode",
+      "ambienceP": "Fireplace, waterfall or rain in full screen, to leave in the background.",
+      "musicH3": "Music on the console, by controller or voice",
+      "musicP": "Spotify or any player: now playing, pause, next and per-app volume.",
+      "claudeH3": "Claude, the assistant, inside the console",
+      "claudeP": "Talk or type. Open it over a game with Ctrl+Alt+Space or View+Y.",
+      "exitH2": "There's always a way back",
+      "exitP": "From any game or app, one gesture takes you back to the CouchDesk home screen.",
+      "exitKeyH": "Keyboard",
+      "exitKeyP": "Hold the Esc key.",
+      "exitPadStat": "Xbox · PS",
+      "exitPadH": "Controller",
+      "exitPadP": "Press the Xbox button or the PS button.",
+      "exitPhoneStat": "Home",
+      "exitPhoneH": "Phone",
+      "exitPhoneP": "Press Home on the phone controller.",
+      "bootH2": "Turn on the PC straight into CouchDesk",
+      "bootLead": "Switch on “Boot straight into the console” and the PC starts straight in CouchDesk.",
+      "bootP1": "One button takes you back to the normal desktop when you need it.",
+      "bootP2": "Sound, brightness, power and Wi-Fi all change with the controller.",
+      "bootP3": "Animated backgrounds like the PS5, or your own image, video or 3D model. Themes with menu music.",
+      "bootLink": "Read the startup guide",
+      "diffH2": "How is CouchDesk different?",
+      "diffP": "What Xbox mode, Steam Big Picture and Playnite each do on their own, in one app.",
+      "diffRows": [
+        [
+          "Runs on Windows 10",
+          "Yes",
+          "No: Windows 11 24H2 or later",
+          "Yes",
+          "Yes"
+        ],
+        [
+          "Games from several stores",
+          "Yes",
+          "Yes",
+          "Added by hand",
+          "Yes, with add-ons"
+        ],
+        [
+          "PS5 Remote Play",
+          "Yes, with chiaki-ng",
+          "No",
+          "No",
+          "Not included"
+        ],
+        [
+          "Installs emulators",
+          "Yes, and updates them",
+          "No",
+          "No",
+          "No: you set them up"
+        ],
+        [
+          "Phone as a controller",
+          "Yes, via QR",
+          "No",
+          "No",
+          "No"
+        ],
+        [
+          "Boots instead of the desktop",
+          "Yes",
+          "Yes",
+          "No",
+          "No"
+        ]
+      ],
+      "faqH2": "Questions about CouchDesk",
+      "faq": [
+        {
+          "q": "How much does CouchDesk cost?",
+          "a": "Nothing. It's free and open source under the MIT license. No account, no ads and no telemetry."
+        },
+        {
+          "q": "Which Windows versions does it run on?",
+          "a": "64-bit Windows 10 and Windows 11."
+        },
+        {
+          "q": "Windows warns me when I open the installer",
+          "a": "The installer isn't signed yet. Click “More info”, then “Run anyway”. <a href=\"{{page:download}}\">More details</a>."
+        },
+        {
+          "q": "How do I get back to the Windows desktop?",
+          "a": "In CouchDesk, open Desktop and press “Go back to normal Windows mode”."
+        },
+        {
+          "q": "Does CouchDesk download games or BIOS files?",
+          "a": "No. It never downloads games, BIOS files or keys: use the ones from your own consoles."
+        },
+        {
+          "q": "Which languages is CouchDesk in?",
+          "a": "Spanish, English, Brazilian Portuguese, French, German and Italian. The community can add more."
+        }
+      ],
+      "closeH2": "Try CouchDesk on your PC",
+      "closeP": "Free for 64-bit Windows 10 and 11."
+    },
+    "download": {
+      "slug": "download/",
+      "title": "Download CouchDesk for Windows 10 and 11 (free)",
+      "description": "Download CouchDesk free for 64-bit Windows 10 and 11. Requirements, step-by-step install and what to do if SmartScreen warns you about the installer.",
+      "crumb": "Download",
+      "h1": "Download CouchDesk for Windows",
+      "lead": "Version {version} “{codename}”. Free, no account, open source. The installer is on GitHub.",
+      "blocks": [
+        {
+          "h2": "Requirements"
+        },
+        {
+          "list": [
+            "64-bit Windows 10 or Windows 11.",
+            "An Xbox, PS4 or PS5 controller, the keyboard or your phone.",
+            "Internet only for the cloud, the browser and emulator updates."
+          ]
+        },
+        {
+          "h2": "How to install it"
+        },
+        {
+          "steps": [
+            "Open the <a href=\"{{latest}}\">latest release on GitHub</a> and download the file ending in <code>_x64-setup.exe</code>.",
+            "Run it. If Windows warns you, see the section below.",
+            "When it finishes, CouchDesk opens. Connect a controller or scan the QR code with your phone.",
+            "Want it to start when you turn on the PC? Go to Settings, Startup."
+          ]
+        },
+        {
+          "h2": "If Windows SmartScreen warns you"
+        },
+        {
+          "p": "SmartScreen warns about programs it doesn't know yet. The CouchDesk installer isn't signed yet, which is why the warning shows up."
+        },
+        {
+          "steps": [
+            "Click “More info”.",
+            "Check that the file name matches the one you downloaded from GitHub.",
+            "Click “Run anyway”."
+          ]
+        },
+        {
+          "note": "Only download CouchDesk from GitHub. The code is public and anyone can review it."
+        },
+        {
+          "h2": "Back to the normal desktop"
+        },
+        {
+          "p": "In CouchDesk, open Desktop and press “Go back to normal Windows mode”. You can also turn it off in Settings, Startup, or uninstall it from Windows settings."
+        },
+        {
+          "cta": true
+        }
+      ]
+    },
+    "changelog": {
+      "slug": "changelog/",
+      "title": "CouchDesk Changelog: What's New in Each Release",
+      "description": "Everything new in each CouchDesk release, the free console mode for Windows: added features, changes and fixes.",
+      "crumb": "Changelog",
+      "h1": "What's new in CouchDesk",
+      "lead": "What changes in each release. Every release has a number and a codename.",
+      "unreleased": "Next release",
+      "sourceNote": "The release notes are written in Spanish, the project's first language."
+    },
+    "vs-xbox": {
+      "slug": "vs/xbox-mode/",
+      "group": "compare",
+      "img": "inicio",
+      "title": "Xbox Mode Alternative for Windows 10 and 11 | CouchDesk",
+      "description": "CouchDesk vs Windows 11 Xbox mode: requirements, stores, PS5 Remote Play, emulators and phone as a controller. An honest comparison.",
+      "crumb": "CouchDesk vs Xbox mode",
+      "menu": "vs Xbox mode",
+      "menuSub": "Microsoft's option for Windows 11",
+      "h1": "CouchDesk vs Windows 11 Xbox mode",
+      "lead": "Xbox mode is Microsoft's console screen for Windows 11. CouchDesk does something similar, on Windows 10 too, and adds PS5 Remote Play, emulators and your phone as a controller.",
+      "blocks": [
+        {
+          "h2": "The differences in one table"
+        },
+        {
+          "table": {
+            "head": [
+              "",
+              "CouchDesk",
+              "Xbox mode"
+            ],
+            "rows": [
+              [
+                "Windows",
+                "10 and 11",
+                "Windows 11 24H2 or later"
+              ],
+              [
+                "Availability",
+                "Direct download, every country",
+                "Through Windows Update, in phases and select markets"
+              ],
+              [
+                "Library",
+                "Steam, Epic, GOG, Xbox and more from the Start menu",
+                "Installed games from major stores, plus Game Pass"
+              ],
+              [
+                "Xbox Cloud Gaming",
+                "Yes",
+                "Yes"
+              ],
+              [
+                "PS5 Remote Play",
+                "Yes, with chiaki-ng",
+                "No"
+              ],
+              [
+                "Emulators",
+                "Installed and updated with one button",
+                "No"
+              ],
+              [
+                "Phone as a controller",
+                "Yes, via QR",
+                "No"
+              ],
+              [
+                "Boots instead of the desktop",
+                "Yes",
+                "Yes"
+              ],
+              [
+                "Price and code",
+                "Free, MIT, open source",
+                "Free, part of Windows, closed source"
+              ]
+            ]
+          }
+        },
+        {
+          "h2": "When Xbox mode suits you"
+        },
+        {
+          "p": "If you're on an up-to-date Windows 11, play mostly Game Pass and want something official from Microsoft, Xbox mode is a good choice. It ships with Windows, so there's nothing to install."
+        },
+        {
+          "h2": "When CouchDesk suits you"
+        },
+        {
+          "list": [
+            "Your PC runs Windows 10, or Xbox mode hasn't reached your country yet.",
+            "You want to stream your PS5 or play emulators with the same controller.",
+            "You want your phone as a gamepad, touchpad or keyboard.",
+            "You want Netflix, DAZN or YouTube with a controller, without leaving the console."
+          ]
+        },
+        {
+          "h2": "Can I use both?"
+        },
+        {
+          "p": "Yes. CouchDesk opens your Xbox and Game Pass games and doesn't touch Xbox mode. Pick which one starts with the PC."
+        },
+        {
+          "sources": [
+            [
+              "Microsoft: Windows gaming full screen experience",
+              "https://support.microsoft.com/en-us/topic/windows-gaming-full-screen-experience-67fb8d12-5467-4a95-8adf-0a10789576ab"
+            ],
+            [
+              "Xbox Wire: Xbox mode comes to Windows 11 PCs",
+              "https://news.xbox.com/en-us/2026/04/30/xbox-mode-pc-windows-11/"
+            ]
+          ]
+        },
+        {
+          "cta": true
+        }
+      ]
+    },
+    "vs-bigpicture": {
+      "slug": "vs/steam-big-picture/",
+      "group": "compare",
+      "img": "biblioteca",
+      "title": "Steam Big Picture Alternative for All Your Games | CouchDesk",
+      "description": "CouchDesk vs Steam Big Picture: games from every store, Xbox and PS5 cloud play, emulators and booting without the desktop. The real differences.",
+      "crumb": "CouchDesk vs Steam Big Picture",
+      "menu": "vs Steam Big Picture",
+      "menuSub": "For games outside Steam",
+      "h1": "CouchDesk vs Steam Big Picture",
+      "lead": "Big Picture is Steam's big-screen mode, and it's great for Steam. CouchDesk brings all your stores together and also runs Windows with a controller.",
+      "blocks": [
+        {
+          "h2": "The differences in one table"
+        },
+        {
+          "table": {
+            "head": [
+              "",
+              "CouchDesk",
+              "Steam Big Picture"
+            ],
+            "rows": [
+              [
+                "Steam games",
+                "Yes",
+                "Yes, with store, achievements and friends"
+              ],
+              [
+                "Epic, GOG, Xbox and other stores",
+                "Yes, automatically",
+                "Only if you add them by hand as non-Steam games"
+              ],
+              [
+                "Xbox Cloud Gaming and PS5 Remote Play",
+                "Yes",
+                "No"
+              ],
+              [
+                "Emulators",
+                "Installed and updated with one button",
+                "No"
+              ],
+              [
+                "Windows settings (Wi-Fi, sound, power)",
+                "Yes, with the controller",
+                "No"
+              ],
+              [
+                "Boots instead of the desktop",
+                "Yes",
+                "Opens Steam in Big Picture at sign-in, on top of the desktop"
+              ],
+              [
+                "Per-game controller setup",
+                "Button profiles for the console",
+                "Steam Input, very complete"
+              ],
+              [
+                "Price and code",
+                "Free, MIT, open source",
+                "Free, closed source"
+              ]
+            ]
+          }
+        },
+        {
+          "h2": "When Big Picture suits you"
+        },
+        {
+          "p": "If nearly everything you play is on Steam, Big Picture is the easiest choice. Steam Input sets up any controller game by game, and you get the store, chat and achievements."
+        },
+        {
+          "h2": "When CouchDesk suits you"
+        },
+        {
+          "list": [
+            "You have games on Epic, GOG, Xbox, EA or Ubisoft as well as Steam.",
+            "You want Xbox cloud, your PS5 remotely and emulators in one place.",
+            "You want the PC to start in the console, not on the desktop."
+          ]
+        },
+        {
+          "h2": "Can I use both?"
+        },
+        {
+          "p": "Yes. CouchDesk lists your Steam games and launches them through Steam, so Steam Input keeps working in them."
+        },
+        {
+          "sources": [
+            [
+              "Steam: Big Picture mode",
+              "https://store.steampowered.com/bigpicture"
+            ]
+          ]
+        },
+        {
+          "cta": true
+        }
+      ]
+    },
+    "vs-playnite": {
+      "slug": "vs/playnite/",
+      "group": "compare",
+      "img": "emuladores",
+      "title": "CouchDesk vs Playnite: Which Console Mode Fits You?",
+      "description": "CouchDesk vs Playnite and its fullscreen mode: library, emulators, cloud play, Windows settings and phone as a controller. An honest comparison.",
+      "crumb": "CouchDesk vs Playnite",
+      "menu": "vs Playnite",
+      "menuSub": "Two open-source apps, two approaches",
+      "h1": "CouchDesk vs Playnite",
+      "lead": "Playnite is the best-known open-source library manager for Windows, and nobody organises games better. CouchDesk is less configurable, but it works as a whole console.",
+      "blocks": [
+        {
+          "h2": "The differences in one table"
+        },
+        {
+          "table": {
+            "head": [
+              "",
+              "CouchDesk",
+              "Playnite"
+            ],
+            "rows": [
+              [
+                "License",
+                "MIT, free",
+                "MIT, free"
+              ],
+              [
+                "Stores",
+                "Steam, Epic, GOG, Xbox and more from the Start menu",
+                "Many, through add-ons"
+              ],
+              [
+                "Game metadata",
+                "Cover and store",
+                "Very rich: descriptions, tags, play time"
+              ],
+              [
+                "Add-ons and themes",
+                "Its own themes and Claude extensions",
+                "A large community of add-ons and themes"
+              ],
+              [
+                "Emulators",
+                "Installed, updated and rolled back with one button",
+                "Detects and imports the ones you have"
+              ],
+              [
+                "Xbox Cloud Gaming and PS5 Remote Play",
+                "Yes",
+                "Not included"
+              ],
+              [
+                "Windows settings with a controller",
+                "Wi-Fi, sound, brightness and power",
+                "No"
+              ],
+              [
+                "Browser with controller and streaming",
+                "Yes",
+                "No"
+              ],
+              [
+                "Phone as a controller",
+                "Yes, via QR",
+                "No"
+              ],
+              [
+                "Boots instead of the desktop",
+                "Yes",
+                "No"
+              ]
+            ]
+          }
+        },
+        {
+          "h2": "When Playnite suits you"
+        },
+        {
+          "p": "If you like to sort, tag and customise everything, Playnite has no equal. Its community of add-ons and themes is huge, built over years of development."
+        },
+        {
+          "h2": "When CouchDesk suits you"
+        },
+        {
+          "list": [
+            "You want the living-room PC to work like a console, without the desktop.",
+            "You want Xbox and PS5 cloud play, emulators and streaming in one menu.",
+            "You'd rather have something that works right after install, with little setup."
+          ]
+        },
+        {
+          "sources": [
+            [
+              "Playnite website",
+              "https://playnite.link/"
+            ],
+            [
+              "Playnite on GitHub",
+              "https://github.com/JosefNemec/Playnite"
+            ]
+          ]
+        },
+        {
+          "cta": true
+        }
+      ]
+    },
+    "guide-boot": {
+      "slug": "guides/boot-windows-into-console-mode/",
+      "group": "guides",
+      "img": "ajustes",
+      "title": "Boot Windows Straight into Console Mode",
+      "description": "How to make a Windows 10 or 11 PC start on a console screen instead of the desktop, and how to undo it. A step-by-step guide.",
+      "crumb": "Boot into console mode",
+      "menu": "Boot into console mode",
+      "menuSub": "Skip the desktop",
+      "h1": "Boot Windows straight into console mode",
+      "lead": "Turn on the PC and the console appears, not the desktop. Here's how to set it up with CouchDesk, and how to undo it.",
+      "blocks": [
+        {
+          "h2": "What this setting does"
+        },
+        {
+          "p": "Windows opens the desktop (File Explorer) when you sign in. CouchDesk can take its place, for your user only. With no desktop behind it, the PC uses less memory."
+        },
+        {
+          "h2": "How to turn it on"
+        },
+        {
+          "steps": [
+            "Install CouchDesk from the <a href=\"{{page:download}}\">download page</a>.",
+            "Open Settings and go to Startup.",
+            "Turn on “Boot straight into the console”.",
+            "Restart the PC. After you sign in, you'll see CouchDesk."
+          ]
+        },
+        {
+          "note": "To start without a password, set up Windows automatic sign-in. Only do this on a home PC."
+        },
+        {
+          "h2": "How to get back to the desktop"
+        },
+        {
+          "list": [
+            "For a while: open Desktop inside CouchDesk.",
+            "For good: Settings, Startup, and turn the setting off. Or press “Go back to normal Windows mode”.",
+            "If something goes wrong, uninstall CouchDesk: the normal startup comes back."
+          ]
+        },
+        {
+          "h2": "What about Xbox mode?"
+        },
+        {
+          "p": "Windows 11 Xbox mode can also start in full screen, but it needs Windows 11 24H2 or later. CouchDesk does it on Windows 10 too. <a href=\"{{page:vs-xbox}}\">See the comparison</a>."
+        },
+        {
+          "cta": true
+        }
+      ]
+    },
+    "guide-remoteplay": {
+      "slug": "guides/ps5-remote-play-pc-controller/",
+      "group": "guides",
+      "img": "nube",
+      "title": "PS5 Remote Play on PC with a Controller (chiaki-ng)",
+      "description": "Play your PS5 from a Windows PC with a controller, using chiaki-ng inside CouchDesk. Requirements, first connection and tips for a smooth stream.",
+      "crumb": "PS5 Remote Play on PC",
+      "menu": "PS5 Remote Play on PC",
+      "menuSub": "Your PS5 on the living-room TV",
+      "h1": "PS5 Remote Play on PC, with a controller",
+      "lead": "Play your PS5 from another room, on the PC hooked up to the TV. CouchDesk uses chiaki-ng, an open-source Remote Play client.",
+      "blocks": [
+        {
+          "h2": "What you need"
+        },
+        {
+          "list": [
+            "A PS5 with Remote Play turned on: Settings, System, Remote Play.",
+            "Your PlayStation Network account.",
+            "The PC and the PS5 on the same network. Wired is best, or 5 GHz Wi-Fi.",
+            "A PS5, PS4 or Xbox controller on the PC."
+          ]
+        },
+        {
+          "h2": "Step by step"
+        },
+        {
+          "steps": [
+            "In CouchDesk, open Cloud and choose PS5 Remote Play.",
+            "If chiaki-ng isn't there, CouchDesk installs it with one button.",
+            "The first time, pair the console with your account and the code the PS5 shows.",
+            "Pick your PS5 in the list and play. To go back, press the Xbox or PS button."
+          ]
+        },
+        {
+          "h2": "For a smooth stream"
+        },
+        {
+          "list": [
+            "Connect the PS5 with a network cable if you can.",
+            "Drop to 1080p if you see stutter.",
+            "Pause big downloads while you play."
+          ]
+        },
+        {
+          "note": "chiaki-ng is an independent project and is not made by Sony."
+        },
+        {
+          "sources": [
+            [
+              "chiaki-ng on GitHub",
+              "https://github.com/streetpea/chiaki-ng"
+            ]
+          ]
+        },
+        {
+          "cta": true
+        }
+      ]
+    },
+    "guide-controller": {
+      "slug": "guides/ps5-ps4-controller-pc-no-drivers/",
+      "group": "guides",
+      "img": "mandos",
+      "title": "Use a PS5 or PS4 Controller on PC Without Drivers",
+      "description": "Connect a DualSense or DualShock 4 to Windows by cable or Bluetooth and use it without drivers in CouchDesk: menus, touchpad as mouse and keyboard.",
+      "crumb": "PS5 and PS4 controller on PC",
+      "menu": "PS5 and PS4 controller, no drivers",
+      "menuSub": "Wired or Bluetooth",
+      "h1": "Your PS5 or PS4 controller on PC, no drivers",
+      "lead": "CouchDesk reads the DualSense and DualShock 4 straight from Windows. You don't need DS4Windows or any other program.",
+      "blocks": [
+        {
+          "h2": "Connect it"
+        },
+        {
+          "p": "Wired: plug it in over USB and you're done."
+        },
+        {
+          "p": "Bluetooth:"
+        },
+        {
+          "steps": [
+            "In Windows, open Settings, Bluetooth & devices, Add device.",
+            "On the controller, hold PS and Create (PS5) or PS and Share (PS4) until the light flashes.",
+            "Pick the controller in the Windows list."
+          ]
+        },
+        {
+          "h2": "What you can do with it"
+        },
+        {
+          "list": [
+            "Move through every CouchDesk menu.",
+            "Use the touchpad as a mouse: one finger moves, two scroll, press to click.",
+            "Press OPTIONS + SHARE to switch between controller, mouse and keyboard across Windows.",
+            "Press the PS button to go back to CouchDesk.",
+            "Connect several controllers at once and make button profiles."
+          ]
+        },
+        {
+          "h2": "What about inside games?"
+        },
+        {
+          "p": "CouchDesk doesn't turn the controller into an Xbox one. Many PC games already support the DualSense. On Steam, Steam Input handles the rest."
+        },
+        {
+          "cta": true
+        }
+      ]
+    },
+    "guide-emulators": {
+      "slug": "guides/emulators-windows-controller/",
+      "group": "guides",
+      "img": "emuladores",
+      "title": "Emulators on Windows, Run with a Controller",
+      "description": "Install and update emulators on Windows with one button and play with a controller: game, BIOS and save folders, and rollback to the previous version.",
+      "crumb": "Emulators with a controller",
+      "menu": "Emulators with a controller",
+      "menuSub": "Install, organise, play",
+      "h1": "Emulators on Windows, run with a controller",
+      "lead": "CouchDesk installs emulators, keeps them up to date and puts their folders at hand. All from the couch.",
+      "blocks": [
+        {
+          "h2": "Which emulators it includes"
+        },
+        {
+          "p": "DuckStation (PlayStation), PCSX2 (PS2), RPCS3 (PS3), shadPS4 (PS4), Dolphin (GameCube and Wii), ares (Nintendo 64), melonDS (Nintendo DS) and others. Each one shows how well it will run on your PC."
+        },
+        {
+          "h2": "Install and update"
+        },
+        {
+          "steps": [
+            "Open Emulators and pick one.",
+            "Press Install. CouchDesk downloads the official release.",
+            "When there's a new version, it updates. If it breaks, press “Previous version”."
+          ]
+        },
+        {
+          "h2": "Your games, BIOS and saves"
+        },
+        {
+          "p": "Each emulator has three folders: games, BIOS and saves. To fill them:"
+        },
+        {
+          "list": [
+            "“Bring in” copies from a USB stick or any folder on the PC.",
+            "From your phone or another PC: scan the QR code and drag the files into the browser.",
+            "Over FTP or LocalSend on your home network."
+          ]
+        },
+        {
+          "note": "CouchDesk never downloads games, BIOS files or keys. Use copies from your own consoles and games."
+        },
+        {
+          "cta": true
+        }
+      ]
+    }
+  }
+}

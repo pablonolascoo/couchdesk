@@ -337,7 +337,7 @@ pub async fn list_games(cache: tauri::State<'_, GameCache>, launch: tauri::State
 #[tauri::command(async)]
 pub fn launch_game(id: String, cache: tauri::State<GameCache>, apps: tauri::State<Launchables>) -> Result<(), String> {
     let known = cache.0.lock().unwrap().iter().find(|g| g.id == id).map(|g| g.launch.clone());
-    let launch = known.or_else(|| apps.0.lock().unwrap().get(&id).cloned()).ok_or("No encontrado")?;
+    let launch = known.or_else(|| apps.0.lock().unwrap().get(&id).cloned()).ok_or(crate::i18n::tr("games.not_found"))?;
     // explorer abre tanto URIs de tienda (steam://, com.epicgames...) como .exe
     Command::new("explorer").arg(&launch).spawn().map_err(|e| e.to_string())?;
     Ok(())

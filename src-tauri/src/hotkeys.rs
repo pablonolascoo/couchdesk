@@ -2,19 +2,60 @@
 //! · Mantener Esc 1 segundo, o pulsar Esc 3 veces seguidas, estando en la consola, su navegador o la nube
 //! · El botón central (Xbox) del mando, desde cualquier sitio
 //! Todas llevan al Inicio de la consola y cierran el navegador o la nube si estaban abiertos.
+//! Además, el asistente flotante de Claude (encima de juegos y programas):
+//! · Ctrl + Alt + Espacio, desde cualquier sitio (solo se queda con esa combinación)
+//! · BACK (View) + Y del mando de Xbox mantenidos medio segundo
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Mutex, OnceLock};
 use std::time::{Duration, Instant};
 use tauri::AppHandle;
 use windows::Win32::Foundation::{LPARAM, LRESULT, WPARAM};
-use windows::Win32::UI::Input::KeyboardAndMouse::VK_ESCAPE;
+use windows::Win32::UI::Input::KeyboardAndMouse::{GetAsyncKeyState, VK_CONTROL, VK_ESCAPE, VK_SPACE};
 use windows::Win32::UI::WindowsAndMessaging::*;
 
 static APP: OnceLock<AppHandle> = OnceLock::new();
 static ESC_DOWN: Mutex<Option<Instant>> = Mutex::new(None);
 static ESC_TAPS: Mutex<Vec<Instant>> = Mutex::new(Vec::new());
 static FIRED: AtomicBool = AtomicBool::new(false);
+/// La barra espaciadora de Ctrl+Alt+Espacio está abajo (para quedarse también con su "soltar")
+static COMBO_SPACE: AtomicBool = AtomicBool::new(false);
+
+/// ¿Es Ctrl + Alt + Espacio? Separado para poder probarlo.
+pub fn is_assistant_combo(vk: u32, ctrl: bool, alt: bool) -> bool {
+    vk == u32::from(VK_SPACE.0) && ctrl && alt
+}
+
+/// Combinación de botones mantenida un tiempo: avisa una sola vez por pulsación
+#[derive(Default)]
+pub struct HoldCombo {
+    since: Option<Instant>,
+    fired: bool,
+}
+
+impl HoldCombo {
+    pub fn update(&mut self, on: bool, now: Instant, hold: Duration) -> bool {
+        if !on {
+            *self = Self::default();
+            return false;
+        }
+        let since = *self.since.get_or_insert(now);
+        if !self.fired && now.duration_since(since) >= hold {
+            self.fired = true;
+            return true;
+        }
+        false
+    }
+}
+
+/// BACK (View) + Y
+pub const ASSISTANT_BUTTONS: u16 = 0x0020 | 0x8000;
+
+fn toggle_assistant() {
+    if let Some(app) = APP.get() {
+        crate::claude::toggle_assistant(app);
+    }
+}
 
 fn trigger() {
     if let Some(app) = APP.get() {
@@ -29,7 +70,7 @@ fn ours_in_front() -> bool {
     unsafe {
         let mut title = [0u16; 64];
         let n = GetWindowTextW(GetForegroundWindow(), &mut title) as usize;
-        matches!(String::from_utf16_lossy(&title[..n]).as_str(), "Consola" | "Navegador" | "Xbox Cloud Gaming")
+        matches!(String::from_utf16_lossy(&title[..n]).as_str(), "CouchDesk" | "Consola" | "Navegador" | "Xbox Cloud Gaming")
     }
 }
 
@@ -62,8 +103,23 @@ fn on_esc(down: bool, now: Instant) -> bool {
 unsafe extern "system" fn keyboard_hook(code: i32, w: WPARAM, l: LPARAM) -> LRESULT {
     if code >= 0 {
         let k = unsafe { &*(l.0 as *const KBDLLHOOKSTRUCT) };
+        let down = matches!(w.0 as u32, WM_KEYDOWN | WM_SYSKEYDOWN);
+        if k.vkCode == u32::from(VK_SPACE.0) {
+            if down {
+                let ctrl = unsafe { GetAsyncKeyState(i32::from(VK_CONTROL.0)) } as u16 & 0x8000 != 0;
+                let alt = k.flags.0 & LLKHF_ALTDOWN.0 != 0;
+                if is_assistant_combo(k.vkCode, ctrl, alt) {
+                    // Al mantenerla llegan repeticiones: solo la primera cuenta
+                    if !COMBO_SPACE.swap(true, Ordering::Relaxed) {
+                        toggle_assistant();
+                    }
+                    return LRESULT(1);
+                }
+            } else if COMBO_SPACE.swap(false, Ordering::Relaxed) {
+                return LRESULT(1);
+            }
+        }
         if k.vkCode == u32::from(VK_ESCAPE.0) {
-            let down = matches!(w.0 as u32, WM_KEYDOWN | WM_SYSKEYDOWN);
             if on_esc(down, Instant::now()) && ours_in_front() {
                 trigger();
             }
@@ -81,16 +137,24 @@ fn guide_watcher() {
     let Some(proc) = (unsafe { GetProcAddress(dll, windows::core::PCSTR(100 as *const u8)) }) else { return };
     let get: GetStateEx = unsafe { std::mem::transmute(proc) };
     let mut was = false;
+    let mut assistant = HoldCombo::default();
     loop {
         std::thread::sleep(Duration::from_millis(80));
-        let pressed = (0..4).any(|i| {
+        let mut buttons = 0u16;
+        for i in 0..4 {
             let mut s = XINPUT_STATE::default();
-            unsafe { get(i, &mut s) == 0 && s.Gamepad.wButtons.0 & 0x0400 != 0 }
-        });
+            if unsafe { get(i, &mut s) } == 0 {
+                buttons |= s.Gamepad.wButtons.0;
+            }
+        }
+        let pressed = buttons & 0x0400 != 0;
         if pressed && !was {
             trigger();
         }
         was = pressed;
+        if assistant.update(buttons & ASSISTANT_BUTTONS == ASSISTANT_BUTTONS, Instant::now(), Duration::from_millis(500)) {
+            toggle_assistant();
+        }
     }
 }
 
@@ -111,6 +175,28 @@ pub fn start(app: AppHandle) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn combinaciones_del_asistente() {
+        let space = u32::from(VK_SPACE.0);
+        assert!(is_assistant_combo(space, true, true));
+        assert!(!is_assistant_combo(space, true, false));
+        assert!(!is_assistant_combo(space, false, true));
+        assert!(!is_assistant_combo(u32::from(VK_ESCAPE.0), true, true));
+        let t0 = Instant::now();
+        let ms = |n| t0 + Duration::from_millis(n);
+        let hold = Duration::from_millis(500);
+        let mut c = HoldCombo::default();
+        assert!(!c.update(true, ms(0), hold));
+        assert!(!c.update(true, ms(400), hold));
+        assert!(c.update(true, ms(520), hold), "a los 0,5 s");
+        assert!(!c.update(true, ms(900), hold), "una vez por pulsación");
+        assert!(!c.update(false, ms(950), hold));
+        assert!(!c.update(true, ms(1000), hold));
+        assert!(!c.update(false, ms(1200), hold), "soltar antes de tiempo no cuenta");
+        assert!(!c.update(true, ms(1300), hold));
+        assert!(c.update(true, ms(1850), hold));
+    }
 
     #[test]
     fn esc_mantenido_o_tres_veces() {

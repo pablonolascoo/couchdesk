@@ -45,6 +45,32 @@ pub fn set_shell(enabled: bool) -> Result<(), String> {
     }
 }
 
+/// Autocuración: si el arranque apunta a otro consola.exe (tras actualizar o mover la consola),
+/// devuelve el valor nuevo con el programa actual. `None` = no hay que tocar nada.
+pub fn heal_decision(shell: Option<&str>, exe: &str) -> Option<String> {
+    let norm = |s: &str| s.trim().trim_matches('"').replace('/', "\\").to_lowercase();
+    let shell = norm(shell?);
+    let me = norm(exe);
+    let file = |p: &str| p.rsplit('\\').next().unwrap_or_default().to_string();
+    // Solo si el arranque es una consola, y solo desde la consola instalada (no el .scr ni pruebas)
+    if file(&shell) != "consola.exe" || file(&me) != "consola.exe" || me.contains("\\target\\") {
+        return None;
+    }
+    (shell != me).then(|| format!("\"{}\"", exe.trim().trim_matches('"')))
+}
+
+/// Se llama al arrancar: arregla el arranque si apunta a una consola que ya no es esta
+pub fn heal_shell() {
+    let Ok(exe) = std::env::current_exe() else { return };
+    let Some(value) = heal_decision(current_shell().as_deref(), &exe.display().to_string()) else { return };
+    if let Ok((key, _)) = RegKey::predef(HKEY_CURRENT_USER).create_subkey(winlogon_path()) {
+        match key.set_value("Shell", &value) {
+            Ok(()) => log::info!("Arranque actualizado a {value}"),
+            Err(e) => log::warn!("No se pudo actualizar el arranque: {e}"),
+        }
+    }
+}
+
 #[tauri::command(async)]
 pub fn shell_status() -> ShellStatus {
     let exe = std::env::current_exe().map(|p| p.display().to_string()).unwrap_or_default();
@@ -104,5 +130,23 @@ mod tests {
         assert!(current_shell().is_none());
         set_shell(false).unwrap(); // desactivar dos veces no falla
         let _ = RegKey::predef(HKEY_CURRENT_USER).delete_subkey_all("Software\\Consola");
+    }
+
+    #[test]
+    fn autocuracion_del_arranque() {
+        let now = "C:\\Users\\Ana\\AppData\\Local\\CouchDesk\\consola.exe";
+        // Apunta a la consola vieja (otra carpeta): se arregla, con comillas
+        assert_eq!(
+            heal_decision(Some("\"C:\\Users\\Ana\\AppData\\Local\\Consola\\consola.exe\""), now).as_deref(),
+            Some("\"C:\\Users\\Ana\\AppData\\Local\\CouchDesk\\consola.exe\"")
+        );
+        // Ya es esta (aunque cambien comillas o mayúsculas): nada
+        assert_eq!(heal_decision(Some("\"c:\\users\\ana\\appdata\\local\\couchdesk\\CONSOLA.EXE\""), now), None);
+        // Sin arranque propio, o con explorer: no se toca
+        assert_eq!(heal_decision(None, now), None);
+        assert_eq!(heal_decision(Some("explorer.exe"), now), None);
+        // Desde el salvapantallas (.scr) o una versión de pruebas: no se toca
+        assert_eq!(heal_decision(Some("\"C:\\Old\\consola.exe\""), "C:\\Users\\Ana\\AppData\\Local\\Consola\\CouchDesk.scr"), None);
+        assert_eq!(heal_decision(Some("\"C:\\Old\\consola.exe\""), "C:\\src\\Consola\\src-tauri\\target\\release\\consola.exe"), None);
     }
 }

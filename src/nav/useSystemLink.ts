@@ -15,7 +15,11 @@ export function useSystemLink() {
     if (!isDesktopApp) return
     let off: (() => void) | undefined
     import('@tauri-apps/api/event').then(({ listen }) =>
-      listen('go-home', () => navigate('/')).then((u) => { off = u }),
+      Promise.all([
+        listen('go-home', () => navigate('/')),
+        // Alguien envía con LocalSend: se abre su pantalla para aceptar o rechazar
+        listen('localsend-request', () => navigate('/recibir/localsend')),
+      ]).then((u) => { off = () => u.forEach((f) => f()) }),
     )
     const focusIn = (e: FocusEvent) => { if (editable(e.target)) call('remote_mode', { tab: 'mouse', kbd: true }).catch(() => {}) }
     const focusOut = (e: FocusEvent) => { if (editable(e.target)) call('remote_mode', { tab: 'gp', kbd: false }).catch(() => {}) }

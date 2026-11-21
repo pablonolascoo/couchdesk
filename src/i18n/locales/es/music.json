@@ -1,0 +1,23 @@
+{
+  "music.title": "Música",
+  "music.loading": "Buscando qué suena…",
+  "music.empty.title": "No suena nada",
+  "music.empty.text": "Abre Spotify y elige una canción. Aquí podrás pausarla, cambiarla y bajar su volumen.",
+  "music.openSpotify": "Abrir Spotify",
+  "music.openSpotifyHint": "App del PC o, si no está, su web",
+  "music.openSpotifyWeb": "Abrir Spotify en el navegador",
+  "music.openApple": "Abrir Apple Music",
+  "music.opening": "Abriendo {name} en el navegador de la consola.",
+  "music.openingSpotify": "Abriendo la app de Spotify del PC. Elige una canción y vuelve aquí.",
+  "music.noSpotify": "Spotify no está instalado en este PC. Se abre su web.",
+  "music.volumePc": "Volumen del PC",
+  "music.volumeApp": "Volumen de {app}",
+  "music.systemVolume": "Esta app no tiene volumen propio. Se cambia el del PC.",
+  "music.hint.select": "Seleccionar",
+  "music.hint.pause": "Pausa",
+  "music.previous": "Anterior",
+  "music.pause": "Pausar",
+  "music.play": "Reproducir",
+  "music.next": "Siguiente",
+  "music.nowPlaying": "Suena ahora"
+}

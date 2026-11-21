@@ -1,5 +1,6 @@
 //! Explorador de archivos: listar, abrir, copiar, mover, nueva carpeta y papelera.
 
+use crate::i18n::{tr, trf};
 use serde::Serialize;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -21,42 +22,60 @@ pub struct Entry {
 pub struct Place {
     label: String,
     path: String,
+    /// "carpeta" | "usb" | "disco"
+    kind: &'static str,
+}
+
+/// ¿Es una unidad extraíble (pincho USB, tarjeta SD)?
+fn is_removable(root: &str) -> bool {
+    use windows::core::HSTRING;
+    use windows::Win32::Storage::FileSystem::GetDriveTypeW;
+    const DRIVE_REMOVABLE: u32 = 2;
+    unsafe { GetDriveTypeW(&HSTRING::from(root)) == DRIVE_REMOVABLE }
 }
 
 fn home() -> PathBuf {
     std::env::var("USERPROFILE").map(PathBuf::from).unwrap_or_else(|_| PathBuf::from("C:\\"))
 }
 
-/// Accesos rápidos: carpetas personales y unidades
+/// Accesos rápidos: pinchos USB primero, luego carpetas personales y discos
 #[tauri::command(async)]
 pub fn list_places() -> Vec<Place> {
     let h = home();
-    let mut places: Vec<Place> = [
-        ("Escritorio", "Desktop"),
-        ("Descargas", "Downloads"),
-        ("Documentos", "Documents"),
-        ("Imágenes", "Pictures"),
-        ("Vídeos", "Videos"),
-        ("Música", "Music"),
-    ]
-    .iter()
-    .map(|(l, d)| (l, h.join(d)))
-    .filter(|(_, p)| p.is_dir())
-    .map(|(l, p)| Place { label: l.to_string(), path: p.to_string_lossy().into_owned() })
-    .collect();
+    let mut usb = Vec::new();
+    let mut disks = Vec::new();
     for c in b'A'..=b'Z' {
         let root = format!("{}:\\", c as char);
         if Path::new(&root).is_dir() {
-            places.push(Place { label: format!("Disco {}:", c as char), path: root });
+            if is_removable(&root) {
+                usb.push(Place { label: format!("USB ({}:)", c as char), path: root, kind: "usb" });
+            } else {
+                let label = trf("files.disk", &[("letter", &(c as char).to_string())]);
+                disks.push(Place { label, path: root, kind: "disco" });
+            }
         }
     }
-    places
+    let folders = [
+        ("files.received", "Recibidos"),
+        ("files.downloads", "Downloads"),
+        ("files.games", "Juegos"),
+        ("files.desktop", "Desktop"),
+        ("files.documents", "Documents"),
+        ("files.pictures", "Pictures"),
+        ("files.videos", "Videos"),
+        ("files.music", "Music"),
+    ]
+    .into_iter()
+    .map(|(l, d)| (l, h.join(d)))
+    .filter(|(_, p)| p.is_dir())
+    .map(|(l, p)| Place { label: tr(l).to_string(), path: p.to_string_lossy().into_owned(), kind: "carpeta" });
+    usb.into_iter().chain(folders).chain(disks).collect()
 }
 
 #[tauri::command(async)]
 pub fn list_dir(path: String) -> Result<Vec<Entry>, String> {
     let mut out: Vec<Entry> = fs::read_dir(&path)
-        .map_err(|e| format!("No se puede abrir la carpeta: {e}"))?
+        .map_err(|e| trf("files.cant_open", &[("err", &e.to_string())]))?
         .flatten()
         .filter_map(|e| {
             let name = e.file_name().to_string_lossy().into_owned();
@@ -85,7 +104,7 @@ pub fn list_dir(path: String) -> Result<Vec<Entry>, String> {
 #[tauri::command(async)]
 pub fn open_path(path: String) -> Result<(), String> {
     if !Path::new(&path).exists() {
-        return Err("Ya no existe".into());
+        return Err(tr("files.not_found").into());
     }
     Command::new("explorer").arg(&path).spawn().map(|_| ()).map_err(|e| e.to_string())
 }
@@ -122,14 +141,14 @@ fn copy_recursive(from: &Path, to: &Path) -> std::io::Result<()> {
 pub fn paste_items(items: Vec<String>, dest: String, cut: bool) -> Result<u32, String> {
     let dest = PathBuf::from(dest);
     if !dest.is_dir() {
-        return Err("La carpeta de destino no existe".into());
+        return Err(tr("files.dest_missing").into());
     }
     let mut done = 0;
     for item in items {
         let from = PathBuf::from(&item);
-        let name = from.file_name().ok_or("Ruta no válida")?.to_string_lossy().into_owned();
+        let name = from.file_name().ok_or(tr("files.bad_path"))?.to_string_lossy().into_owned();
         if dest.starts_with(&from) {
-            return Err("No se puede copiar una carpeta dentro de sí misma".into());
+            return Err(tr("files.into_itself").into());
         }
         let to = unique_target(&dest, &name);
         if cut {
@@ -148,7 +167,7 @@ pub fn paste_items(items: Vec<String>, dest: String, cut: bool) -> Result<u32, S
 
 #[tauri::command(async)]
 pub fn new_folder(dir: String) -> Result<String, String> {
-    let target = unique_target(Path::new(&dir), "Nueva carpeta");
+    let target = unique_target(Path::new(&dir), tr("files.new_folder"));
     fs::create_dir(&target).map_err(|e| e.to_string())?;
     Ok(target.to_string_lossy().into_owned())
 }

@@ -1,0 +1,55 @@
+/* Asistente flotante: tarjeta compacta que ocupa toda su ventanita (420 x 640) */
+.overlay {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 16px 12px;
+  background: var(--bg);
+  overflow: hidden;
+}
+.overlay-head { display: flex; align-items: center; gap: 8px; }
+.overlay-title {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--serif);
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.overlay .c-chip { height: 40px; padding: 0 14px; font-size: 13px; }
+.overlay-close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: inset 0 1px 1px var(--highlight), 0 0 0 1px var(--hair);
+}
+.overlay-close[data-focused] { transform: scale(1.08); }
+
+.overlay .chat { flex: 1; max-height: none; min-height: 0; padding-top: 14px; }
+.overlay .bubble { max-width: 88%; font-size: 15px; padding: 10px 14px; border-radius: 18px; }
+.overlay-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.overlay-chips .c-chip { white-space: normal; height: auto; min-height: 40px; padding: 8px 14px; text-align: left; }
+
+.overlay .ask { margin-top: 12px; gap: 8px; }
+.overlay .ask-input { height: 48px; padding: 0 16px; font-size: 15px; }
+.overlay .mic { width: 48px; height: 48px; }
+/* Enviar solo con el icono: el texto queda para los lectores de pantalla */
+.overlay .ask .send { width: 48px; height: 48px; padding: 0; justify-content: center; gap: 0; font-size: 0; }
+.overlay .voice-error { margin-top: 10px; font-size: 13px; }
+
+.overlay-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.overlay-foot span { display: inline-flex; align-items: center; gap: 6px; }
+.overlay-tip { flex-basis: 100%; }

@@ -1,0 +1,22 @@
+{
+  "shell.hint.select": "Selecionar",
+  "shell.hint.view": "Ver",
+  "shell.hint.next": "Próximo",
+  "shell.key.enter": "Enter",
+  "shell.key.space": "Espaço",
+  "shell.key.home": "Home",
+  "shell.goBack": "Voltar",
+  "shell.loading": "Carregando…",
+  "shell.opening": "Abrindo…",
+  "shell.onlyInstalled": "Isso só funciona no console instalado.",
+  "shell.online": "Conectado à internet",
+  "shell.offline": "Sem internet",
+  "shell.remote.aria": "Usar o celular como controle",
+  "shell.remote.title": "Controle no celular",
+  "shell.remote.connected": "{n} conectado|{n} conectados",
+  "shell.remote.scan": "Escaneie",
+  "shell.padMode.nav": "Controle: comanda o console",
+  "shell.padMode.mouse": "Controle como mouse",
+  "shell.padMode.keyboard": "Controle como teclado",
+  "shell.padMode.switch": "({keys} para trocar)"
+}

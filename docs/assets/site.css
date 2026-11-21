@@ -1,0 +1,140 @@
+/* CouchDesk site: the brand (brand/BRAND.md) on top of the kit's system.css.
+   Fonts are self-hosted (copied from node_modules by scripts/build-site.mjs). */
+@font-face { font-family: "Instrument Serif"; src: url("fonts/instrument-serif-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Serif"; src: url("fonts/instrument-serif-400-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Geist"; src: url("fonts/geist-wght.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url("fonts/geist-mono-wght.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+
+:root {
+  /* Lino ground, Tinta ink, Brasa light. Muted is a darker Taupe so small text keeps 5:1 on Lino. */
+  --p-bg: #F3ECE1; --p-surface: #E6DCCB; --p-ink: #1F1A17; --p-muted: #65594F;
+  --p-accent: #E8643A; --p-accent-ink: #1F1A17; --p-action: #E8643A; --p-action-ink: #1F1A17;
+  --p-inv-bg: #14110F; --p-inv-surface: #1F1A17; --p-inv-ink: #F3ECE1; --p-inv-muted: #B9AC9D;
+  --p-inv-accent: #E8643A; --p-inv-accent-ink: #1F1A17; --p-inv-action: #E8643A; --p-inv-action-ink: #1F1A17;
+  --ground-bg: #E6DCCB; --ground-surface: #EFE6D8; --ground-ink: #1F1A17; --ground-muted: #65594F; --ground-accent: #E8643A;
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-text: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, Consolas, monospace;
+  --display-weight: 400;
+  --display-tracking: -0.01em;
+  --display-tracking-xl: -0.015em;
+  --ly-scale: 1.08;
+  color-scheme: light;
+}
+/* Instrument Serif runs small: card titles and labels stay in Geist */
+h1, h2 { line-height: 1.02; }
+.hero h1 { line-height: 0.98; }
+h3 { font-family: var(--font-text); font-weight: 500; letter-spacing: -0.015em; }
+
+/* logo lockup (brand/final/lockup.svg, inline so it takes the ground's ink) */
+.logo { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); }
+.logo svg { height: 26px; width: auto; display: block; }
+.footer .logo svg { height: 34px; }
+.logo .logo__c { fill: currentColor; }
+.logo .logo__dot { fill: #E8643A; }
+@media (prefers-reduced-motion: no-preference) {
+  .logo .logo__dot { animation: standby 2.4s ease-in-out 1 both; }
+}
+@keyframes standby { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+
+/* language switcher: real links, no redirect */
+.lang { position: relative; }
+.lang > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 var(--s-2); font-size: var(--t-small); font-weight: 500; border-radius: var(--r-sm); }
+.lang > summary::-webkit-details-marker { display: none; }
+.lang > summary:hover { background: color-mix(in oklab, var(--bg) 90%, var(--ink)); }
+.lang > summary svg { width: 16px; height: 16px; }
+.lang ul { position: absolute; right: 0; top: calc(100% + 6px); z-index: 60; min-width: 200px; padding: var(--s-2); background: var(--p-bg); color: var(--p-ink); border: 1px solid var(--line-strong); border-radius: var(--r-md); box-shadow: 0 18px 40px -24px rgba(31, 26, 23, .45); }
+.lang li a { display: flex; justify-content: space-between; gap: var(--s-4); min-height: 44px; align-items: center; padding: 0 var(--s-3); border-radius: var(--r-sm); font-size: var(--t-small); }
+.lang li a:hover { background: var(--p-surface); }
+.lang li a[aria-current="true"] { font-weight: 600; }
+.lang li a span { color: var(--p-muted); font-size: var(--t-label); }
+@media (max-width: 1023px) { .nav.is-open .lang ul { position: static; box-shadow: none; } }
+
+/* footer language list */
+.footer__langs { display: flex; flex-wrap: wrap; gap: 0 var(--s-4); }
+
+/* content pages: a short head, then a reading column */
+.page-head { padding: calc(var(--nav) + var(--s-8)) 0 var(--s-7); }
+@media (max-width: 639px) { .page-head { padding: calc(var(--nav) + var(--s-5)) 0 var(--s-6); } .crumbs { margin-bottom: var(--s-4); } }
+.prose > figure:first-child { margin-top: 0; }
+.page-head h1 { font-size: var(--t-h1); max-width: 22ch; }
+.page-head .lead { margin-top: var(--s-5); font-size: var(--ly-lead, 20px); line-height: 1.5; max-width: 60ch; }
+.page-head .btn-row { margin-top: var(--s-6); }
+.crumbs { display: flex; flex-wrap: wrap; gap: var(--s-2); font-size: var(--t-small); color: var(--muted); margin-bottom: var(--s-6); }
+.crumbs a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-strong); display: inline-flex; align-items: center; min-height: 44px; }
+.crumbs a:hover { text-decoration-color: currentColor; }
+.crumbs li + li::before { content: "/"; margin-right: var(--s-2); color: var(--muted); }
+.crumbs li { display: inline-flex; align-items: center; }
+
+.doc { padding-bottom: var(--s-10); }
+.doc .grid { align-items: start; }
+.prose { max-width: 68ch; }
+.prose > * + * { margin-top: var(--s-5); }
+.prose h2 { margin-top: var(--s-9); font-size: var(--t-h2); }
+.prose h2:first-child { margin-top: 0; }
+.prose h3 { margin-top: var(--s-7); font-size: var(--t-h3); }
+.prose p, .prose li { font-size: 17px; line-height: 1.65; }
+.prose ul { list-style: disc; padding-left: 1.2em; }
+.prose ol { list-style: decimal; padding-left: 1.4em; }
+.prose li + li { margin-top: var(--s-2); }
+.prose li::marker { color: var(--accent); }
+.prose a:not(.btn) { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: color-mix(in oklab, var(--ink) 35%, transparent); }
+.prose a:not(.btn):hover { text-decoration-color: var(--accent); }
+.prose code, .prose kbd { font-family: var(--font-mono); font-size: .88em; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; }
+.prose .note { border-left: 3px solid var(--accent); padding: var(--s-4) var(--s-5); background: var(--surface); border-radius: 0 var(--r-md) var(--r-md) 0; }
+.prose figure { margin-block: var(--s-7); }
+.prose figure img { width: 100%; height: auto; border-radius: var(--r-md); border: 1px solid var(--line); }
+.prose .btn-row { margin-top: var(--s-7); }
+
+/* comparison table */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line-strong); border-radius: var(--r-md); background: var(--bg); }
+.prose .table-wrap { max-width: none; }
+table.cmp { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.45; min-width: 560px; }
+table.cmp th, table.cmp td { text-align: left; vertical-align: top; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+table.cmp thead th { font-weight: 600; background: var(--surface); }
+table.cmp tbody th { font-weight: 500; width: 30%; }
+table.cmp tr:last-child > * { border-bottom: 0; }
+table.cmp td.is-us { background: color-mix(in oklab, var(--accent) 7%, var(--bg)); }
+
+/* side column on content pages */
+.aside { position: sticky; top: calc(var(--nav) + var(--s-6)); display: grid; gap: var(--s-5); padding: var(--s-6); border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--surface); }
+.aside h2 { font-size: var(--t-h3); font-family: var(--font-text); font-weight: 500; letter-spacing: -0.015em; }
+.aside ul { display: grid; gap: var(--s-1); }
+.aside li a { display: flex; align-items: center; min-height: 44px; font-size: var(--t-small); border-bottom: 1px solid var(--line); }
+.aside li a:hover { color: var(--accent); }
+.aside li a[aria-current="page"] { font-weight: 600; }
+.aside .btn { width: 100%; justify-content: center; }
+@media (max-width: 1023px) { .aside { position: static; margin-top: var(--s-8); } }
+
+/* changelog */
+.release + .release { margin-top: var(--s-9); padding-top: var(--s-8); border-top: 1px solid var(--line-strong); }
+.release__meta { font-size: var(--t-small); color: var(--muted); margin-top: var(--s-2); }
+
+/* home: the screenshots carry their own light UI, so they get a hairline */
+.shot, .frame__img, .mo-pc__visual img, .menu-card img, .panel img { border-radius: var(--r-md); }
+.panel > picture, .frame > picture, .mo-pc__visual > picture, .at-corner > picture { display: contents; }
+
+/* home: the differences table sits in a full-width card */
+#diferencias table.cmp td, #diferencias table.cmp th { padding-block: 12px; }
+
+/* 404 */
+.notfound { min-height: 100svh; display: grid; align-content: center; padding: calc(var(--nav) + var(--s-8)) 0 var(--s-8); }
+.notfound h1 { font-size: var(--t-h1); }
+.notfound p { margin-top: var(--s-5); max-width: 52ch; font-size: 18px; }
+.notfound ul { margin-top: var(--s-6); display: flex; flex-wrap: wrap; gap: var(--s-3); }
+
+/* focus: Brasa on Lino is 2.8:1, so the ring takes the ink (15:1); on Brasa buttons too */
+:focus-visible { outline-color: var(--ink); }
+
+/* home differences table: fits a phone without sideways scroll */
+@media (max-width: 639px) {
+  #diferencias .table-wrap { overflow: visible; }
+  #diferencias table.cmp { min-width: 0; font-size: 12px; table-layout: fixed; }
+  #diferencias table.cmp th, #diferencias table.cmp td { padding: 8px 6px; overflow-wrap: anywhere; hyphens: auto; }
+  #diferencias table.cmp tbody th { width: 26%; }
+}
+
+/* home: the living-room list beside the screensaver */
+.room-list { display: grid; gap: var(--s-6); }
+.room-list h3 { font-size: var(--t-card); font-family: var(--font-text); font-weight: 500; }
+.room-list p { margin-top: var(--s-2); }

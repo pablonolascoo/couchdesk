@@ -84,7 +84,7 @@ const BAR_SCRIPT: &str = r#"
       .x{background:#1d1813;color:#fbf8f2}
       .u{max-width:30vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.55;padding:0 10px}
       .h{opacity:.5;font-size:12px;padding:0 12px 0 6px;white-space:nowrap}
-    </style><div class="b"><button data-a="back">← Atrás</button><button data-a="reload">⟳</button><span class="u"></span><button data-a="fuera">Abrir en Windows</button><button class="x" data-a="cerrar">✕ Volver a la consola</button><span class="h">o mantén Esc</span></div>`;
+    </style><div class="b"><button data-a="back">← __T_BACK__</button><button data-a="reload">⟳</button><span class="u"></span><button data-a="fuera">__T_OUT__</button><button class="x" data-a="cerrar">✕ __T_HOME__</button><span class="h">__T_ESC__</span></div>`;
     sh.querySelector('.u').textContent = location.hostname;
     sh.addEventListener('click', (e) => {
       const a = e.composedPath().find((n) => n.dataset && n.dataset.a)?.dataset.a;
@@ -105,6 +105,18 @@ const BAR_SCRIPT: &str = r#"
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', bar); else bar();
 })();
 "#;
+
+/// BAR_SCRIPT con los textos en el idioma de la consola (se monta al abrir la ventana)
+fn bar_script() -> String {
+    use crate::i18n::tr;
+    // Los textos van dentro de un `...` de JavaScript: sin comillas invertidas ni ${
+    let safe = |k: &'static str| tr(k).replace('`', "'").replace("${", "$ {").replace('<', "&lt;");
+    BAR_SCRIPT
+        .replace("__T_BACK__", &safe("browser.back"))
+        .replace("__T_OUT__", &safe("browser.open_windows"))
+        .replace("__T_HOME__", &safe("browser.home"))
+        .replace("__T_ESC__", &safe("browser.hold_esc"))
+}
 
 fn open_in_system_browser(url: &str) {
     let _ = std::process::Command::new("explorer").arg(url).spawn();
@@ -279,7 +291,7 @@ pub fn normalize(input: &str) -> String {
 #[tauri::command]
 pub async fn browser_open(app: tauri::AppHandle, url: String) -> Result<(), String> {
     let url = normalize(&url);
-    let parsed: tauri::Url = url.parse().map_err(|_| "Dirección no válida")?;
+    let parsed: tauri::Url = url.parse().map_err(|_| crate::i18n::tr("browser.bad_url"))?;
     if let Some(w) = app.get_webview_window(LABEL) {
         w.navigate(parsed).map_err(|e| e.to_string())?;
         let _ = w.set_focus();
@@ -289,7 +301,7 @@ pub async fn browser_open(app: tauri::AppHandle, url: String) -> Result<(), Stri
             .fullscreen(true)
             .decorations(false)
             .initialization_script(PAD_SCRIPT)
-            .initialization_script(BAR_SCRIPT)
+            .initialization_script(bar_script())
             .on_document_title_changed(on_title)
             .build()
             .map_err(|e| e.to_string())?;
@@ -305,7 +317,18 @@ pub async fn browser_open(app: tauri::AppHandle, url: String) -> Result<(), Stri
 // ---------------- Xbox Cloud Gaming ----------------
 
 const CLOUD: &str = "nube";
-const CLOUD_URL: &str = "https://www.xbox.com/es-ES/play";
+/// Xbox Cloud Gaming en el idioma de la consola
+fn cloud_url() -> String {
+    let region = match crate::i18n::current() {
+        crate::i18n::Lang::Es => "es-ES",
+        crate::i18n::Lang::En => "en-US",
+        crate::i18n::Lang::PtBr => "pt-BR",
+        crate::i18n::Lang::Fr => "fr-FR",
+        crate::i18n::Lang::De => "de-DE",
+        crate::i18n::Lang::It => "it-IT",
+    };
+    format!("https://www.xbox.com/{region}/play")
+}
 static CLOUD_RUNNING: AtomicBool = AtomicBool::new(false);
 
 /// En la nube el mando es del juego: la consola solo vigila la combinación para salir
@@ -344,12 +367,12 @@ pub async fn cloud_open(app: tauri::AppHandle) -> Result<(), String> {
     if let Some(w) = app.get_webview_window(CLOUD) {
         let _ = w.set_focus();
     } else {
-        WebviewWindowBuilder::new(&app, CLOUD, WebviewUrl::External(CLOUD_URL.parse().unwrap()))
+        WebviewWindowBuilder::new(&app, CLOUD, WebviewUrl::External(cloud_url().parse().unwrap()))
             .title("Xbox Cloud Gaming")
             .fullscreen(true)
             .decorations(false)
             .background_color(tauri::window::Color(0, 0, 0, 255))
-            .initialization_script(BAR_SCRIPT)
+            .initialization_script(bar_script())
             .on_document_title_changed(on_title)
             .build()
             .map_err(|e| e.to_string())?;

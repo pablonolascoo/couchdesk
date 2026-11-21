@@ -89,7 +89,7 @@
 
 /* --- Carpetas --- */
 .emu-folders { display: flex; flex-direction: column; gap: 10px; }
-.emu-folder { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+.emu-folder { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; }
 .emu-folder-main { display: flex; align-items: center; gap: 14px; text-align: left; }
 .emu-folder-icon {
   display: grid;
@@ -105,3 +105,4 @@
 .emu-folder-hint { font-size: 13px; color: var(--muted); }
 .emu-folder-path { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .emu-folder-win { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.emu-send { margin-top: 16px; width: fit-content; align-self: flex-start; }

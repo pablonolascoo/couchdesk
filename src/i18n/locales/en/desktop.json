@@ -1,0 +1,12 @@
+{
+  "desktop.title": "Desktop",
+  "desktop.heading": "How do you want to go back?",
+  "desktop.now.title": "Go to the desktop just for now",
+  "desktop.now.text": "The console closes and you see the Windows desktop.",
+  "desktop.now.boots": "When you turn it back on, the console shows up again.",
+  "desktop.normal.title": "Go back to normal Windows mode",
+  "desktop.normal.confirm": "Press again to confirm.",
+  "desktop.normal.already": "Windows already starts on its usual desktop. Only the console will close.",
+  "desktop.normal.text": "On startup, Windows will open its normal desktop. The console stays in the Start menu.",
+  "desktop.foot": "To use the console at startup again: open it from the Start menu → Settings → Startup."
+}

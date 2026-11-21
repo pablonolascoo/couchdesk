@@ -1,0 +1,11 @@
+{
+  "keyboard.label": "Tastiera su schermo",
+  "keyboard.placeholder": "Scrivi",
+  "keyboard.shift": "Maiuscole",
+  "keyboard.delete": "Cancella",
+  "keyboard.space": "Spazio",
+  "keyboard.done": "Fatto",
+  "keyboard.hint.type": "Scrivi",
+  "keyboard.hint.caret": "Sposta cursore",
+  "keyboard.hint.close": "Chiudi"
+}

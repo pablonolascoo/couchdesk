@@ -55,7 +55,7 @@ fn cpu_name() -> String {
     hklm.open_subkey("HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0")
         .and_then(|k| k.get_value::<String, _>("ProcessorNameString"))
         .map(|s| s.trim().to_string())
-        .unwrap_or_else(|_| "Procesador".into())
+        .unwrap_or_else(|_| crate::i18n::tr("hw.cpu").into())
 }
 
 fn ram_gb() -> f64 {
@@ -68,9 +68,9 @@ fn ram_gb() -> f64 {
 fn best_gpu() -> (String, f64) {
     let hklm = winreg::RegKey::predef(winreg::enums::HKEY_LOCAL_MACHINE);
     let Ok(class) = hklm.open_subkey("SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}") else {
-        return ("Desconocida".into(), 0.0);
+        return (crate::i18n::tr("hw.gpu_unknown").into(), 0.0);
     };
-    let mut best = ("Desconocida".to_string(), 0.0, 0u8);
+    let mut best = (crate::i18n::tr("hw.gpu_unknown").to_string(), 0.0, 0u8);
     for sub in class.enum_keys().flatten() {
         let Ok(k) = class.open_subkey(&sub) else { continue };
         let Ok(name) = k.get_value::<String, _>("DriverDesc") else { continue };

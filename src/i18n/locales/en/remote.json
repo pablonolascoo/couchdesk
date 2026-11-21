@@ -1,0 +1,9 @@
+{
+  "remote.title": "Phone controller",
+  "remote.intro": "Scan the code with your phone camera. A page opens that turns your phone into a mouse, keyboard or controller. Several phones can connect at once.",
+  "remote.connected": "Connected",
+  "remote.none": "Nobody yet.",
+  "remote.note": "Your phone and PC must be on the same Wi-Fi network. The first time, Windows may ask for permission for “Consola”: allow it on private networks.",
+  "remote.back": "Go back",
+  "remote.noNetwork": "No network connection."
+}

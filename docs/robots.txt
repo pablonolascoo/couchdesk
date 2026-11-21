@@ -1,3 +1,6 @@
+# Note: search engines only read /robots.txt at the root of the host (pablonolascoo.github.io),
+# so this file under /couchdesk/ is informative. Submit the sitemap in Google Search Console and
+# Bing Webmaster Tools, and run `npm run indexnow` after publishing.
 User-agent: *
 Allow: /
 

@@ -3,6 +3,7 @@
 //! Nunca descarga juegos, BIOS ni claves.
 
 use crate::hardware::{get_hardware, Hardware};
+use crate::i18n::{lookup, tr, trf};
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::Read;
@@ -131,7 +132,9 @@ pub fn ensure_xtend_running() -> Result<(), String> {
     if read_installed("xtend").is_none() {
         install("xtend")?;
     }
-    let out = Command::new("tasklist").args(["/FI", "IMAGENAME eq xtend.exe", "/NH"]).output().map_err(|e| e.to_string())?;
+    // Sin ventana: si no, al abrir la consola parpadea una terminal
+    use std::os::windows::process::CommandExt;
+    let out = Command::new("tasklist").args(["/FI", "IMAGENAME eq xtend.exe", "/NH"]).creation_flags(0x0800_0000).output().map_err(|e| e.to_string())?;
     if String::from_utf8_lossy(&out.stdout).to_lowercase().contains("xtend.exe") {
         return Ok(());
     }
@@ -182,14 +185,14 @@ fn pick_asset<'a>(names: impl Iterator<Item = &'a str>, must: &[&str]) -> Option
 fn latest(e: &Emu) -> Result<Release, String> {
     let http = client();
     let get = |url: &str| -> Result<reqwest::blocking::Response, String> {
-        let r = http.get(url).send().map_err(|err| format!("Sin conexión con {url}: {err}"))?;
-        if r.status().is_success() { Ok(r) } else { Err(format!("{url} respondió {}", r.status())) }
+        let r = http.get(url).send().map_err(|err| trf("emu.no_connection", &[("url", url), ("err", &err.to_string())]))?;
+        if r.status().is_success() { Ok(r) } else { Err(trf("emu.http_status", &[("url", url), ("status", &r.status().to_string())])) }
     };
     match e.source {
         Source::Github { repo, must } => {
             // Sin API (tiene límite de uso): /releases/latest redirige a /tag/<versión>
             let r = get(&format!("https://github.com/{repo}/releases/latest"))?;
-            let tag = r.url().path().rsplit("/tag/").next().filter(|t| !t.contains('/')).ok_or("Este proyecto no tiene versiones publicadas")?.to_string();
+            let tag = r.url().path().rsplit("/tag/").next().filter(|t| !t.contains('/')).ok_or(tr("emu.no_releases"))?.to_string();
             let html = get(&format!("https://github.com/{repo}/releases/expanded_assets/{tag}"))?.text().map_err(|e| e.to_string())?;
             let prefix = format!("/{repo}/releases/download/{tag}/");
             let files: Vec<String> = html
@@ -198,7 +201,7 @@ fn latest(e: &Emu) -> Result<Release, String> {
                 .filter_map(|s| s.split('"').next())
                 .filter_map(|h| h.strip_prefix(&prefix).map(String::from))
                 .collect();
-            let file = pick_asset(files.iter().map(String::as_str), must).ok_or("No hay versión para Windows")?.to_string();
+            let file = pick_asset(files.iter().map(String::as_str), must).ok_or(tr("emu.no_windows"))?.to_string();
             let extra_exe = files
                 .iter()
                 .find(|f| {
@@ -229,7 +232,7 @@ fn latest(e: &Emu) -> Result<Release, String> {
                     return Ok(Release { version: rel.tag_name.clone(), file: a.name.clone(), url: a.browser_download_url.clone(), extra_exe: None });
                 }
             }
-            Err("No hay versión para Windows".into())
+            Err(tr("emu.no_windows").into())
         }
         Source::Dolphin => {
             // La web de Dolphin bloquea programas; las versiones estables están como etiquetas en GitHub
@@ -239,7 +242,7 @@ fn latest(e: &Emu) -> Result<Release, String> {
                 .skip(1)
                 .filter_map(|s| s.split('"').next())
                 .find(|t| t.chars().next().is_some_and(|c| c.is_ascii_digit()))
-                .ok_or("No se encontró la versión de Dolphin")?
+                .ok_or(tr("emu.no_dolphin"))?
                 .to_string();
             let file = format!("dolphin-{tag}-x64.7z");
             Ok(Release { url: format!("https://dl.dolphin-emu.org/releases/{tag}/{file}"), version: tag, file, extra_exe: None })
@@ -303,7 +306,7 @@ fn install_release(e: &Emu, rel: &Release) -> Result<Installed, String> {
     let archive = dir.join(&rel.file);
     let mut resp = client().get(&rel.url).send().map_err(|err| err.to_string())?;
     if !resp.status().is_success() {
-        return Err(format!("La descarga falló ({})", resp.status()));
+        return Err(trf("emu.download_failed", &[("status", &resp.status().to_string())]));
     }
     let mut bytes = Vec::new();
     resp.read_to_end(&mut bytes).map_err(|err| err.to_string())?;
@@ -317,7 +320,7 @@ fn install_release(e: &Emu, rel: &Release) -> Result<Installed, String> {
         fs::write(target.join(file), &data).map_err(|err| err.to_string())?;
     }
     // Modo portable cuando el emulador lo admite: la configuración queda junto al programa
-    let exe = find_exe(&target, e.exe_hint).ok_or("No se encontró el programa dentro de la descarga")?;
+    let exe = find_exe(&target, e.exe_hint).ok_or(tr("emu.no_exe"))?;
     if matches!(e.id, "duckstation" | "pcsx2" | "melonds") {
         let _ = fs::write(exe.parent().unwrap().join("portable.txt"), "");
     }
@@ -376,19 +379,19 @@ fn folders(e: &Emu, exe_dir: Option<&Path>) -> Vec<Folder> {
     let games = home().join("Juegos").join(&console);
     let appdata = PathBuf::from(std::env::var("APPDATA").unwrap_or_default());
     let f = |key, label, hint, path: PathBuf| Folder { key, label, hint, path: path.to_string_lossy().into_owned() };
-    let mut out = vec![f("juegos", "Tus juegos", "Copia aquí tus juegos. La primera vez que abras el emulador, elige esta carpeta como carpeta de juegos.", games.clone())];
+    let mut out = vec![f("juegos", tr("emu.folder.games"), tr("emu.folder.games_hint"), games.clone())];
     let exe_dir = exe_dir.map(Path::to_path_buf);
     let bios = match e.id {
-        "duckstation" => exe_dir.as_ref().map(|d| (d.join("bios"), "BIOS de tu PS1 (por ejemplo scph5501.bin). DuckStation la encuentra sola.")),
-        "pcsx2" => exe_dir.as_ref().map(|d| (d.join("bios"), "BIOS de tu PS2 (archivo .bin). PCSX2 la encuentra sola.")),
-        "melonds" => exe_dir.as_ref().map(|d| (d.join("bios"), "bios7.bin, bios9.bin y firmware.bin. Después elígelos en melonDS: Ajustes → Emulación.")),
-        "rpcs3" => Some((games.join("Firmware"), "Deja aquí PS3UPDAT.PUP y, en RPCS3, Archivo → Instalar firmware.")),
-        "shadps4" => exe_dir.as_ref().map(|d| (d.join("user").join("sys_modules"), "Opcional: módulos de sistema de tu PS4.")),
-        "eden" | "eden-nx2" => Some((appdata.join("eden").join("keys"), "prod.keys y title.keys de tu consola. El firmware se instala desde el propio emulador.")),
+        "duckstation" => exe_dir.as_ref().map(|d| (d.join("bios"), "emu.folder.bios_duckstation")),
+        "pcsx2" => exe_dir.as_ref().map(|d| (d.join("bios"), "emu.folder.bios_pcsx2")),
+        "melonds" => exe_dir.as_ref().map(|d| (d.join("bios"), "emu.folder.bios_melonds")),
+        "rpcs3" => Some((games.join("Firmware"), "emu.folder.bios_rpcs3")),
+        "shadps4" => exe_dir.as_ref().map(|d| (d.join("user").join("sys_modules"), "emu.folder.bios_shadps4")),
+        "eden" | "eden-nx2" => Some((appdata.join("eden").join("keys"), "emu.folder.bios_eden")),
         _ => None,
     };
     if let Some((path, hint)) = bios {
-        out.push(f("bios", "BIOS, firmware y claves", hint, path));
+        out.push(f("bios", tr("emu.folder.bios"), tr(hint), path));
     }
     let data = match e.id {
         "dolphin" => Some(home().join("Documents").join("Dolphin Emulator")),
@@ -396,7 +399,7 @@ fn folders(e: &Emu, exe_dir: Option<&Path>) -> Vec<Folder> {
         _ => exe_dir.clone(),
     };
     if let Some(path) = data {
-        out.push(f("datos", "Partidas y ajustes", "Tus partidas guardadas y la configuración del emulador.", path));
+        out.push(f("datos", tr("emu.folder.data"), tr("emu.folder.data_hint"), path));
     }
     out
 }
@@ -407,13 +410,40 @@ pub fn emu_folder(id: String, key: String) -> Result<String, String> {
     let e = emu(&id)?;
     let inst = read_installed(e.id);
     let exe_dir = inst.as_ref().and_then(|i| Path::new(&i.exe).parent().map(Path::to_path_buf));
-    let f = folders(e, exe_dir.as_deref()).into_iter().find(|f| f.key == key).ok_or("Carpeta desconocida")?;
+    let f = folders(e, exe_dir.as_deref()).into_iter().find(|f| f.key == key).ok_or(tr("transfer.unknown_folder"))?;
     fs::create_dir_all(&f.path).map_err(|err| err.to_string())?;
     Ok(f.path)
 }
 
+/// Una carpeta de un emulador instalado a la que se pueden enviar archivos desde otro dispositivo
+pub struct Destination {
+    /// "<emulador>.<carpeta>", p. ej. "pcsx2.bios"
+    pub id: String,
+    pub emu: &'static str,
+    pub label: &'static str,
+    pub path: PathBuf,
+}
+
+/// Todas las carpetas (juegos, BIOS, partidas) de los emuladores instalados
+pub fn destinations() -> Vec<Destination> {
+    CATALOG
+        .iter()
+        .filter(|e| !HIDDEN.contains(&e.id))
+        .filter_map(|e| read_installed(e.id).map(|i| (e, i)))
+        .flat_map(|(e, inst)| {
+            let exe_dir = Path::new(&inst.exe).parent().map(Path::to_path_buf);
+            folders(e, exe_dir.as_deref()).into_iter().map(move |f| Destination {
+                id: format!("{}.{}", e.id, f.key),
+                emu: e.name,
+                label: f.label,
+                path: PathBuf::from(f.path),
+            })
+        })
+        .collect()
+}
+
 fn emu(id: &str) -> Result<&'static Emu, String> {
-    CATALOG.iter().find(|e| e.id == id).ok_or_else(|| "Emulador desconocido".into())
+    CATALOG.iter().find(|e| e.id == id).ok_or_else(|| tr("emu.unknown").into())
 }
 
 // ---------------- Comandos ----------------
@@ -450,8 +480,11 @@ pub fn list_emulators() -> (Hardware, Vec<EmuInfo>) {
         .map(|((e, inst), icon)| {
             let exe_dir = inst.as_ref().and_then(|i| Path::new(&i.exe).parent().map(Path::to_path_buf));
             EmuInfo {
-                id: e.id, name: e.name, console: e.console, trust: e.trust, verdict: verdict(&h, e),
-                bios: e.bios, note: e.note,
+                // Textos del catálogo en el idioma de la consola (claves emu.<id>.bios/note/console)
+                id: e.id, name: e.name, trust: e.trust, verdict: verdict(&h, e),
+                console: lookup(&format!("emu.{}.console", e.id)).unwrap_or(e.console),
+                bios: lookup(&format!("emu.{}.bios", e.id)).unwrap_or(e.bios),
+                note: lookup(&format!("emu.{}.note", e.id)).unwrap_or(e.note),
                 can_rollback: inst.as_ref().is_some_and(|i| i.previous.is_some()),
                 folder: exe_dir.as_ref().map(|p| p.to_string_lossy().into_owned()),
                 folders: folders(e, exe_dir.as_deref()),
@@ -481,8 +514,8 @@ pub async fn install_emulator(id: String) -> Result<String, String> {
 #[tauri::command(async)]
 pub fn rollback_emulator(id: String) -> Result<String, String> {
     let e = emu(&id)?;
-    let cur = read_installed(e.id).ok_or("No está instalado")?;
-    let prev = *cur.previous.clone().ok_or("No hay versión anterior")?;
+    let cur = read_installed(e.id).ok_or(tr("emu.not_installed"))?;
+    let prev = *cur.previous.clone().ok_or(tr("emu.no_previous"))?;
     // Tus datos vuelven con la versión anterior
     if let (Some(from), Some(to)) = (Path::new(&cur.exe).parent(), Path::new(&prev.exe).parent()) {
         carry_user_data(from, to);
@@ -503,7 +536,7 @@ fn prefer_dedicated_gpu(exe: &str) {
 #[tauri::command(async)]
 pub fn launch_emulator(id: String) -> Result<(), String> {
     let e = emu(&id)?;
-    let inst = read_installed(e.id).ok_or("No está instalado")?;
+    let inst = read_installed(e.id).ok_or(tr("emu.not_installed"))?;
     prefer_dedicated_gpu(&inst.exe);
     let exe = Path::new(&inst.exe);
     Command::new(exe).current_dir(exe.parent().unwrap()).spawn().map(|_| ()).map_err(|err| err.to_string())
@@ -527,6 +560,19 @@ pub fn update_all_installed() {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn textos_del_catalogo_traducidos() {
+        for e in CATALOG.iter().filter(|e| !HIDDEN.contains(&e.id)) {
+            if !e.bios.is_empty() {
+                assert_eq!(lookup(&format!("emu.{}.bios", e.id)), Some(e.bios), "{}: falta o no coincide emu.{}.bios", e.id, e.id);
+            }
+            if !e.note.is_empty() {
+                assert_eq!(lookup(&format!("emu.{}.note", e.id)), Some(e.note), "{}: falta o no coincide emu.{}.note", e.id, e.id);
+            }
+        }
+        assert_eq!(lookup("emu.dolphin.console"), Some("Wii y GameCube"));
+    }
 
     #[test]
     fn elige_el_archivo_de_windows() {

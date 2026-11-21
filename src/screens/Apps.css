@@ -17,8 +17,8 @@
   padding: 18px;
   border-radius: 22px;
   text-align: left;
-  background: rgba(255, 253, 249, 0.6);
-  box-shadow: 0 0 0 1px var(--hair), 0 24px 40px -30px rgba(80, 56, 30, 0.35);
+  background: rgb(var(--surface-rgb) / 0.6);
+  box-shadow: 0 0 0 1px var(--hair), 0 24px 40px -30px rgb(var(--shadow-rgb) / 0.35);
 }
 .app-tile[data-focused] { box-shadow: var(--bezel-focus); background: var(--surface); transform: translateY(-4px) scale(1.04); }
 .app-name {
@@ -35,7 +35,7 @@
   display: grid;
   place-items: center;
   border-radius: 14px;
-  background: rgba(30, 24, 18, 0.05);
+  background: rgb(var(--ink-rgb) / 0.05);
   box-shadow: 0 0 0 1px var(--hair);
   color: var(--text-2);
   filter: none;
@@ -48,7 +48,7 @@
   width: 150px;
   height: 150px;
   border-radius: 38px;
-  background: rgba(255, 253, 249, 0.7);
+  background: rgb(var(--surface-rgb) / 0.7);
   box-shadow: var(--bezel);
   margin-bottom: 8px;
 }

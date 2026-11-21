@@ -1,100 +1,112 @@
 <div align="center">
 
-# CouchDesk
+**English** · [Español](README.es.md) · [Português (Brasil)](README.pt-BR.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Italiano](README.it.md)
 
-**Tu PC con Windows en modo consola.**
-Se maneja entero con mando, teclado o el móvil, como una PS5 o Steam Big Picture.
+<br>
 
-[![Descargar para Windows](https://img.shields.io/github/v/release/pablonolascoo/couchdesk?label=Descargar%20para%20Windows&style=for-the-badge)](https://github.com/pablonolascoo/couchdesk/releases/latest)
-[![Licencia MIT](https://img.shields.io/badge/licencia-MIT-2f3437?style=for-the-badge)](LICENSE)
-[![Windows 10 y 11](https://img.shields.io/badge/Windows-10%20%7C%2011-0a66c2?style=for-the-badge)](https://github.com/pablonolascoo/couchdesk/releases/latest)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="brand/final/lockup-reversed.svg">
+  <img src="brand/final/lockup.svg" alt="CouchDesk" width="360">
+</picture>
 
-[Web](https://pablonolascoo.github.io/couchdesk/) · [Descargar](https://github.com/pablonolascoo/couchdesk/releases/latest) · [Cambios](CHANGELOG.md)
+### Free, open-source console mode for Windows 10 and 11
 
-<img src="docs/img/inicio.jpg" alt="Pantalla de inicio de CouchDesk: juegos arriba y accesos a Biblioteca, Nube, Emuladores, Navegador y Ajustes abajo" width="100%">
+Steam, Epic, GOG and Xbox games in one library, Xbox Cloud Gaming and PS5 Remote Play, emulators and streaming apps, all run from the couch with a controller, the keyboard or your phone.
+
+[![Latest release](https://img.shields.io/github/v/release/pablonolascoo/couchdesk?label=release&color=E8643A)](https://github.com/pablonolascoo/couchdesk/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/pablonolascoo/couchdesk/total?color=1F1A17)](https://github.com/pablonolascoo/couchdesk/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-1F1A17)](LICENSE)
+[![Windows 10 | 11](https://img.shields.io/badge/Windows-10%20%7C%2011-1F1A17)](https://github.com/pablonolascoo/couchdesk/releases/latest)
+[![GitHub stars](https://img.shields.io/github/stars/pablonolascoo/couchdesk?style=flat&color=E8643A)](https://github.com/pablonolascoo/couchdesk/stargazers)
+
+[**Download for Windows**](https://github.com/pablonolascoo/couchdesk/releases/latest) · [Website](https://pablonolascoo.github.io/couchdesk/en/) · [Changelog](CHANGELOG.md)
+
+<img src="docs/img/en/inicio.jpg" alt="The CouchDesk home screen: games along the top and Library, Cloud, Emulators, Browser and Settings below" width="100%">
 
 </div>
 
-## Qué es
+## What it is
 
-CouchDesk cambia el escritorio de Windows por una pantalla como la de una consola. Desde el sofá juegas, ves series y cambias ajustes sin tocar el ratón. Si quieres, arranca en lugar del escritorio al encender el PC.
+CouchDesk replaces the Windows desktop with a console-style screen, like a PS5 or Steam Big Picture. From the couch you play, watch shows and change settings without touching the mouse. If you want, the PC boots straight into it instead of the desktop.
 
-Es gratis y de código abierto.
+It's free, has no account, no ads and no telemetry.
 
-## Funciones
+## Features
 
-| | Qué hace |
+| | |
 |---|---|
-| 🎮 **Todos tus juegos juntos** | Steam, Epic, GOG, Xbox y Game Pass en una sola biblioteca. Si falta alguno, lo marcas como juego. |
-| ☁️ **Juegos en la nube** | Xbox Cloud Gaming y PS5 Remote Play, dentro de la app. |
-| 🕹️ **Emuladores** | Los instala y los actualiza. Cada uno trae botones para abrir la carpeta de juegos y la de BIOS. |
-| 📺 **Series, deporte y música** | Netflix, Prime Video, Disney+, HBO Max, DAZN, Movistar Plus+, YouTube, Spotify y más, con su logo. |
-| 🌐 **Navegador con mando** | La cruceta salta entre enlaces y el stick mueve la página. Esc o el botón Xbox te devuelven a casa. |
-| 📱 **El móvil como mando** | Escaneas un QR y el móvil es un mando, un touchpad o un teclado. Cambia solo según lo que hagas. |
-| 🎛️ **Mandos de verdad** | Xbox, PS4 y PS5 por cable o Bluetooth. El touchpad de PlayStation hace de ratón. |
-| ⚡ **Arranca en lugar de Windows** | Al encender, ves CouchDesk y no el escritorio. Gasta menos memoria. |
-| 🗂️ **Y además** | Todas tus apps con su icono, explorador de archivos, recibir archivos por FTP, sonido, brillo, Wi-Fi y energía. |
+| **One game library** | Steam, Epic, GOG and Xbox / Game Pass together. Games from EA, Ubisoft, Battle.net and other launchers come from the Start menu: press "Mark as game". |
+| **All your apps** | Everything installed on the PC, with its real icon. |
+| **Cloud gaming** | Xbox Cloud Gaming in full screen and PS5 Remote Play with [chiaki-ng](https://github.com/streetpea/chiaki-ng). |
+| **Emulators** | Installed and updated with one button, with game, BIOS and save folders for each one, and rollback if a new version breaks. |
+| **Browser with a controller** | 24 streaming shortcuts: Netflix, Prime Video, Disney+, HBO Max, DAZN, Movistar Plus+, YouTube, Twitch, Spotify and more. Hold Esc or press the Xbox button to leave. |
+| **Phone as a controller** | Scan a QR code and your phone becomes a gamepad, touchpad or keyboard. It switches mode by itself. |
+| **Real controllers** | Xbox, PS4 and PS5, wired or Bluetooth, all at once. The PlayStation touchpad works as a mouse. Button mapping profiles and an on-screen keyboard. |
+| **Music** | Spotify or any player: now playing, play/pause, next and per-app volume, also by voice. |
+| **Claude built in** | The Claude assistant with voice, saved conversations, connectors (MCP) and extensions, in a floating window over your game. |
+| **Backgrounds and themes** | Animated PS5-style backgrounds or your own image, video, YouTube link or 3D model. Built-in themes, or make your own with menu music. |
+| **Screensaver and ambient mode** | Apple TV-style screensaver with clock, date and weather, low-power mode, and it can replace the Windows one. Fireplace, waterfall and rain videos. |
+| **Boot into CouchDesk** | Start the PC in CouchDesk instead of the Windows desktop, and go back with one button. |
+| **Files** | A file explorer, and receive files from your phone or another PC by browser upload, FTP or LocalSend, straight into emulator folders. |
+| **Windows settings** | Sound, brightness, power and Wi-Fi with the controller. |
+| **Languages** | Spanish, English, Brazilian Portuguese, French, German and Italian, with community translations. |
 
-## Capturas
+## Why CouchDesk?
 
-<table>
-  <tr>
-    <td width="50%"><img src="docs/img/biblioteca.jpg" alt="Biblioteca con juegos de Steam, Epic y GOG"><br><b>Biblioteca.</b> Todos tus juegos, con su portada y su tienda.</td>
-    <td width="50%"><img src="docs/img/nube.jpg" alt="Pantalla En la nube con Xbox Cloud Gaming y PS5 Remote Play"><br><b>En la nube.</b> Xbox Cloud Gaming y tu PS5 a distancia.</td>
-  </tr>
-  <tr>
-    <td width="50%"><img src="docs/img/navegador.jpg" alt="Navegador con accesos a YouTube, Netflix y Prime Video"><br><b>Navegador.</b> Accesos grandes a tus plataformas favoritas.</td>
-    <td width="50%"><img src="docs/img/emuladores.jpg" alt="Lista de emuladores con su consola y cómo irá en tu PC"><br><b>Emuladores.</b> Cada uno con su logo, sus carpetas y cómo irá en tu PC.</td>
-  </tr>
-  <tr>
-    <td colspan="2"><img src="docs/img/ajustes.jpg" alt="Ajustes de sonido, pantalla, energía, Wi-Fi y arranque"><br><b>Ajustes.</b> Sonido, pantalla, energía, Wi-Fi y arranque, todo con el mando.</td>
-  </tr>
-</table>
+| | CouchDesk | Xbox mode | Steam Big Picture | Playnite |
+|---|---|---|---|---|
+| Runs on Windows 10 | Yes | No (Windows 11 24H2+) | Yes | Yes |
+| Games from several stores | Yes | Yes | Added by hand | Yes, with add-ons |
+| PS5 Remote Play | Yes | No | No | Not included |
+| Installs and updates emulators | Yes | No | No | No |
+| Phone as a controller | Yes | No | No | No |
+| Boots instead of the desktop | Yes | Yes | No | No |
 
-## Instalar
+Each tool has its strengths. Read the honest comparisons: [vs Xbox mode](https://pablonolascoo.github.io/couchdesk/en/vs/xbox-mode/) · [vs Steam Big Picture](https://pablonolascoo.github.io/couchdesk/en/vs/steam-big-picture/) · [vs Playnite](https://pablonolascoo.github.io/couchdesk/en/vs/playnite/).
 
-1. Descarga `Consola_X.Y.Z_x64-setup.exe` de la [última versión](https://github.com/pablonolascoo/couchdesk/releases/latest).
-2. Ábrelo. Windows puede avisar de que no conoce el programa, porque aún no está firmado. Pulsa **Más información → Ejecutar de todas formas**.
-3. ¿Quieres que arranque al encender? Ve a **Ajustes → Arranque**.
+## Install
 
-Para volver al escritorio normal: **Escritorio → Volver al modo normal de Windows**. Si algo falla, ejecuta `consola.exe --restaurar-escritorio`.
+1. Download the file ending in `_x64-setup.exe` from the [latest release](https://github.com/pablonolascoo/couchdesk/releases/latest).
+2. Run it. Windows SmartScreen may warn you because the installer isn't signed yet: click **More info → Run anyway**.
+3. Want it to start with the PC? Go to **Settings → Startup**.
 
-## Volver al inicio desde cualquier sitio
+To get the normal desktop back: **Desktop → Go back to normal Windows mode**, or turn it off in **Settings → Startup**.
 
-| Con | Haz esto |
+Requires 64-bit Windows 10 or 11.
+
+## Shortcuts
+
+| To | Do this |
 |---|---|
-| Mando de Xbox | Pulsa el botón **Xbox** |
-| Mando de PlayStation | Pulsa el botón **PS** |
-| Teclado | Mantén **Esc** 1 segundo, o púlsalo 3 veces |
-| Móvil | Pulsa **Inicio** |
+| Go back home from any game or app | Hold **Esc**, press the **Xbox** or **PS** button, or press **Home** on the phone controller |
+| Open Claude over a game | **Ctrl + Alt + Space**, or **View + Y** on the controller |
+| Use the controller as mouse and keyboard in Windows | **START + BACK** (Xbox) or **OPTIONS + SHARE** (PlayStation) |
 
-## Lo que no hace
+## FAQ
 
-No descarga juegos, BIOS ni claves. Usa los de tus propias consolas.
+**Is it really free?** Yes. MIT license, no account, no ads, no telemetry.
 
-## Para desarrolladores
+**Does it download games, BIOS files or keys?** No. Use the ones from your own consoles and games.
 
-Hecho con [Tauri 2](https://tauri.app) (Rust) y React 19. Solo para Windows 10 y 11 de 64 bits.
+**Does it replace Windows?** No. It runs on top of Windows. If you turn on boot mode, it takes the desktop's place for your user only, and one button undoes it.
+
+**Do PlayStation controllers need DS4Windows?** No. CouchDesk reads the DualSense and DualShock 4 directly. Inside games, use the game's own support or Steam Input.
+## Contributing
+
+Bug reports and ideas go to [Issues](https://github.com/pablonolascoo/couchdesk/issues). Want CouchDesk in your language? Read [TRANSLATING.md](TRANSLATING.md).
+
+For developers: built with [Tauri 2](https://tauri.app) (Rust) and React 19.
 
 ```bash
 npm install
-npm run tauri dev      # abrir en modo desarrollo
-npm run app:build      # crear el instalador (src-tauri/target/release/bundle/nsis)
-cd src-tauri && cargo test --lib
+npm run app:dev      # run in development mode
+npm run app:build    # build the installer (src-tauri/target/release/bundle/nsis)
+npm run site         # rebuild the website in docs/ from site/
+npm run release      # bump the version, build the installer and publish it (needs Bun and GitHub CLI)
 ```
 
-### Publicar una versión
+Before a release, add the changes to [CHANGELOG.md](CHANGELOG.md).
 
-Cada versión tiene número ([SemVer](https://semver.org/lang/es/)) y nombre en clave. La primera es **Salón v1.0.0**. Hace falta [Bun](https://bun.sh) y [GitHub CLI](https://cli.github.com).
+## License
 
-```bash
-npm run release          # 1.0.0 → 1.0.1
-npm run release minor    # 1.0.1 → 1.1.0
-npm run release major    # 1.1.0 → 2.0.0
-```
-
-El script sube la versión, crea el instalador y lo publica en GitHub. También avisa a los buscadores (IndexNow). Si algo falla al compilar, lo deja todo como estaba. Antes, apunta los cambios en [CHANGELOG.md](CHANGELOG.md).
-
-## Licencia
-
-[MIT](LICENSE) · Hecho por Pablo Nolasco.
+[MIT](LICENSE) · Made by Pablo Nolasco. Product names and logos are trademarks of their owners.

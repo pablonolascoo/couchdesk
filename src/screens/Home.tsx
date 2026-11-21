@@ -1,20 +1,32 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Play, ArrowUpRight } from '@phosphor-icons/react'
+import { Play, ArrowUpRight, Waves } from '@phosphor-icons/react'
 import { TopBar } from '../components/TopBar'
 import { HintBar } from '../components/HintBar'
 import { GameCard } from '../components/GameCard'
-import { sections } from '../data/mock'
+import { sections, type Section } from '../data/mock'
 import { Ambient } from '../components/Ambient'
 import { useGames, storeLabel, lastPlayedText, sizeText, type Game } from '../data/games'
 import { usePlay } from '../data/usePlay'
 import { BrandLogo } from '../ui/brands'
+import { NowPlaying } from '../components/NowPlaying'
+import { t, useT } from '../i18n'
 import './Home.css'
 
 // Juego destacado recordado al volver atrás
 let lastSelectedId: string | undefined
 
+// Modo ambiente, junto a Música
+function dockSections(): Section[] {
+  const all = sections()
+  const ambienceSection: Section = { path: '/ambiente', label: t('home.section.ambience'), hint: t('home.section.ambience.hint'), icon: Waves, tone: '#2f6f6a' }
+  const dockAt = all.findIndex((s) => s.path === '/recibir')
+  return dockAt < 0 ? [...all, ambienceSection] : [...all.slice(0, dockAt), ambienceSection, ...all.slice(dockAt)]
+}
+
 export function Home() {
+  const t = useT()
+  const dock = dockSections()
   const navigate = useNavigate()
   const games = useGames()
   const recent = (games ?? []).slice(0, 10)
@@ -39,14 +51,14 @@ export function Home() {
   return (
     <div className="screen home">
       <Ambient game={selected} />
-      <TopBar title="Inicio" />
+      <TopBar title={t('home.title')} />
 
-      <section className="rail" aria-label="Tus juegos">
+      <section className="rail" aria-label={t('home.rail')}>
         <div className="rail-row" ref={railRef}>
           {recent.map((g, i) => (
             <GameCard key={g.id} game={g} index={i} compact navDown="play" isDefault={i === 0} onOpen={() => navigate(`/juego/${g.id}`)} />
           ))}
-          {games && recent.length === 0 && <p className="empty">Cuando instales un juego, saldrá en esta fila.</p>}
+          {games && recent.length === 0 && <p className="empty">{t('home.rail.empty')}</p>}
         </div>
       </section>
 
@@ -65,26 +77,27 @@ export function Home() {
             </p>
             <div className="hero-actions">
               <button className="pill pill-dark" data-nav="play" data-nav-up={`game-${selected.id}`} onClick={() => play(selected)}>
-                {launching === selected.id ? 'Abriendo…' : 'Jugar'}
+                {launching === selected.id ? t('shell.opening') : t('home.play')}
                 <span className="pill-icon"><Play size={14} weight="fill" /></span>
               </button>
               <button className="pill" data-nav="info" data-nav-up={`game-${selected.id}`} onClick={() => navigate(`/juego/${selected.id}`)}>
-                Ficha del juego
+                {t('home.details')}
                 <span className="pill-icon"><ArrowUpRight size={16} /></span>
               </button>
             </div>
           </div>
         ) : (
           <div className="hero-inner">
-            <span className="eyebrow">Biblioteca</span>
-            <h2 className="hero-title">{games === null ? 'Buscando juegos…' : 'Aún no hay juegos'}</h2>
-            <p className="hero-meta">Instala juegos con Steam, Epic, GOG o Xbox y aparecerán aquí solos.</p>
+            <span className="eyebrow">{t('home.eyebrow')}</span>
+            <h2 className="hero-title">{games === null ? t('home.searching') : t('home.noGames')}</h2>
+            <p className="hero-meta">{t('home.noGames.text')}</p>
           </div>
         )}
+        <div className="home-np"><NowPlaying /></div>
       </section>
 
-      <nav className="dock" aria-label="Secciones">
-        {sections.map(({ path, label, hint, icon: Icon, tone, brand }, i) => (
+      <nav className="dock" aria-label={t('home.sections')}>
+        {dock.map(({ path, label, hint, icon: Icon, tone, brand }, i) => (
           <button
             key={path}
             className="tile reveal"
@@ -105,7 +118,7 @@ export function Home() {
         ))}
       </nav>
 
-      <HintBar hints={[['A', 'Seleccionar']]} />
+      <HintBar hints={[['A', t('shell.hint.select')]]} />
     </div>
   )
 }

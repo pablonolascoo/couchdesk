@@ -12,7 +12,7 @@
   font-size: 14px;
   background: var(--green-bg);
   color: var(--green);
-  box-shadow: 0 0 0 1px var(--hair), 0 20px 40px -24px rgba(80, 56, 30, 0.35);
+  box-shadow: 0 0 0 1px var(--hair), 0 20px 40px -24px rgb(var(--shadow-rgb) / 0.35);
   animation: toast-in 600ms var(--spring) both;
 }
 @keyframes toast-in { from { opacity: 0; translate: 0 -16px; scale: 0.94; } to { opacity: 1; translate: 0 0; scale: 1; } }

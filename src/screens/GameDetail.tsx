@@ -6,10 +6,12 @@ import { Ambient } from '../components/Ambient'
 import { useGames, storeLabel, lastPlayedText, sizeText, coverSrc, iconSrc, markAsGame } from '../data/games'
 import { usePlay } from '../data/usePlay'
 import { StoreArt } from '../components/GameCard'
+import { useT } from '../i18n'
 import '../components/GameCard.css'
 import './GameDetail.css'
 
 export function GameDetail() {
+  const t = useT()
   const { id } = useParams()
   const navigate = useNavigate()
   const games = useGames()
@@ -19,13 +21,13 @@ export function GameDetail() {
   if (!game) {
     return (
       <div className="screen">
-        <TopBar title="Juego" />
+        <TopBar title={t('games.title')} />
         <section className="detail">
           <div>
-            <p className="hero-meta">{games === null ? 'Cargando…' : 'Este juego ya no está instalado.'}</p>
+            <p className="hero-meta">{games === null ? t('shell.loading') : t('games.notInstalled')}</p>
             <div className="hero-actions">
               <button className="pill" data-nav="back" data-nav-default="" onClick={() => navigate(-1)}>
-                Volver <span className="pill-icon"><ArrowLeft size={16} /></span>
+                {t('shell.goBack')} <span className="pill-icon"><ArrowLeft size={16} /></span>
               </button>
             </div>
           </div>
@@ -62,28 +64,28 @@ export function GameDetail() {
             ))}
           </h2>
           <dl className="detail-facts">
-            <dt>Última vez</dt><dd>{lastPlayedText(game.lastPlayed)}</dd>
-            {size && (<><dt>Tamaño</dt><dd>{size}</dd></>)}
-            {game.installDir && (<><dt>Carpeta</dt><dd className="mono">{game.installDir}</dd></>)}
+            <dt>{t('games.lastPlayed')}</dt><dd>{lastPlayedText(game.lastPlayed)}</dd>
+            {size && (<><dt>{t('games.size')}</dt><dd>{size}</dd></>)}
+            {game.installDir && (<><dt>{t('games.folder')}</dt><dd className="mono">{game.installDir}</dd></>)}
           </dl>
           <div className="hero-actions">
             <button className="pill pill-dark" data-nav="play" data-nav-default="" onClick={() => play(game)}>
-              {launching ? 'Abriendo…' : 'Jugar'}
+              {launching ? t('shell.opening') : t('games.play')}
               <span className="pill-icon"><Play size={14} weight="fill" /></span>
             </button>
             <button className="pill" data-nav="back" onClick={() => navigate(-1)}>
-              Volver
+              {t('shell.goBack')}
               <span className="pill-icon"><ArrowLeft size={16} /></span>
             </button>
             <button className="pill" data-nav="notgame" onClick={() => markAsGame(game.id, false).then(() => navigate('/aplicaciones', { replace: true }))}>
-              No es un juego
+              {t('games.notGame')}
               <span className="pill-icon"><AppWindow size={16} /></span>
             </button>
           </div>
-          {error && <p className="detail-error">No se pudo abrir: {error}</p>}
+          {error && <p className="detail-error">{t('games.openError', { error })}</p>}
         </div>
       </section>
-      <HintBar hints={[['A', 'Seleccionar'], ['B', 'Atrás']]} />
+      <HintBar hints={[['A', t('shell.hint.select')], ['B', t('common.back')]]} />
     </div>
   )
 }

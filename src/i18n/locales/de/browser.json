@@ -1,0 +1,20 @@
+{
+  "browser.title": "Browser",
+  "browser.placeholder": "Website oder Suchbegriff eingeben",
+  "browser.go": "Los",
+  "browser.group.movies": "Filme und Serien",
+  "browser.group.live": "Sport, Livestreams und Musik",
+  "browser.group.cloud": "Cloud-Gaming",
+  "browser.group.shopping": "Shopping und Nachschlagen",
+  "browser.openInSystem": "Im Windows-Browser öffnen (Chrome, Edge…)",
+  "browser.inside": "Auf einer Website",
+  "browser.key.dpad": "Steuerkreuz",
+  "browser.key.rstick": "Rechter Stick",
+  "browser.key.orXbox": "oder Xbox-Taste",
+  "browser.do.dpad": "Zwischen Links und Buttons springen",
+  "browser.do.scroll": "Seite scrollen",
+  "browser.do.b": "Vorherige Seite (auf der ersten zurück zur Konsole)",
+  "browser.do.home": "Zurück zur Konsole",
+  "browser.do.esc": "1 Sekunde halten (oder 3-mal drücken), um von jeder Website zur Konsole zurückzukehren",
+  "browser.phoneNote": "Ist dein Handy als Controller verbunden, wechselt es von selbst in den Touchpad-Modus und öffnet die Tastatur, wenn die Website Text braucht."
+}

@@ -1,0 +1,8 @@
+{
+  "library.title": "Library",
+  "library.searching": "Looking for games…",
+  "library.count": "{n} game installed|{n} games installed",
+  "library.empty.title": "No games yet",
+  "library.empty.text": "Steam, Epic, GOG and Xbox games show up here on their own as soon as you install them. Meanwhile, you can play with emulators.",
+  "library.empty.emulators": "Go to Emulators"
+}

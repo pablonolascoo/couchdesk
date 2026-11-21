@@ -1,6 +1,13 @@
 /* Accesos directos: tarjetas grandes, cada una con su color, su logo y (si la web la da) su imagen de fondo */
 /* Siempre 3 columnas (2 en pantallas estrechas): cada grupo llena sus filas */
 .web-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+/* Pantalla ancha: 6 por fila. Los grupos de 3 van de dos en dos, lado a lado, así las filas siempre se llenan */
+@media (min-width: 1280px) {
+  .web-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
+  .web-group { grid-column: 1 / -1; }
+  .web-group.half { grid-column: auto; }
+  .web-group:not(.half) .web-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
 @media (max-width: 860px) { .web-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 .web-card {
@@ -20,7 +27,7 @@
   background:
     radial-gradient(110% 90% at 100% 100%, color-mix(in oklab, var(--tone) 26%, transparent), transparent 70%),
     linear-gradient(160deg, var(--surface), color-mix(in oklab, var(--tone) 10%, var(--surface)));
-  box-shadow: inset 0 1px 1px #fff, 0 0 0 1px color-mix(in oklab, var(--tone) 18%, transparent), 0 24px 40px -28px rgba(80, 56, 30, 0.45);
+  box-shadow: inset 0 1px 1px var(--highlight), 0 0 0 1px color-mix(in oklab, var(--tone) 18%, transparent), 0 24px 40px -28px rgb(var(--shadow-rgb) / 0.45);
 }
 .web-card[data-focused] { box-shadow: var(--bezel-focus); transform: translateY(-4px) scale(1.03); }
 

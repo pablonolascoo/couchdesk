@@ -198,7 +198,7 @@ fn console_in_front() -> bool {
         let mut title = [0u16; 64];
         let n = GetWindowTextW(GetForegroundWindow(), &mut title) as usize;
         let t = String::from_utf16_lossy(&title[..n]);
-        t == "Consola" || t == "Navegador"
+        t == "CouchDesk" || t == "Consola" || t == "Navegador"
     }
 }
 
@@ -220,7 +220,7 @@ fn game_in_front() -> bool {
         let mut title = [0u16; 64];
         let n = GetWindowTextW(h, &mut title) as usize;
         let title = String::from_utf16_lossy(&title[..n]);
-        if title == "Consola" || title == "Navegador" {
+        if title == "CouchDesk" || title == "Consola" || title == "Navegador" {
             return false;
         }
         let mut r = RECT::default();

@@ -16,3 +16,25 @@
 .file-row svg { color: var(--text-2); flex: none; }
 .file-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
 .file-meta { color: var(--muted); font-size: 13px; font-family: var(--mono); }
+
+/* Modo «traer archivos» */
+.bring-intro { margin: 0 0 16px; max-width: 520px; }
+.bring-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px 12px 12px 20px;
+  border-radius: 9999px;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--hair), 0 12px 32px -18px rgba(0, 0, 0, 0.35);
+}
+.bring-count { flex: 1; min-width: 0; font-size: 14px; color: var(--text-2); font-family: var(--mono); }
+.bring-bar .btn-primary, .bring-bar .btn-ghost { margin: 0; }
+.file-row.picked { background: var(--surface); }
+.file-row .pick-on { color: var(--text); }
+.pick-gap { width: 22px; flex: none; }

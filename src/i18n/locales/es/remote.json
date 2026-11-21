@@ -1,0 +1,9 @@
+{
+  "remote.title": "Mando móvil",
+  "remote.intro": "Escanea el código con la cámara del móvil. Se abre una página que convierte el móvil en ratón, teclado o mando. Pueden conectarse varios a la vez.",
+  "remote.connected": "Conectados",
+  "remote.none": "Nadie todavía.",
+  "remote.note": "El móvil y el PC deben estar en la misma red Wi-Fi. La primera vez, Windows puede pedir permiso para \"Consola\": acepta en redes privadas.",
+  "remote.back": "Volver",
+  "remote.noNetwork": "No hay conexión de red."
+}

@@ -1,11 +1,13 @@
+/* Claude: chat con burbujas, micrófono y accesos (Conversaciones, Conectores, Extensiones) */
 .chat {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 42vh;
+  max-height: 38vh;
+  min-height: 120px;
   overflow-y: auto;
   scrollbar-width: none;
-  padding-bottom: 6px;
+  padding: 18px 2px 6px;
 }
 .chat-empty { display: flex; align-items: center; gap: 8px; }
 .bubble {
@@ -15,18 +17,43 @@
   font-size: 16px;
   line-height: 1.5;
   white-space: pre-wrap;
+  user-select: text;
+  animation: bubble-in 600ms var(--ease) both;
 }
-.bubble { animation: bubble-in 600ms var(--ease) both; }
 @keyframes bubble-in { from { opacity: 0; translate: 0 10px; scale: 0.98; } to { opacity: 1; translate: 0 0; scale: 1; } }
 .bubble.user { align-self: flex-end; background: var(--text); color: var(--bg); border-bottom-right-radius: 8px; }
-.bubble.claude { align-self: flex-start; background: var(--surface); box-shadow: inset 0 1px 1px #fff, 0 0 0 1px var(--hair); border-bottom-left-radius: 8px; }
+.bubble.claude { align-self: flex-start; background: var(--surface); box-shadow: inset 0 1px 1px var(--highlight), 0 0 0 1px var(--hair); border-bottom-left-radius: 8px; }
 .bubble.tool { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; font-size: 13px; color: var(--muted); background: transparent; }
 .bubble.error { align-self: flex-start; background: var(--red-bg); color: var(--red); }
 .bubble.typing { color: var(--muted); }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-.ask { display: flex; gap: 10px; margin-top: 18px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+/* Accesos de arriba y ajustes de abajo: píldoras pequeñas */
+.claude-bar, .claude-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.claude-foot { margin-top: 18px; gap: 12px 16px; }
+.c-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  background: rgb(var(--surface-rgb) / 0.8);
+  box-shadow: inset 0 1px 1px var(--highlight), 0 0 0 1px var(--hair);
+  white-space: nowrap;
+}
+.c-chip[data-focused] { transform: scale(1.04); }
+.claude-help { color: var(--muted); font-size: 13px; line-height: 1.7; }
+.claude-help .kb, .claude-setup .kb { font-size: 11px; }
+
+/* Caja de pregunta: micrófono, texto y enviar */
+.ask { display: flex; align-items: center; gap: 10px; margin-top: 18px; }
 .ask-input {
   flex: 1;
+  min-width: 0;
   font: inherit;
   height: 52px;
   padding: 0 22px;
@@ -34,6 +61,72 @@
   outline: none;
   border-radius: 9999px;
   background: var(--surface);
-  box-shadow: inset 0 1px 2px rgba(58, 42, 24, 0.06), 0 0 0 1px var(--hair);
+  color: var(--text);
+  box-shadow: inset 0 1px 2px rgb(var(--ink-rgb) / 0.06), 0 0 0 1px var(--hair);
   user-select: text;
 }
+.ask .send { flex: none; }
+.mic {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: inset 0 1px 1px var(--highlight), 0 0 0 1px var(--hair), 0 14px 30px -20px rgb(var(--shadow-rgb) / 0.35);
+  touch-action: none;
+}
+.mic[data-focused] { transform: scale(1.08); }
+.mic:disabled { opacity: 0.4; }
+.mic.on { background: var(--text); color: var(--bg); animation: mic-pulse 1400ms var(--ease) infinite; }
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(var(--ink-rgb) / 0.28); }
+  50% { box-shadow: 0 0 0 10px rgb(var(--ink-rgb) / 0); }
+}
+
+.voice-error { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.voice-error > span { flex: 1; min-width: 200px; }
+.btn-ghost.small { height: 40px; padding: 0 16px; font-size: 14px; }
+
+/* Claude Code sin instalar o sin sesión */
+.claude-setup ol { padding-left: 20px; color: var(--text-2); line-height: 2; }
+.claude-setup .hero-actions { margin-top: 6px; }
+
+/* ---------- Subpantallas: listas de conversaciones, conectores y extensiones ---------- */
+.c-list { display: flex; flex-direction: column; gap: 14px; }
+.c-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.c-row > .option { margin-top: 0; flex: 1; min-width: 0; }
+.c-row .option-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.c-row .row-label, .c-row .row-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c-row .row-sub { white-space: normal; }
+.c-actions { display: flex; gap: 8px; flex: none; }
+.c-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 18px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--surface);
+  box-shadow: inset 0 1px 1px var(--highlight), 0 0 0 1px var(--hair);
+}
+.c-icon-btn[data-focused] { transform: scale(1.05); }
+.c-icon-btn.danger { color: var(--red); }
+.c-icon-btn.on { color: var(--green); }
+.c-icon-btn:disabled { opacity: 0.45; }
+.c-top { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; }
+.c-note { display: flex; align-items: center; gap: 10px; margin: 0 0 20px; max-width: 70ch; }
+.c-intro { color: var(--muted); max-width: 60ch; margin-bottom: 20px; line-height: 1.6; }
+.c-form { display: flex; flex-direction: column; gap: 14px; max-width: 620px; }
+.c-form label { display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--text-2); }
+.c-form .ask-input { width: 100%; flex: none; }
+.c-confirm { display: flex; flex-direction: column; gap: 10px; max-width: 560px; }
+.c-confirm h2 { font-family: var(--serif); font-weight: 400; font-size: 44px; line-height: 1.05; letter-spacing: -0.01em; }
+.c-confirm p { color: var(--muted); }

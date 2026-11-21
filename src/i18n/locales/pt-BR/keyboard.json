@@ -1,0 +1,11 @@
+{
+  "keyboard.label": "Teclado na tela",
+  "keyboard.placeholder": "Digite",
+  "keyboard.shift": "Maiúsculas",
+  "keyboard.delete": "Apagar",
+  "keyboard.space": "Espaço",
+  "keyboard.done": "Pronto",
+  "keyboard.hint.type": "Digitar",
+  "keyboard.hint.caret": "Mover cursor",
+  "keyboard.hint.close": "Fechar"
+}

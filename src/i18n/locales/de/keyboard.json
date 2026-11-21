@@ -1,0 +1,11 @@
+{
+  "keyboard.label": "Bildschirmtastatur",
+  "keyboard.placeholder": "Tippe",
+  "keyboard.shift": "Großbuchstaben",
+  "keyboard.delete": "Löschen",
+  "keyboard.space": "Leerzeichen",
+  "keyboard.done": "Fertig",
+  "keyboard.hint.type": "Tippen",
+  "keyboard.hint.caret": "Cursor bewegen",
+  "keyboard.hint.close": "Schließen"
+}
