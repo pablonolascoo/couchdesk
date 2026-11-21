@@ -5,7 +5,7 @@
 //   bun scripts/indexnow.ts            → manda todas las URLs del sitemap
 import { readdirSync, readFileSync } from 'node:fs'
 
-const SITE = 'https://pablonolascoo.github.io/consola'
+const SITE = 'https://pablonolascoo.github.io/couchdesk'
 const keyFile = readdirSync('docs').find((f) => /^[a-f0-9]{32}\.txt$/.test(f))
 if (!keyFile) { console.error('Falta docs/<clave>.txt'); process.exit(1) }
 const key = keyFile.replace('.txt', '')

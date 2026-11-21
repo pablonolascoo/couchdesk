@@ -1,6 +1,17 @@
 # Registro de cambios
 
-Todas las versiones de Consola. Formato: [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) · versiones [SemVer](https://semver.org/lang/es/) con nombre en clave.
+Todas las versiones de CouchDesk (antes «Consola»). Formato: [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) · versiones [SemVer](https://semver.org/lang/es/) con nombre en clave.
+
+## [Sin publicar]
+
+### Añadido
+- **Más accesos en el navegador, agrupados por tipo:**
+  - Cine y series: Disney+, HBO Max, Apple TV, Movistar Plus+, SkyShowtime, Filmin, RTVE Play, Atresplayer, Mitele y Crunchyroll.
+  - Deporte, directos y música: DAZN, Kick, Spotify y Apple Music.
+  - Juegos en la nube: Boosteroid.
+
+### Cambiado
+- El proyecto se llama ahora **CouchDesk**: [github.com/pablonolascoo/couchdesk](https://github.com/pablonolascoo/couchdesk).
 
 ## [1.0.0] — Salón — 2026-11-21
 

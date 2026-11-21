@@ -66,4 +66,4 @@ if (pushed.exitCode !== 0) { console.error('\n✖  No se pudo subir a GitHub. La
 await $`gh release create ${tag} ${installer} --title ${`Consola ${version} · ${meta.codename}`} --notes-file ${notesFile} --latest`
 // Avisar a los buscadores de que hay versión nueva (si la web ya está publicada)
 await $`bun scripts/indexnow.ts`.nothrow()
-console.log(`\n✔  ${label} publicada: https://github.com/pablonolascoo/consola/releases/tag/${tag}\n`)
+console.log(`\n✔  ${label} publicada: https://github.com/pablonolascoo/couchdesk/releases/tag/${tag}\n`)

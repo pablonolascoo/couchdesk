@@ -1,6 +1,6 @@
-# Consola
+# CouchDesk
 
-> Consola es una app gratis y de código abierto (licencia MIT) para Windows 10 y 11 de 64 bits. Cambia el escritorio de Windows por una interfaz tipo consola, como la de una PS5 o Steam Big Picture, que se maneja con un mando, el teclado o el móvil. Primera versión: 1.0.0 «Salón». Hecha con Tauri 2 y React por Pablo Nolasco.
+> CouchDesk es una app gratis y de código abierto (licencia MIT) para Windows 10 y 11 de 64 bits. Cambia el escritorio de Windows por una interfaz tipo consola, como la de una PS5 o Steam Big Picture, que se maneja con un mando, el teclado o el móvil. Primera versión: 1.0.0 «Salón». Hecha con Tauri 2 y React por Pablo Nolasco.
 
 ## Qué hace
 
@@ -17,9 +17,9 @@
 
 ## Enlaces
 
-- [Descargar para Windows](https://github.com/pablonolascoo/consola/releases/latest)
-- [Código en GitHub](https://github.com/pablonolascoo/consola)
-- [Licencia MIT](https://github.com/pablonolascoo/consola/blob/main/LICENSE)
+- [Descargar para Windows](https://github.com/pablonolascoo/couchdesk/releases/latest)
+- [Código en GitHub](https://github.com/pablonolascoo/couchdesk)
+- [Licencia MIT](https://github.com/pablonolascoo/couchdesk/blob/main/LICENSE)
 
 ## Nota
 

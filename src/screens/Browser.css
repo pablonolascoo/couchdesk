@@ -1,5 +1,7 @@
 /* Accesos directos: tarjetas grandes, cada una con su color, su logo y (si la web la da) su imagen de fondo */
-.web-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+/* Siempre 3 columnas (2 en pantallas estrechas): cada grupo llena sus filas */
+.web-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 860px) { .web-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 .web-card {
   --tone: #5b5148;

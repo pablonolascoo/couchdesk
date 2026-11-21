@@ -3,6 +3,7 @@
 import {
   siSteam, siEpicgames, siGogdotcom, siPlaystation, siYoutube, siTwitch,
   siGoogle, siWikipedia, siNvidia, siClaude, siNetflix,
+  siDazn, siHbomax, siAppletv, siMovistar, siCrunchyroll, siSpotify, siKick, siApplemusic,
   siPlaystation2, siPlaystation3, siPlaystation4, siPlaystation5,
 } from 'simple-icons'
 
@@ -20,6 +21,14 @@ export const brands = {
   nvidia: siNvidia,
   claude: siClaude,
   netflix: siNetflix,
+  dazn: siDazn,
+  hbomax: siHbomax,
+  appletv: siAppletv,
+  movistar: siMovistar,
+  crunchyroll: siCrunchyroll,
+  spotify: siSpotify,
+  kick: siKick,
+  applemusic: siApplemusic,
   ps2: siPlaystation2,
   ps3: siPlaystation3,
   ps4: siPlaystation4,

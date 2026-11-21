@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pablonolascoo.github.io/consola/sitemap.xml
+Sitemap: https://pablonolascoo.github.io/couchdesk/sitemap.xml
