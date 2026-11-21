@@ -1,7 +1,7 @@
 {
   "name": "consola",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "app:dev": "tauri dev",
-    "app:build": "tauri build"
+    "app:build": "tauri build",
+    "release": "bun scripts/release.ts",
+    "indexnow": "bun scripts/indexnow.ts"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",

@@ -6,6 +6,7 @@ import {
 } from '@phosphor-icons/react'
 import { Page } from '../components/Page'
 import { Stepper } from '../components/Stepper'
+import { APP_VERSION } from '../version'
 import { call } from '../native'
 
 /** Carga un valor nativo y permite recargarlo */
@@ -61,6 +62,7 @@ export function SettingsMenu() {
           </button>
         ))}
       </div>
+      <p className="app-version">Consola · {APP_VERSION}</p>
     </Page>
   )
 }

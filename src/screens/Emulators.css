@@ -1,3 +1,107 @@
 .hw { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; }
 .bios-text { max-width: 640px; font-size: 16px; color: var(--text-2); }
 .menu-item .tag { flex: none; }
+
+/* --- Lista: una tarjeta por emulador, con el color y el logo de su consola --- */
+.emu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 18px; }
+.emu-card {
+  --tone: #5b5148;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border-radius: 24px;
+  text-align: left;
+  color: #fff;
+  background:
+    radial-gradient(110% 90% at 100% 0%, color-mix(in oklab, var(--tone) 60%, #fff), transparent 60%),
+    linear-gradient(160deg, var(--tone), color-mix(in oklab, var(--tone) 55%, #000));
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 24px 40px -28px rgba(30, 20, 10, 0.6);
+}
+/* Sin instalar: más apagada, para que se vea de un vistazo qué tienes */
+.emu-card:not(.is-installed) { filter: saturate(0.55); }
+.emu-card:not(.is-installed)[data-focused] { filter: none; }
+.emu-card[data-focused] { box-shadow: var(--bezel-focus); transform: translateY(-4px) scale(1.03); }
+.emu-card .tag { background: rgba(255, 255, 255, 0.92); }
+
+.emu-art {
+  position: absolute;
+  z-index: -1;
+  right: -30px;
+  bottom: -40px;
+  color: #fff;
+  opacity: 0.14;
+  transform: rotate(-10deg);
+  transition: transform 800ms var(--spring), opacity 420ms var(--ease);
+  pointer-events: none;
+}
+.emu-card[data-focused] .emu-art { opacity: 0.24; transform: rotate(-4deg) scale(1.08); }
+
+.emu-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.emu-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  color: var(--tone);
+  background: #fff;
+  box-shadow: 0 10px 22px -12px rgba(0, 0, 0, 0.5);
+  flex: none;
+  transition: transform 520ms var(--spring);
+}
+.emu-icon img { object-fit: contain; }
+.emu-card[data-focused] .emu-icon { transform: rotate(-6deg) scale(1.06); }
+
+.emu-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.emu-name { font-family: var(--serif); font-size: 30px; line-height: 1.02; letter-spacing: -0.01em; }
+.emu-sub { font-size: 13px; color: rgba(255, 255, 255, 0.82); }
+.emu-state { font-size: 12px; color: rgba(255, 255, 255, 0.66); margin-top: 4px; }
+
+/* --- Ficha: cabecera con la identidad de la consola --- */
+.emu-hero {
+  --tone: #5b5148;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 26px 28px;
+  border-radius: 28px;
+  color: #fff;
+  background:
+    radial-gradient(90% 120% at 100% 0%, color-mix(in oklab, var(--tone) 60%, #fff), transparent 60%),
+    linear-gradient(160deg, var(--tone), color-mix(in oklab, var(--tone) 50%, #000));
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 30px 50px -32px rgba(30, 20, 10, 0.6);
+}
+.emu-hero .emu-art { right: -20px; bottom: -70px; opacity: 0.16; }
+.emu-icon.big { width: 84px; height: 84px; border-radius: 24px; }
+.emu-hero-console { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.75); }
+.emu-hero-name { font-family: var(--serif); font-weight: 400; font-size: 54px; line-height: 1; letter-spacing: -0.02em; margin: 4px 0 12px; }
+.emu-hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.emu-hero .tag { background: rgba(255, 255, 255, 0.92); }
+
+/* --- Carpetas --- */
+.emu-folders { display: flex; flex-direction: column; gap: 10px; }
+.emu-folder { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+.emu-folder-main { display: flex; align-items: center; gap: 14px; text-align: left; }
+.emu-folder-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--bg-2);
+}
+.emu-folder-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.emu-folder-label { font-weight: 600; font-size: 15px; }
+.emu-folder-hint { font-size: 13px; color: var(--muted); }
+.emu-folder-path { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.emu-folder-win { display: flex; align-items: center; gap: 8px; white-space: nowrap; }

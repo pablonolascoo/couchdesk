@@ -2,7 +2,8 @@
 // Xbox no tiene logo libre: se representa con su color y un mando, nunca con un logo imitado.
 import {
   siSteam, siEpicgames, siGogdotcom, siPlaystation, siYoutube, siTwitch,
-  siGoogle, siWikipedia, siNvidia, siClaude,
+  siGoogle, siWikipedia, siNvidia, siClaude, siNetflix,
+  siPlaystation2, siPlaystation3, siPlaystation4, siPlaystation5,
 } from 'simple-icons'
 
 type SimpleIcon = { path: string; hex: string; title: string }
@@ -18,6 +19,11 @@ export const brands = {
   wikipedia: siWikipedia,
   nvidia: siNvidia,
   claude: siClaude,
+  netflix: siNetflix,
+  ps2: siPlaystation2,
+  ps3: siPlaystation3,
+  ps4: siPlaystation4,
+  ps5: siPlaystation5,
 } satisfies Record<string, SimpleIcon>
 
 export type Brand = keyof typeof brands

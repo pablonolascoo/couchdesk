@@ -290,6 +290,19 @@ pub mod icons {
         }
     }
 
+    /// Iconos de varios programas (.exe o apps), en un hilo con COM preparado
+    pub fn get_many(names: Vec<Option<String>>) -> Vec<Option<String>> {
+        let n = names.len();
+        std::thread::spawn(move || {
+            unsafe {
+                let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);
+            }
+            names.iter().map(|n| n.as_deref().and_then(get)).collect::<Vec<_>>()
+        })
+        .join()
+        .unwrap_or_else(|_| vec![None; n])
+    }
+
     /// Icono para juegos de tienda sin portada (GOG por su .exe, Xbox por su app)
     pub fn fill_games(games: &mut Vec<Game>) {
         let names: Vec<Option<String>> = games

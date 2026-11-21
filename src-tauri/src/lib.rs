@@ -8,12 +8,14 @@ pub mod mcp;
 mod files;
 mod games;
 mod hardware;
+mod hotkeys;
 mod input;
 pub mod psmando;
 mod receive;
 mod remote;
 mod settings;
 pub mod startup;
+mod webs;
 
 /// Cierra la consola y deja ver el escritorio normal de Windows
 /// (si la consola hacía de escritorio, arranca primero el de Windows).
@@ -33,11 +35,8 @@ pub fn run() {
   tauri::Builder::default()
     // Debe ir primero: una segunda consola se cierra al instante y despierta a la primera
     .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-      if let Some(w) = app.get_webview_window("main") {
-        let _ = w.unminimize();
-        let _ = w.show();
-        let _ = w.set_focus();
-      }
+      // Abrirla otra vez (menú Inicio, botón PS…) = volver al Inicio de la que ya está
+      browser::go_home(app);
     }))
     .manage(games::GameCache::default())
     .manage(games::Launchables::default())
@@ -47,6 +46,8 @@ pub fn run() {
       // Mando móvil siempre disponible (solo red local + código secreto del QR)
       let hub = remote::Hub::new(Some(app.handle().clone()));
       app.manage(hub.clone());
+      // Salidas de emergencia: Esc mantenido / 3 veces y el botón Xbox del mando
+      hotkeys::start(app.handle().clone());
       // Actualizar emuladores instalados en segundo plano, un rato después de arrancar
       // Si la consola es el escritorio, arrancar los programas de inicio (RustDesk, WARP, audio…)
       if !startup::explorer_running() {
@@ -104,6 +105,8 @@ pub fn run() {
       receive::receive_start,
       receive::receive_stop,
       remote::remote_status,
+      remote::remote_mode,
+      webs::site_previews,
       hardware::get_hardware,
       emulators::list_emulators,
       emulators::install_emulator,
@@ -116,6 +119,7 @@ pub fn run() {
       browser::browser_in_system,
       browser::cloud_open,
       emulators::open_remote_play,
+      emulators::emu_folder,
       startup::shell_status,
       startup::shell_set
     ])

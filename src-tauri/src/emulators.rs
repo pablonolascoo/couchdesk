@@ -321,6 +321,12 @@ fn install_release(e: &Emu, rel: &Release) -> Result<Installed, String> {
     if matches!(e.id, "duckstation" | "pcsx2" | "melonds") {
         let _ = fs::write(exe.parent().unwrap().join("portable.txt"), "");
     }
+    // Tus datos (BIOS, partidas, ajustes, juegos instalados…) se mudan a la versión nueva
+    if let Some(prev) = read_installed(e.id).filter(|p| p.version != rel.version) {
+        if let (Some(from), Some(to)) = (Path::new(&prev.exe).parent(), exe.parent()) {
+            carry_user_data(from, to);
+        }
+    }
     let previous = read_installed(e.id).filter(|p| p.version != rel.version).map(|mut p| {
         // Solo se guarda una versión anterior; las más viejas se borran
         if let Some(old) = p.previous.take() {
@@ -333,6 +339,77 @@ fn install_release(e: &Emu, rel: &Release) -> Result<Installed, String> {
     let inst = Installed { version: rel.version.clone(), exe: exe.to_string_lossy().into_owned(), previous };
     fs::write(dir.join("instalado.json"), serde_json::to_string_pretty(&inst).unwrap()).map_err(|err| err.to_string())?;
     Ok(inst)
+}
+
+/// Mueve a la carpeta de la versión nueva todo lo que el usuario creó junto al programa
+/// (lo que la descarga nueva no trae): carpetas `bios`, `memcards`, `dev_hdd0`, `user`, ajustes…
+/// Se mueve (no se copia): es instantáneo aunque haya muchos GB de juegos instalados.
+fn carry_user_data(from: &Path, to: &Path) {
+    let Ok(entries) = fs::read_dir(from) else { return };
+    for entry in entries.flatten() {
+        let target = to.join(entry.file_name());
+        if !target.exists() {
+            let _ = fs::rename(entry.path(), &target);
+        }
+    }
+}
+
+// ---------------- Carpetas de cada emulador ----------------
+
+#[derive(Serialize, Clone)]
+pub struct Folder {
+    /// "juegos" | "bios" | "datos"
+    key: &'static str,
+    label: &'static str,
+    hint: &'static str,
+    path: String,
+}
+
+fn home() -> PathBuf {
+    PathBuf::from(std::env::var("USERPROFILE").unwrap_or_else(|_| "C:\\".into()))
+}
+
+/// Dónde va cada cosa. Los emuladores que guardan todo junto al programa (portables) usan su
+/// carpeta; los demás, la suya de Windows. Los juegos, siempre en Juegos\<consola>.
+fn folders(e: &Emu, exe_dir: Option<&Path>) -> Vec<Folder> {
+    let console: String = e.console.chars().filter(|c| !"<>:\"/\\|?*".contains(*c)).collect();
+    let games = home().join("Juegos").join(&console);
+    let appdata = PathBuf::from(std::env::var("APPDATA").unwrap_or_default());
+    let f = |key, label, hint, path: PathBuf| Folder { key, label, hint, path: path.to_string_lossy().into_owned() };
+    let mut out = vec![f("juegos", "Tus juegos", "Copia aquí tus juegos. La primera vez que abras el emulador, elige esta carpeta como carpeta de juegos.", games.clone())];
+    let exe_dir = exe_dir.map(Path::to_path_buf);
+    let bios = match e.id {
+        "duckstation" => exe_dir.as_ref().map(|d| (d.join("bios"), "BIOS de tu PS1 (por ejemplo scph5501.bin). DuckStation la encuentra sola.")),
+        "pcsx2" => exe_dir.as_ref().map(|d| (d.join("bios"), "BIOS de tu PS2 (archivo .bin). PCSX2 la encuentra sola.")),
+        "melonds" => exe_dir.as_ref().map(|d| (d.join("bios"), "bios7.bin, bios9.bin y firmware.bin. Después elígelos en melonDS: Ajustes → Emulación.")),
+        "rpcs3" => Some((games.join("Firmware"), "Deja aquí PS3UPDAT.PUP y, en RPCS3, Archivo → Instalar firmware.")),
+        "shadps4" => exe_dir.as_ref().map(|d| (d.join("user").join("sys_modules"), "Opcional: módulos de sistema de tu PS4.")),
+        "eden" | "eden-nx2" => Some((appdata.join("eden").join("keys"), "prod.keys y title.keys de tu consola. El firmware se instala desde el propio emulador.")),
+        _ => None,
+    };
+    if let Some((path, hint)) = bios {
+        out.push(f("bios", "BIOS, firmware y claves", hint, path));
+    }
+    let data = match e.id {
+        "dolphin" => Some(home().join("Documents").join("Dolphin Emulator")),
+        "eden" | "eden-nx2" => Some(appdata.join("eden")),
+        _ => exe_dir.clone(),
+    };
+    if let Some(path) = data {
+        out.push(f("datos", "Partidas y ajustes", "Tus partidas guardadas y la configuración del emulador.", path));
+    }
+    out
+}
+
+/// Abre (creándola si hace falta) una de las carpetas del emulador
+#[tauri::command(async)]
+pub fn emu_folder(id: String, key: String) -> Result<String, String> {
+    let e = emu(&id)?;
+    let inst = read_installed(e.id);
+    let exe_dir = inst.as_ref().and_then(|i| Path::new(&i.exe).parent().map(Path::to_path_buf));
+    let f = folders(e, exe_dir.as_deref()).into_iter().find(|f| f.key == key).ok_or("Carpeta desconocida")?;
+    fs::create_dir_all(&f.path).map_err(|err| err.to_string())?;
+    Ok(f.path)
 }
 
 fn emu(id: &str) -> Result<&'static Emu, String> {
@@ -354,21 +431,31 @@ pub struct EmuInfo {
     installed: Option<String>,
     can_rollback: bool,
     folder: Option<String>,
+    /// Icono real del programa (PNG), cuando está instalado
+    icon: Option<String>,
+    folders: Vec<Folder>,
 }
 
 #[tauri::command(async)]
 pub fn list_emulators() -> (Hardware, Vec<EmuInfo>) {
     let h = get_hardware();
-    let list = CATALOG
-        .iter()
-        .filter(|e| !HIDDEN.contains(&e.id))
-        .map(|e| {
-            let inst = read_installed(e.id);
+    let shown: Vec<&Emu> = CATALOG.iter().filter(|e| !HIDDEN.contains(&e.id)).collect();
+    let installed: Vec<Option<Installed>> = shown.iter().map(|e| read_installed(e.id)).collect();
+    // Iconos reales de los .exe instalados (Windows los da en un hilo propio)
+    let icons = crate::apps::icons::get_many(installed.iter().map(|i| i.as_ref().map(|i| i.exe.clone())).collect());
+    let list = shown
+        .into_iter()
+        .zip(installed)
+        .zip(icons)
+        .map(|((e, inst), icon)| {
+            let exe_dir = inst.as_ref().and_then(|i| Path::new(&i.exe).parent().map(Path::to_path_buf));
             EmuInfo {
                 id: e.id, name: e.name, console: e.console, trust: e.trust, verdict: verdict(&h, e),
                 bios: e.bios, note: e.note,
                 can_rollback: inst.as_ref().is_some_and(|i| i.previous.is_some()),
-                folder: inst.as_ref().and_then(|i| Path::new(&i.exe).parent().map(|p| p.to_string_lossy().into_owned())),
+                folder: exe_dir.as_ref().map(|p| p.to_string_lossy().into_owned()),
+                folders: folders(e, exe_dir.as_deref()),
+                icon,
                 installed: inst.map(|i| i.version),
             }
         })
@@ -396,6 +483,10 @@ pub fn rollback_emulator(id: String) -> Result<String, String> {
     let e = emu(&id)?;
     let cur = read_installed(e.id).ok_or("No está instalado")?;
     let prev = *cur.previous.clone().ok_or("No hay versión anterior")?;
+    // Tus datos vuelven con la versión anterior
+    if let (Some(from), Some(to)) = (Path::new(&cur.exe).parent(), Path::new(&prev.exe).parent()) {
+        carry_user_data(from, to);
+    }
     let back = Installed { version: prev.version.clone(), exe: prev.exe.clone(), previous: Some(Box::new(Installed { previous: None, ..cur })) };
     fs::write(root().join(e.id).join("instalado.json"), serde_json::to_string_pretty(&back).unwrap()).map_err(|err| err.to_string())?;
     Ok(back.version)
@@ -468,6 +559,37 @@ mod tests {
     }
 
     /// Instalación real de melonDS (pequeño) en una carpeta temporal
+    #[test]
+    fn tus_datos_pasan_a_la_version_nueva() {
+        let base = std::env::temp_dir().join(format!("consola-carry-{}", std::process::id()));
+        let (old, new) = (base.join("v1"), base.join("v2"));
+        for d in [&old, &new] { fs::create_dir_all(d).unwrap(); }
+        fs::write(old.join("duckstation.exe"), b"viejo").unwrap();
+        fs::write(new.join("duckstation.exe"), b"nuevo").unwrap();
+        fs::create_dir_all(old.join("bios")).unwrap();
+        fs::write(old.join("bios").join("scph5501.bin"), b"bios").unwrap();
+        fs::write(old.join("settings.ini"), b"ajustes").unwrap();
+        carry_user_data(&old, &new);
+        assert_eq!(fs::read(new.join("bios").join("scph5501.bin")).unwrap(), b"bios");
+        assert_eq!(fs::read(new.join("settings.ini")).unwrap(), b"ajustes");
+        assert_eq!(fs::read(new.join("duckstation.exe")).unwrap(), b"nuevo", "el programa nuevo no se pisa");
+        let _ = fs::remove_dir_all(&base);
+    }
+
+    #[test]
+    fn carpetas_de_cada_emulador() {
+        let exe_dir = Path::new(r"C:\emus\duckstation\v1");
+        let f = folders(emu("duckstation").unwrap(), Some(exe_dir));
+        let keys: Vec<_> = f.iter().map(|f| f.key).collect();
+        assert_eq!(keys, ["juegos", "bios", "datos"]);
+        assert!(f[0].path.ends_with(r"Juegos\PlayStation"));
+        assert_eq!(f[1].path, r"C:\emus\duckstation\v1\bios");
+        // Sin instalar: solo la de juegos (y la de claves de Eden, que no depende del programa)
+        assert_eq!(folders(emu("pcsx2").unwrap(), None).len(), 1);
+        assert!(folders(emu("eden").unwrap(), None).iter().any(|f| f.path.ends_with(r"eden\keys")));
+        assert!(folders(emu("dolphin").unwrap(), None).iter().any(|f| f.path.ends_with("Dolphin Emulator")));
+    }
+
     #[test]
     #[ignore]
     fn instala_melonds_de_verdad() {

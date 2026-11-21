@@ -55,12 +55,22 @@ const PAD_SCRIPT: &str = r#"
 "#;
 
 /// Barra de arriba: siempre hay una salida, también con ratón o teclado (navegador y nube).
-/// Para hablar con la consola se marca la dirección (sin recargar ni ensuciar el historial).
+/// Para hablar con la consola la página pone un instante un título especial (no se ve: la ventana
+/// no tiene barra de título) y lo devuelve; así no se toca la dirección ni el historial de la web.
 const BAR_SCRIPT: &str = r#"
 (() => {
   if (window.__consolaBar) return;
   window.__consolaBar = true;
-  const signal = (what) => history.replaceState(history.state, '', location.pathname + location.search + '#__consola_' + what);
+  const signal = (what) => {
+    const prev = document.title;
+    document.title = '__consola:' + what;
+    setTimeout(() => { if (document.title.startsWith('__consola:')) document.title = prev; }, 80);
+  };
+  // Al escribir en una web, el móvil conectado como mando abre su teclado
+  const editable = (el) => !!el && (el.isContentEditable ||
+    (/^(INPUT|TEXTAREA)$/.test(el.tagName) && !/^(button|checkbox|radio|range|submit|reset|file|color|image|hidden)$/i.test(el.type || '')));
+  addEventListener('focusin', (e) => { if (editable(e.composedPath()[0])) signal('kbd:1'); }, true);
+  addEventListener('focusout', (e) => { if (editable(e.composedPath()[0])) signal('kbd:0'); }, true);
   const bar = () => {
     if (document.getElementById('__consola_bar')) return;
     const host = document.createElement('div');
@@ -73,7 +83,8 @@ const BAR_SCRIPT: &str = r#"
       button:hover,button:focus-visible{background:#1d1813;color:#fbf8f2}
       .x{background:#1d1813;color:#fbf8f2}
       .u{max-width:30vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.55;padding:0 10px}
-    </style><div class="b"><button data-a="back">← Atrás</button><button data-a="reload">⟳</button><span class="u"></span><button data-a="fuera">Abrir en Windows</button><button class="x" data-a="cerrar">✕ Volver a la consola</button></div>`;
+      .h{opacity:.5;font-size:12px;padding:0 12px 0 6px;white-space:nowrap}
+    </style><div class="b"><button data-a="back">← Atrás</button><button data-a="reload">⟳</button><span class="u"></span><button data-a="fuera">Abrir en Windows</button><button class="x" data-a="cerrar">✕ Volver a la consola</button><span class="h">o mantén Esc</span></div>`;
     sh.querySelector('.u').textContent = location.hostname;
     sh.addEventListener('click', (e) => {
       const a = e.composedPath().find((n) => n.dataset && n.dataset.a)?.dataset.a;
@@ -86,14 +97,8 @@ const BAR_SCRIPT: &str = r#"
     const hide = () => { host.style.opacity = '0'; host.style.translate = '0 -12px'; host.style.pointerEvents = 'none'; };
     const show = () => { host.style.opacity = '1'; host.style.translate = '0 0'; host.style.pointerEvents = 'auto'; clearTimeout(t); t = setTimeout(hide, 3500); };
     addEventListener('mousemove', (e) => { if (e.clientY < 90) show(); }, { passive: true });
-    // Esc enseña la barra; Esc dos veces seguidas vuelve a la consola
-    let lastEsc = 0;
-    addEventListener('keydown', (e) => {
-      if (e.key !== 'Escape' || document.fullscreenElement) return;
-      if (Date.now() - lastEsc < 700) signal('cerrar');
-      lastEsc = Date.now();
-      show();
-    }, true);
+    // Esc enseña la barra (mantener Esc o pulsarlo 3 veces lo vigila la consola: ninguna web lo bloquea)
+    addEventListener('keydown', (e) => { if (e.key === 'Escape') show(); }, true);
     if (window.__pad) window.__pad.bar = show;
     show();
   };
@@ -156,17 +161,39 @@ impl PadReader {
     }
 }
 
-/// Órdenes de la barra de arriba. `true` = la ventana se ha cerrado.
-fn handle_signals(win: &tauri::WebviewWindow) -> bool {
-    let Ok(url) = win.url() else { return false };
-    let u = url.as_str();
-    if u.contains("#__consola_fuera") {
-        open_in_system_browser(u.split("#__consola_").next().unwrap_or(u));
-    } else if !u.contains("#__consola_cerrar") {
-        return false;
+/// Señales de la página (título especial puesto un instante por BAR_SCRIPT)
+fn on_title(win: tauri::WebviewWindow, title: String) {
+    let Some(what) = title.strip_prefix("__consola:") else { return };
+    match what {
+        "cerrar" => go_home(win.app_handle()),
+        "fuera" => {
+            if let Ok(url) = win.url() {
+                open_in_system_browser(url.as_str());
+            }
+            go_home(win.app_handle());
+        }
+        "kbd:1" => crate::remote::set_mode(win.app_handle(), None, Some(true)),
+        "kbd:0" => crate::remote::set_mode(win.app_handle(), None, Some(false)),
+        _ => {}
     }
-    let _ = win.close();
-    true
+}
+
+/// Volver al Inicio de la consola desde donde sea: cierra navegador y nube, trae la consola
+/// al frente y pone los móviles conectados en modo mando.
+pub fn go_home(app: &tauri::AppHandle) {
+    use tauri::Emitter;
+    for label in [LABEL, CLOUD] {
+        if let Some(w) = app.get_webview_window(label) {
+            let _ = w.close();
+        }
+    }
+    if let Some(main) = app.get_webview_window("main") {
+        let _ = main.unminimize();
+        let _ = main.show();
+        let _ = main.set_focus();
+        let _ = main.emit("go-home", ());
+    }
+    crate::remote::set_mode(app, Some("gp"), Some(false));
 }
 
 /// Bucle del mando mientras el navegador está abierto (Xbox o PlayStation)
@@ -178,10 +205,6 @@ fn pad_loop(app: tauri::AppHandle) {
     while RUNNING.load(Ordering::Relaxed) {
         std::thread::sleep(Duration::from_millis(16));
         let Some(win) = app.get_webview_window(LABEL) else { break };
-        // Órdenes de la barra de arriba (funcionan con o sin mando)
-        if handle_signals(&win) {
-            break;
-        }
         let Some(g) = reader.read() else { continue };
         let mut b = g.wButtons.0;
         // Stick izquierdo como cruceta
@@ -233,10 +256,11 @@ fn pad_loop(app: tauri::AppHandle) {
         }
     }
     RUNNING.store(false, Ordering::Relaxed);
-    // Volver a la consola
+    // Volver a la consola (y los móviles, a modo mando)
     if let Some(main) = app.get_webview_window("main") {
         let _ = main.set_focus();
     }
+    crate::remote::set_mode(&app, Some("gp"), Some(false));
 }
 
 /// Solo http(s); lo demás se trata como búsqueda
@@ -266,9 +290,12 @@ pub async fn browser_open(app: tauri::AppHandle, url: String) -> Result<(), Stri
             .decorations(false)
             .initialization_script(PAD_SCRIPT)
             .initialization_script(BAR_SCRIPT)
+            .on_document_title_changed(on_title)
             .build()
             .map_err(|e| e.to_string())?;
     }
+    // En una web se usa sobre todo el puntero: los móviles pasan a touchpad
+    crate::remote::set_mode(&app, Some("mouse"), Some(false));
     if !RUNNING.swap(true, Ordering::Relaxed) {
         std::thread::spawn(move || pad_loop(app));
     }
@@ -290,8 +317,7 @@ fn cloud_loop(app: tauri::AppHandle) {
     while CLOUD_RUNNING.load(Ordering::Relaxed) {
         // 30 veces por segundo basta para vigilar; el juego lee el mando por su cuenta
         std::thread::sleep(Duration::from_millis(33));
-        let Some(win) = app.get_webview_window(CLOUD) else { break };
-        if handle_signals(&win) {
+        if app.get_webview_window(CLOUD).is_none() {
             break;
         }
         let on = reader.read().is_some_and(|g| g.wButtons.0 & exit == exit);
@@ -299,7 +325,7 @@ fn cloud_loop(app: tauri::AppHandle) {
             (false, _) => held = None,
             (true, None) => held = Some(Instant::now()),
             (true, Some(t)) if t.elapsed() > Duration::from_millis(1500) => {
-                let _ = win.close();
+                go_home(&app);
                 break;
             }
             _ => {}
@@ -324,9 +350,12 @@ pub async fn cloud_open(app: tauri::AppHandle) -> Result<(), String> {
             .decorations(false)
             .background_color(tauri::window::Color(0, 0, 0, 255))
             .initialization_script(BAR_SCRIPT)
+            .on_document_title_changed(on_title)
             .build()
             .map_err(|e| e.to_string())?;
     }
+    // En la nube se juega: los móviles pasan a mando
+    crate::remote::set_mode(&app, Some("gp"), Some(false));
     if !CLOUD_RUNNING.swap(true, Ordering::Relaxed) {
         std::thread::spawn(move || cloud_loop(app));
     }

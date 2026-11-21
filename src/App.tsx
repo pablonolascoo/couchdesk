@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { IconContext } from '@phosphor-icons/react'
 import { useSpatialNav } from './nav/useSpatialNav'
+import { useSystemLink } from './nav/useSystemLink'
 import { trackInputMode } from './ui/sound'
 import { Home } from './screens/Home'
 import { Library } from './screens/Library'
@@ -22,6 +23,7 @@ import { SettingsMenu, SoundSettings, DisplaySettings, PowerSettings, NetworkSet
 
 function Shell() {
   useSpatialNav()
+  useSystemLink()
   const location = useLocation()
   useEffect(trackInputMode, [])
   return (

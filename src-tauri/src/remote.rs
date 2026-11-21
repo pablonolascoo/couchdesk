@@ -29,6 +29,10 @@ pub struct Cursor { id: u32, name: String, color: String, x: f64, y: f64 }
 pub struct Hub {
     token: String,
     clients: Mutex<HashMap<u32, Cursor>>,
+    /// Órdenes de la consola a todos los móviles (modo mando/touchpad, teclado)
+    tx: tokio::sync::broadcast::Sender<String>,
+    /// Último modo pedido: un móvil que se conecta tarde lo recibe al entrar
+    mode: Mutex<(String, bool)>,
     next_id: AtomicU32,
     last_emit: Mutex<Instant>,
     app: Option<tauri::AppHandle>,
@@ -39,10 +43,27 @@ impl Hub {
         Arc::new(Hub {
             token: saved_token(),
             clients: Mutex::new(HashMap::new()),
+            tx: tokio::sync::broadcast::channel(32).0,
+            mode: Mutex::new(("gp".into(), false)),
             next_id: AtomicU32::new(1),
             last_emit: Mutex::new(Instant::now()),
             app,
         })
+    }
+
+    fn mode_msg(&self) -> String {
+        let (tab, kbd) = self.mode.lock().unwrap().clone();
+        serde_json::json!({ "t": "mode", "tab": tab, "kbd": kbd }).to_string()
+    }
+
+    /// Cambia lo que enseñan los móviles: "gp" (mando) o "mouse" (touchpad y teclado), y el teclado
+    pub fn set_mode(&self, tab: Option<&str>, kbd: Option<bool>) {
+        {
+            let mut m = self.mode.lock().unwrap();
+            if let Some(t) = tab { m.0 = t.into(); }
+            if let Some(k) = kbd { m.1 = k; }
+        }
+        let _ = self.tx.send(self.mode_msg());
     }
 
     pub fn url(&self) -> Option<String> {
@@ -147,8 +168,20 @@ async fn session(hub: Arc<Hub>, mut socket: WebSocket) {
         });
     }
     hub.emit(true);
+    // Al entrar, el móvil se pone en el modo que toca ahora mismo
+    let _ = socket.send(Message::Text(hub.mode_msg().into())).await;
+    let mut orders = hub.tx.subscribe();
 
-    while let Some(Ok(msg)) = socket.next().await {
+    loop {
+        let msg = tokio::select! {
+            m = socket.next() => match m { Some(Ok(m)) => m, _ => break },
+            o = orders.recv() => {
+                if let Ok(o) = o {
+                    if socket.send(Message::Text(o.into())).await.is_err() { break }
+                }
+                continue;
+            }
+        };
         match msg {
             // Movimiento: 4 bytes = dx, dy como i16 (formato binario, lo más ligero)
             Message::Binary(b) if b.len() == 4 => {
@@ -189,6 +222,11 @@ async fn session(hub: Arc<Hub>, mut socket: WebSocket) {
                     }
                     Msg::Scroll { dx, dy } => input::scroll(dx.unwrap_or(0).clamp(-1200, 1200), dy.clamp(-1200, 1200)),
                     Msg::Text { s } => input::text(&s.chars().take(500).collect::<String>()),
+                    // Inicio del móvil: la misma salida segura que el botón Xbox (cierra webs y nube)
+                    Msg::Key { k } if k == "home" => match &hub.app {
+                        Some(app) => crate::browser::go_home(app),
+                        None => { input::key("home"); }
+                    },
                     Msg::Key { k } => {
                         input::key(&k);
                     }
@@ -214,6 +252,20 @@ pub fn router(hub: Arc<Hub>) -> Router {
 pub async fn serve(hub: Arc<Hub>, port: u16) -> std::io::Result<()> {
     let listener = tokio::net::TcpListener::bind(("0.0.0.0", port)).await?;
     axum::serve(listener, router(hub).into_make_service_with_connect_info::<SocketAddr>()).await
+}
+
+/// Cambia el modo de los móviles conectados desde cualquier parte de la consola
+pub fn set_mode(app: &tauri::AppHandle, tab: Option<&str>, kbd: Option<bool>) {
+    use tauri::Manager;
+    if let Some(hub) = app.try_state::<Arc<Hub>>() {
+        hub.set_mode(tab, kbd);
+    }
+}
+
+/// Para la propia interfaz: al escribir en un campo, los móviles abren el teclado
+#[tauri::command(async)]
+pub fn remote_mode(hub: tauri::State<Arc<Hub>>, tab: Option<String>, kbd: Option<bool>) {
+    hub.set_mode(tab.as_deref(), kbd);
 }
 
 #[derive(Serialize)]
