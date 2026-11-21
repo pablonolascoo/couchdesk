@@ -36,11 +36,24 @@
   overflow: hidden;
 }
 img.card-cover { padding: 0; display: block; background: var(--surface-2); }
-.card-cover.steam { background: linear-gradient(160deg, #eef4f8, #cfdfea); color: var(--blue); }
-.card-cover.epic { background: linear-gradient(160deg, #faf3e3, #ecd9b0); color: var(--yellow); }
-.card-cover.gog { background: linear-gradient(160deg, #eef3ea, #cfdcc8); color: var(--green); }
-.card-cover.xbox { background: linear-gradient(160deg, #f8ebe8, #eac6c0); color: var(--red); }
-.card-cover.pc { background: linear-gradient(160deg, #f3efe9, #ddd3c6); color: #6e5a44; }
+/* Cada tienda con sus colores de verdad y su logo grande detrás */
+.card-cover { isolation: isolate; }
+.card-cover.steam { background: radial-gradient(120% 80% at 80% 0%, #3d6c8c, transparent 60%), linear-gradient(165deg, #1b2838, #10161f); color: #dbe7f0; }
+.card-cover.epic { background: radial-gradient(120% 80% at 80% 0%, #4a4a4a, transparent 60%), linear-gradient(165deg, #2a2a2a, #111); color: #f2f2f2; }
+.card-cover.gog { background: radial-gradient(120% 80% at 80% 0%, #fff6e6, transparent 60%), linear-gradient(165deg, #efe3cf, #d6c2a2); color: #3b2f22; }
+.card-cover.xbox { background: radial-gradient(120% 80% at 80% 0%, #2fae2f, transparent 60%), linear-gradient(165deg, #107c10, #0a4f0a); color: #f1fff1; }
+.card-cover.pc { background: linear-gradient(160deg, #f3efe9, #ddd3c6); color: #5a4836; }
+.card-cover-art {
+  position: absolute;
+  z-index: -1;
+  right: -34px;
+  bottom: -26px;
+  opacity: 0.16;
+  transform: rotate(-12deg);
+  transition: transform 800ms var(--spring), opacity 420ms var(--ease);
+  pointer-events: none;
+}
+.card[data-focused] .card-cover-art { opacity: 0.26; transform: rotate(-6deg) scale(1.08); }
 /* Icono del programa cuando no hay portada */
 .card-cover-icon { width: 56px; height: 56px; object-fit: contain; filter: drop-shadow(0 8px 14px rgba(60, 40, 20, 0.22)); }
 .card-cover-store {

@@ -201,7 +201,12 @@ fn latest(e: &Emu) -> Result<Release, String> {
             let file = pick_asset(files.iter().map(String::as_str), must).ok_or("No hay versión para Windows")?.to_string();
             let extra_exe = files
                 .iter()
-                .find(|f| f.starts_with(e.exe_hint) && f.to_lowercase().ends_with(".exe"))
+                .find(|f| {
+                    // Un programa suelto, nunca un instalador ni la versión para otros procesadores
+                    let l = f.to_lowercase();
+                    f.starts_with(e.exe_hint) && l.ends_with(".exe")
+                        && !["install", "setup", "arm64", "aarch64"].iter().any(|b| l.contains(b))
+                })
                 .map(|f| (format!("https://github.com{prefix}{f}"), f.clone()));
             // Versiones "rolling" (siempre se llaman igual): añadir la fecha para detectar cambios
             let version = if ["latest", "preview", "continuous", "nightly"].contains(&tag.as_str()) {
@@ -468,7 +473,7 @@ mod tests {
     fn instala_melonds_de_verdad() {
         let dir = std::env::temp_dir().join(format!("consola-emu-{}", std::process::id()));
         unsafe { std::env::set_var("CONSOLA_EMU_DIR", &dir) };
-        for id in ["melonds", "pcsx2", "xtend"] {
+        for id in ["melonds", "pcsx2", "xtend", "chiaki-ng"] {
             // melonDS viene en .zip y PCSX2 en .7z
             let e = emu(id).unwrap();
             let rel = latest(e).unwrap();

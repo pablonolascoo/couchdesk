@@ -1,0 +1,29 @@
+/* Cada plataforma con su identidad: Xbox en su verde, PlayStation en su azul, su dibujo grande detrás */
+.cloud-card { overflow: hidden; isolation: isolate; color: #fff; }
+.cloud-card .desk-title { color: #fff; }
+.cloud-card .desk-text { color: rgba(255, 255, 255, 0.78); }
+.cloud-card .desk-icon,
+.cloud-card .desk-go { background: rgba(255, 255, 255, 0.16); color: #fff; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25); }
+.desk-card.cloud-card[data-focused] .desk-icon { background: #fff; }
+
+.cloud-card.xbox {
+  background: radial-gradient(90% 120% at 100% 0%, #2fb02f, transparent 60%), linear-gradient(160deg, #107c10, #073f07);
+}
+.desk-card.cloud-card.xbox[data-focused] .desk-icon { color: #107c10; }
+.cloud-card.ps {
+  background: radial-gradient(90% 120% at 100% 0%, #1f6fe0, transparent 60%), linear-gradient(160deg, #003791, #001a4d);
+}
+.desk-card.cloud-card.ps[data-focused] .desk-icon { color: #003791; }
+
+.cloud-art {
+  position: absolute;
+  z-index: -1;
+  right: -46px;
+  bottom: -58px;
+  color: #fff;
+  opacity: 0.12;
+  transform: rotate(-12deg);
+  transition: transform 800ms var(--spring), opacity 420ms var(--ease);
+  pointer-events: none;
+}
+.cloud-card[data-focused] .cloud-art { opacity: 0.2; transform: rotate(-6deg) scale(1.06); }

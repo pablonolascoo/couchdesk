@@ -34,18 +34,37 @@
   backdrop-filter: blur(22px) saturate(1.15);
   box-shadow: inset 0 1px 1px #fff, 0 0 0 1px var(--hair), 0 40px 80px -40px rgba(80, 56, 30, 0.3);
 }
+/* Cada pieza lleva su color (--tone): fondo teñido, icono a color y su dibujo grande detrás */
 .tile {
+  --tone: #5b5148;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
   padding: 14px 16px 13px;
-  background: var(--surface);
+  background:
+    radial-gradient(120% 90% at 100% 100%, color-mix(in oklab, var(--tone) 22%, transparent), transparent 70%),
+    linear-gradient(160deg, var(--surface), color-mix(in oklab, var(--tone) 9%, var(--surface)));
   border-radius: var(--radius);
-  box-shadow: inset 0 1px 1px #fff, 0 0 0 1px var(--hair), 0 14px 30px -24px rgba(80, 56, 30, 0.35);
+  box-shadow: inset 0 1px 1px #fff, 0 0 0 1px color-mix(in oklab, var(--tone) 16%, transparent), 0 14px 30px -24px rgba(80, 56, 30, 0.35);
   text-align: left;
   color: var(--text);
 }
+.tile-art {
+  position: absolute;
+  z-index: -1;
+  right: -16px;
+  bottom: -18px;
+  color: var(--tone);
+  opacity: 0.13;
+  transform: rotate(-10deg);
+  transition: transform 700ms var(--spring), opacity 420ms var(--ease);
+  pointer-events: none;
+}
+.tile[data-focused] .tile-art { opacity: 0.22; transform: rotate(-4deg) scale(1.1); }
 .tile-icon {
   display: grid;
   place-items: center;
@@ -53,7 +72,9 @@
   height: 38px;
   margin-bottom: 10px;
   border-radius: 50%;
-  background: var(--bg-2);
+  color: var(--tone);
+  background: color-mix(in oklab, var(--tone) 14%, var(--surface));
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--tone) 18%, transparent);
   transition: transform 520ms var(--spring), background-color 420ms var(--ease), color 420ms var(--ease);
 }
 /* Siempre una línea por texto: todas las piezas miden y se leen igual */
@@ -61,7 +82,7 @@
 .tile-label { font-weight: 500; font-size: 15px; line-height: 1.25; }
 .tile-hint { font-size: 12px; color: var(--muted); line-height: 1.3; }
 .tile[data-focused] { transform: translateY(-6px); }
-.tile[data-focused] .tile-icon { background: var(--text); color: var(--bg); transform: rotate(-8deg) scale(1.06); }
+.tile[data-focused] .tile-icon { background: var(--tone); color: #fff; transform: rotate(-8deg) scale(1.06); }
 
 @media (max-width: 1100px) {
   .dock { grid-template-columns: repeat(5, minmax(0, 1fr)); }

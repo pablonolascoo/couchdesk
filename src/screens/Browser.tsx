@@ -1,16 +1,19 @@
 import { useState } from 'react'
-import { Globe, MagnifyingGlass, ArrowSquareOut } from '@phosphor-icons/react'
+import { GameController, MagnifyingGlass, ArrowSquareOut } from '@phosphor-icons/react'
+import { BrandLogo, type Brand } from '../ui/brands'
+import './Home.css'
 import { Page } from '../components/Page'
 import { call } from '../native'
 
-const favorites = [
-  ['YouTube', 'https://www.youtube.com/tv'],
-  ['Twitch', 'https://www.twitch.tv'],
-  ['Google', 'https://www.google.com'],
-  ['Wikipedia', 'https://es.wikipedia.org'],
-  ['Xbox Cloud Gaming', 'https://www.xbox.com/play'],
-  ['GeForce NOW', 'https://play.geforcenow.com'],
-] as const
+// Cada favorito con su logo real y su color
+const favorites: { name: string; url: string; brand?: Brand; tone: string }[] = [
+  { name: 'YouTube', url: 'https://www.youtube.com/tv', brand: 'youtube', tone: '#ff0000' },
+  { name: 'Twitch', url: 'https://www.twitch.tv', brand: 'twitch', tone: '#9146ff' },
+  { name: 'Google', url: 'https://www.google.com', brand: 'google', tone: '#4285f4' },
+  { name: 'Wikipedia', url: 'https://es.wikipedia.org', brand: 'wikipedia', tone: '#3b3b3b' },
+  { name: 'Xbox Cloud Gaming', url: 'https://www.xbox.com/play', tone: '#107c10' },
+  { name: 'GeForce NOW', url: 'https://play.geforcenow.com', brand: 'nvidia', tone: '#76b900' },
+]
 
 export function Browser() {
   const [text, setText] = useState('')
@@ -26,9 +29,12 @@ export function Browser() {
 
       <h3 className="label" style={{ marginTop: 28 }}>Favoritos</h3>
       <div className="fav-grid">
-        {favorites.map(([name, url], i) => (
-          <button key={url} className="tile" data-nav={`fav-${i}`} data-nav-default={i === 0 ? '' : undefined} onClick={() => open(url)}>
-            <Globe size={24} weight="light" />
+        {favorites.map(({ name, url, brand, tone }, i) => (
+          <button key={url} className="tile" style={{ ['--tone' as string]: tone }} data-nav={`fav-${i}`} data-nav-default={i === 0 ? '' : undefined} onClick={() => open(url)}>
+            <span className="tile-art" aria-hidden>
+              {brand ? <BrandLogo name={brand} size={92} color="currentColor" /> : <GameController size={96} weight="fill" />}
+            </span>
+            <span className="tile-icon">{brand ? <BrandLogo name={brand} size={20} color="currentColor" /> : <GameController size={22} weight="fill" />}</span>
             <span className="tile-label">{name}</span>
             <span className="tile-hint">{url.replace('https://', '').replace(/\/.*$/, '')}</span>
           </button>

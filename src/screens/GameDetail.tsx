@@ -5,6 +5,8 @@ import { HintBar } from '../components/HintBar'
 import { Ambient } from '../components/Ambient'
 import { useGames, storeLabel, lastPlayedText, sizeText, coverSrc, iconSrc, markAsGame } from '../data/games'
 import { usePlay } from '../data/usePlay'
+import { StoreArt } from '../components/GameCard'
+import '../components/GameCard.css'
 import './GameDetail.css'
 
 export function GameDetail() {
@@ -45,6 +47,7 @@ export function GameDetail() {
             <img className="detail-cover" src={src} alt="" />
           ) : (
             <div className={`detail-cover card-cover ${game.store}`}>
+              <StoreArt store={game.store} />
               <span className="card-cover-store">{storeLabel[game.store]}</span>
               {iconSrc(game) && <img className="card-cover-icon" src={iconSrc(game)!} alt="" style={{ width: 96, height: 96 }} />}
               <span className="card-cover-title">{game.title}</span>

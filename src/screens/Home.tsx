@@ -8,6 +8,7 @@ import { sections } from '../data/mock'
 import { Ambient } from '../components/Ambient'
 import { useGames, storeLabel, lastPlayedText, sizeText, type Game } from '../data/games'
 import { usePlay } from '../data/usePlay'
+import { BrandLogo } from '../ui/brands'
 import './Home.css'
 
 // Juego destacado recordado al volver atrás
@@ -83,17 +84,21 @@ export function Home() {
       </section>
 
       <nav className="dock" aria-label="Secciones">
-        {sections.map(({ path, label, hint, icon: Icon }, i) => (
+        {sections.map(({ path, label, hint, icon: Icon, tone, brand }, i) => (
           <button
             key={path}
             className="tile reveal"
-            style={{ ['--i' as string]: i + 4 }}
+            style={{ ['--i' as string]: i + 4, ['--tone' as string]: tone }}
             data-nav={`sec-${path}`}
             data-nav-up={selected ? 'play' : undefined}
             data-nav-default={games && recent.length === 0 && i === 0 ? '' : undefined}
             onClick={() => navigate(path)}
           >
-            <span className="tile-icon"><Icon size={24} /></span>
+            {/* Dibujo grande de fondo, propio de cada sección */}
+            <span className="tile-art" aria-hidden>
+              {brand ? <BrandLogo name={brand} size={92} color="currentColor" /> : <Icon size={96} weight="duotone" />}
+            </span>
+            <span className="tile-icon">{brand ? <BrandLogo name={brand} size={20} color="currentColor" /> : <Icon size={22} weight="regular" />}</span>
             <span className="tile-label">{label}</span>
             <span className="tile-hint">{hint}</span>
           </button>
