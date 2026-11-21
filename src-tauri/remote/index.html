@@ -81,14 +81,15 @@
   .mid { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 0 6px; }
   /* Xbox: stick izquierdo arriba-fuera, cruceta abajo-dentro · botones arriba-fuera, stick derecho abajo-dentro */
   #ls { grid-area: 1 / 1 / 3 / 2; align-self: start; }
-  #dpad { grid-area: 2 / 2; }
+  /* La cruceta y los botones son grandes: ocupan su columna entera y se apoyan abajo / arriba */
+  #dpad { grid-area: 1 / 2 / 3 / 3; align-self: end; }
   #abxy { grid-area: 1 / 2 / 3 / 3; align-self: start; }
-  #rs { grid-area: 2 / 1; }
+  #rs { grid-area: 1 / 1 / 3 / 2; align-self: end; }
   /* PS5: cruceta y botones arriba-fuera, los dos sticks abajo hacia el centro */
   body.ps #dpad { grid-area: 1 / 1 / 3 / 2; align-self: start; }
-  body.ps #ls { grid-area: 2 / 2; align-self: center; }
+  body.ps #ls { grid-area: 1 / 2 / 3 / 3; align-self: end; }
 
-  .stick { --s: min(48cqh, 21cqw); position: relative; width: var(--s); height: var(--s); border-radius: 50%; }
+  .stick { --s: min(46cqh, 19cqw); position: relative; width: var(--s); height: var(--s); border-radius: 50%; }
   .stick .base {
     position: absolute; inset: 0; border-radius: 50%;
     background: radial-gradient(circle at 50% 40%, var(--surface), var(--bg2));
@@ -102,18 +103,23 @@
   }
   .stick.held .knob { transition: none; }
 
-  .cross, .face { --s: min(42cqh, 17cqw); width: var(--s); height: var(--s); display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); gap: 5px; }
+  /* Cruceta y botones de acción grandes para el pulgar: cada botón mide como mínimo ~52 px
+     (más que los 44 px recomendados), los sticks se quedan como estaban */
+  .cross, .face { --s: max(160px, min(60cqh, 23cqw)); width: var(--s); height: var(--s); display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); gap: 4px; }
   .cross button, .face button {
-    background: var(--surface); box-shadow: var(--shell); font-weight: 700; font-size: 17px;
+    background: var(--surface); box-shadow: var(--shell); font-weight: 700; font-size: calc(var(--s) * .12);
     transition: transform .3s var(--spring), background-color .25s var(--ease);
+    touch-action: none;
   }
-  .cross button { border-radius: 12px; }
-  .face button { border-radius: 50%; font-size: 19px; }
+  .cross button { border-radius: 14px; }
+  /* La cruceta forma una cruz continua: los brazos se tocan con el centro */
+  .cross::after { content: ''; grid-area: 2 / 2; border-radius: 10px; background: var(--bg2); box-shadow: inset 0 1px 2px rgba(58, 42, 24, .08); }
+  .face button { border-radius: 50%; font-size: calc(var(--s) * .14); }
   .face [data-k=enter] { color: #3f6440; } .face [data-k=esc] { color: #93362f; }
   .face [data-k=space] { color: #2e5f80; } .face [data-k=tab] { color: #8a6418; }
   body.ps .face [data-k=enter] { color: #3b5fa8; } body.ps .face [data-k=esc] { color: #b13a3a; }
   body.ps .face [data-k=space] { color: #b0558f; } body.ps .face [data-k=tab] { color: #2f8a76; }
-  body.ps .face button { font-size: 23px; font-weight: 400; }
+  body.ps .face button { font-size: calc(var(--s) * .17); font-weight: 400; }
   .u { grid-area: 1/2; } .l { grid-area: 2/1; } .r { grid-area: 2/3; } .d { grid-area: 3/2; }
   .pressed { transform: scale(.9) !important; background: var(--bg2) !important; }
 
@@ -154,8 +160,8 @@
     transition: opacity .7s var(--ease), transform .7s var(--ease);
   }
   #start.gone { opacity: 0; transform: scale(1.04); pointer-events: none; }
-  .mark { width: 64px; height: 64px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--text); display: grid; place-items: center; animation: pop .9s var(--spring) both; }
-  .mark::after { content: ''; width: 22px; height: 22px; border-radius: 50%; background: var(--text); }
+  /* Símbolo de CouchDesk: la C con la luz de encendido */
+  .mark { width: 72px; height: 72px; display: block; animation: pop .9s var(--spring) both; }
   @keyframes pop { from { transform: scale(.5); opacity: 0; } to { transform: none; opacity: 1; } }
   #start h1 { font: 400 34px/1 Georgia, "Times New Roman", serif; letter-spacing: -.02em; }
   #start p { color: var(--muted); font-size: 13px; max-width: 280px; text-align: center; }
@@ -241,7 +247,7 @@
 </div>
 
 <div id="start">
-  <span class="mark"></span>
+  <svg class="mark" viewBox="0 0 256 256" aria-hidden="true"><path d="M205.95 63.97A104 104 0 1 0 205.95 192.03A19 19 0 0 0 176.01 168.63A66 66 0 1 1 176.01 87.37A19 19 0 0 0 205.95 63.97Z" fill="#1F1A17"/><path d="M191 128a20 20 0 1 0 40 0a20 20 0 1 0 -40 0Z" fill="#E8643A"/></svg>
   <h1 data-i18n="pad">Mando</h1>
   <input id="name" maxlength="20" placeholder="Tu nombre" data-i18n-ph="name" autocomplete="off">
   <button id="go"><span data-i18n="start">Empezar</span> <i>→</i></button>
@@ -408,6 +414,8 @@
     else send({ t: 'key', k });
   };
   document.querySelectorAll('[data-k]').forEach((b) => {
+    // La cruceta y los botones de acción tienen su propia zona táctil inteligente (más abajo)
+    if (b.closest('#dpad, #abxy')) return;
     let timer = 0, rep = 0;
     const repeatable = ['up', 'down', 'left', 'right', 'backspace', 'volup', 'voldown'].includes(b.dataset.k);
     b.addEventListener('pointerdown', (e) => {
@@ -418,6 +426,85 @@
     const up = () => { b.classList.remove('pressed'); clearTimeout(timer); clearInterval(rep); };
     b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('pointerleave', up);
   });
+
+  // ---------- Zonas táctiles inteligentes (como el teclado del iPhone: no se ven, pero ayudan) ----------
+  // · La zona que responde es más grande que el dibujo (un 30 % por cada lado).
+  // · Cruceta: la dirección sale del ángulo del dedo, así que el centro y los huecos también valen,
+  //   y deslizando el pulgar se cambia de dirección sin levantarlo.
+  // · Botones: gana el más cercano al dedo, con ventaja para los que más usas (aprende sola)
+  //   y algo más para A / ✕, que es el que más se pulsa.
+  const SMART = { grow: 0.3, centerDead: 0.1 };
+  const usage = (() => { try { return JSON.parse(localStorage.getItem('mando-uso') || '{}') } catch { return {} } })();
+  const remember = (k) => {
+    usage[k] = (usage[k] || 0) + 1;
+    try { localStorage.setItem('mando-uso', JSON.stringify(usage)) } catch {}
+  };
+  const weightOf = (k) => {
+    const total = Object.values(usage).reduce((a, b) => a + b, 0) || 1;
+    const base = k === 'enter' ? 1.15 : 1;
+    return base * (1 + 0.35 * ((usage[k] || 0) / total)); // como mucho, un 35 % más de zona
+  };
+  const inflate = (r, g) => ({ l: r.left - r.width * g, t: r.top - r.height * g, r: r.right + r.width * g, b: r.bottom + r.height * g });
+  const inside = (x, y, z) => x >= z.l && x <= z.r && y >= z.t && y <= z.b;
+
+  const dirFor = (el, x, y) => {
+    const r = el.getBoundingClientRect();
+    const dx = x - (r.left + r.width / 2), dy = y - (r.top + r.height / 2);
+    if (Math.hypot(dx, dy) < r.width * SMART.centerDead) return null;
+    return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+  };
+  const faceFor = (el, x, y) => {
+    let best = null, bestScore = Infinity;
+    el.querySelectorAll('button').forEach((b) => {
+      const r = b.getBoundingClientRect();
+      const d = Math.hypot(x - (r.left + r.width / 2), y - (r.top + r.height / 2));
+      const score = d / weightOf(b.dataset.k);
+      if (score < bestScore) { bestScore = score; best = b; }
+    });
+    return best;
+  };
+
+  const smart = new Map(); // un dedo = una pulsación, varios dedos a la vez
+  const gp = $('#gp');
+  const smartRelease = (s) => {
+    if (!s.btn) return;
+    s.btn.classList.remove('pressed'); clearTimeout(s.timer); clearInterval(s.rep);
+    s.btn = null; s.k = null;
+  };
+  const engage = (s, btn) => {
+    if (btn === s.btn) return;
+    smartRelease(s);
+    if (!btn) return;
+    s.btn = btn; s.k = btn.dataset.k;
+    press(btn, s.k); remember(s.k);
+    if (s.kind === 'dpad') s.timer = setTimeout(() => { s.rep = setInterval(() => send({ t: 'key', k: s.k }), 110) }, 380);
+  };
+  const resolve = (s, x, y) => {
+    if (s.kind === 'dpad') {
+      const d = dirFor($('#dpad'), x, y);
+      return d ? $(`#dpad [data-k=${d}]`) : s.btn; // en el centro se mantiene la dirección que había
+    }
+    return faceFor($('#abxy'), x, y);
+  };
+  gp.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('.stick, #home')) return; // los sticks e Inicio tienen lo suyo
+    const { clientX: x, clientY: y } = e;
+    const kind = inside(x, y, inflate($('#dpad').getBoundingClientRect(), SMART.grow)) ? 'dpad'
+      : inside(x, y, inflate($('#abxy').getBoundingClientRect(), SMART.grow)) ? 'face' : null;
+    if (!kind) return;
+    e.preventDefault();
+    try { gp.setPointerCapture(e.pointerId) } catch {}
+    const s = { kind, btn: null, k: null, timer: 0, rep: 0 };
+    smart.set(e.pointerId, s);
+    engage(s, resolve(s, x, y));
+  });
+  gp.addEventListener('pointermove', (e) => {
+    const s = smart.get(e.pointerId);
+    if (!s || s.kind !== 'dpad') return; // los botones no cambian al deslizar: evita pulsaciones sin querer
+    engage(s, resolve(s, e.clientX, e.clientY));
+  });
+  const lift = (e) => { const s = smart.get(e.pointerId); if (s) { smartRelease(s); smart.delete(e.pointerId); } };
+  gp.addEventListener('pointerup', lift); gp.addEventListener('pointercancel', lift);
 
   // ---------- Movimiento del puntero (binario, 4 bytes) ----------
   let accX = 0, accY = 0, raf = 0;

@@ -42,8 +42,7 @@ pub struct ClaudeState(Mutex<Option<String>>);
 
 /// Carpeta de trabajo de Claude en la consola
 pub fn dir() -> PathBuf {
-    let base = std::env::var("LOCALAPPDATA").unwrap_or_else(|_| ".".into());
-    PathBuf::from(base).join("Consola").join("claude")
+    crate::paths::data_dir().join("claude")
 }
 
 pub fn claude_exe() -> Option<PathBuf> {

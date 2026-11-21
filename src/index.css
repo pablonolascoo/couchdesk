@@ -323,7 +323,8 @@ kbd {
 :root .ss:not(.ss-off) { animation: ss-in var(--dur-5) var(--ease-glide) both; }
 @keyframes ss-in { from { opacity: 0; } to { opacity: 1; } }
 
-/* Sin movimiento: cambios casi al instante, solo fundidos */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important; }
+/* Sin movimiento (Ajustes → Rendimiento → Reducir movimiento): cambios casi al instante.
+   No sigue a prefers-reduced-motion: el optimizador de Windows lo activa y la app se quedaría quieta. */
+:root[data-reduce-motion] *, :root[data-reduce-motion] *::before, :root[data-reduce-motion] *::after {
+  animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important;
 }

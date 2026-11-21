@@ -5,7 +5,8 @@
   "windows": [
     "main",
     "asistente",
-    "salvapantallas"
+    "salvapantallas",
+    "capa-escritorio"
   ],
   "permissions": [
     "core:default"

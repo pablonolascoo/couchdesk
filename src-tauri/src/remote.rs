@@ -101,8 +101,7 @@ impl Hub {
 
 /// Código del QR guardado en disco: así el acceso guardado en el móvil sigue valiendo tras reiniciar
 fn saved_token() -> String {
-    let Ok(base) = std::env::var("LOCALAPPDATA") else { return random_password() };
-    let file = std::path::Path::new(&base).join("Consola").join("mando.txt");
+    let file = crate::paths::data_dir().join("mando.txt");
     if let Ok(t) = std::fs::read_to_string(&file) {
         let t = t.trim().to_string();
         if t.len() >= 10 && t.chars().all(|c| c.is_ascii_alphanumeric()) {

@@ -254,7 +254,7 @@ fn latest(e: &Emu) -> Result<Release, String> {
 
 fn root() -> PathBuf {
     std::env::var("CONSOLA_EMU_DIR").map(PathBuf::from).unwrap_or_else(|_| {
-        PathBuf::from(std::env::var("LOCALAPPDATA").unwrap_or_else(|_| "C:\\".into())).join("Consola").join("emuladores")
+        crate::paths::data_dir().join("emuladores")
     })
 }
 
@@ -262,7 +262,26 @@ fn root() -> PathBuf {
 struct Installed { version: String, exe: String, previous: Option<Box<Installed>> }
 
 fn read_installed(id: &str) -> Option<Installed> {
-    serde_json::from_str(&fs::read_to_string(root().join(id).join("instalado.json")).ok()?).ok()
+    let mut i: Installed = serde_json::from_str(&fs::read_to_string(root().join(id).join("instalado.json")).ok()?).ok()?;
+    rebase(&mut i, &root());
+    Some(i)
+}
+
+/// Hasta la 1.1.0 los emuladores vivían en %LOCALAPPDATA%\Consola\emuladores: si la ruta guardada
+/// ya no existe pero el mismo archivo está bajo la carpeta actual, se usa la nueva
+fn rebase(i: &mut Installed, root: &Path) {
+    if !Path::new(&i.exe).exists() {
+        let lower = i.exe.to_lowercase().replace('/', "\\");
+        if let Some(pos) = lower.find("\\emuladores\\") {
+            let candidate = root.join(&i.exe[pos + "\\emuladores\\".len()..]);
+            if candidate.exists() {
+                i.exe = candidate.display().to_string();
+            }
+        }
+    }
+    if let Some(prev) = i.previous.as_mut() {
+        rebase(prev, root);
+    }
 }
 
 fn extract(archive: &Path, dest: &Path) -> Result<(), String> {

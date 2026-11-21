@@ -41,7 +41,7 @@ writeFileSync('src-tauri/tauri.conf.json', backup['src-tauri/tauri.conf.json'].r
 
 console.log(`\n▶  Preparando ${label}\n`)
 const build = await $`npm run app:build`.nothrow()
-const installer = `src-tauri/target/release/bundle/nsis/Consola_${version}_x64-setup.exe`
+const installer = `src-tauri/target/release/bundle/nsis/CouchDesk_${version}_x64-setup.exe`
 if (build.exitCode !== 0 || !existsSync(installer)) {
   console.error('\n✖  La compilación falló. Todo vuelve a como estaba.')
   restore()
@@ -52,7 +52,7 @@ if (build.exitCode !== 0 || !existsSync(installer)) {
 const changelog = existsSync('CHANGELOG.md') ? readFileSync('CHANGELOG.md', 'utf8') : ''
 const section = changelog.split(/^## /m).find((s) => s.startsWith(`[${version}]`) || s.startsWith(version))
 const notes = (section ? section.split('\n').slice(1).join('\n').trim() : `Versión ${label}.`) +
-  `\n\n**Descarga:** \`Consola_${version}_x64-setup.exe\` (Windows 10/11, 64 bits).` +
+  `\n\n**Descarga:** \`CouchDesk_${version}_x64-setup.exe\` (Windows 10/11, 64 bits).` +
   `\n\nWindows puede avisar de que el programa no es conocido (aún no está firmado): «Más información» → «Ejecutar de todas formas».`
 // Fuera del proyecto: así no se cuela en el commit de la versión
 const notesFile = join(tmpdir(), 'consola-release-notes.md')

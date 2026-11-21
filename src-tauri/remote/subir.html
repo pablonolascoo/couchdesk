@@ -163,7 +163,7 @@ document.title = T.title
 document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = T[el.dataset.i18n] })
 
 const TOKEN = '__TOKEN__'
-const PARALLEL = 3
+const PARALLEL = 6
 const $ = (id) => document.getElementById(id)
 const params = new URLSearchParams(location.search)
 let dests = [], current = null
@@ -252,33 +252,78 @@ function add(files) {
   pump(); summary()
 }
 
-function pump() {
-  while (running.size < PARALLEL && queue.length) send(queue.shift())
+// Los archivos grandes van en trozos por varias conexiones a la vez (como un gestor de
+// descargas): con wifi, varias conexiones suman mucha más velocidad que una sola.
+const CHUNK = 16 << 20
+let inflight = 0
+
+function nextPart() {
+  // Un archivo grande no acapara todas las conexiones: los siguientes empiezan a la vez
+  const busy = [...running].filter((j) => j.parts.length).length
+  if (!queue.length || busy >= 2) for (const job of running) if (job.parts.length) return [job, job.parts.shift()]
+  if (!queue.length) return null
+  const job = queue.shift()
+  job.big = job.file.size > 2 * CHUNK
+  job.parts = job.big ? Array.from({ length: Math.ceil(job.file.size / CHUNK) }, (_, i) => i * CHUNK) : [0]
+  job.total = job.parts.length; job.done = 0; job.loaded = {}
+  job.id = Math.random().toString(36).slice(2, 12)
+  running.add(job)
+  return [job, job.parts.shift()]
 }
 
-function send(job) {
-  running.add(job)
-  const state = job.el.querySelector('.item-state'), bar = job.el.querySelector('.bar i')
+function pump() {
+  for (let n; inflight < PARALLEL && (n = nextPart()); ) sendPart(...n)
+}
+
+function url(job, extra = '') {
+  return `/api/subir?t=${TOKEN}&d=${encodeURIComponent(job.dest)}&n=${encodeURIComponent(job.rel)}${job.big ? `&u=${job.id}&s=${job.file.size}` : ''}${extra}`
+}
+
+function progress(job, off, loaded) {
+  sentBytes += loaded - (job.loaded[off] || 0); job.loaded[off] = loaded
+  job.sent = Object.values(job.loaded).reduce((a, b) => a + b, 0)
+  const p = job.file.size ? job.sent / job.file.size : 1
+  job.el.querySelector('.bar i').style.width = (p * 100).toFixed(1) + '%'
+  job.el.querySelector('.item-state').textContent = Math.floor(p * 100) + ' %'
+  summary()
+}
+
+function finish(job, ok, text) {
+  if (job.ended) return
+  job.ended = true; job.parts = []
+  running.delete(job)
+  job.el.classList.add(ok ? 'ok' : 'err')
+  job.el.querySelector('.bar i').style.width = '100%'
+  job.el.querySelector('.item-state').textContent = text
+  if (ok) { sentBytes += job.file.size - job.sent; job.sent = job.file.size }
+  pump(); summary()
+}
+
+function doneText(job, saved) {
+  return saved && saved !== job.rel.split('/').pop() ? fmt(T.doneAs, { name: saved }) : fmt(T.done, { size: size(job.file.size) })
+}
+
+function sendPart(job, off) {
+  inflight++
   const xhr = new XMLHttpRequest()
-  xhr.open('PUT', `/api/subir?t=${TOKEN}&d=${encodeURIComponent(job.dest)}&n=${encodeURIComponent(job.rel)}`)
-  xhr.upload.onprogress = (e) => {
-    sentBytes += e.loaded - job.sent; job.sent = e.loaded
-    const p = job.file.size ? e.loaded / job.file.size : 1
-    bar.style.width = (p * 100).toFixed(1) + '%'
-    state.textContent = Math.floor(p * 100) + ' %'
-    summary()
+  xhr.open('PUT', url(job, job.big ? `&o=${off}` : ''))
+  xhr.upload.onprogress = (e) => progress(job, off, e.loaded)
+  const end = () => { inflight--; pump() }
+  xhr.onload = async () => {
+    if (job.ended) return end()
+    if (xhr.status !== 200) { end(); return finish(job, false, xhr.responseText || T.error) }
+    progress(job, off, job.big ? Math.min(CHUNK, job.file.size - off) : job.file.size)
+    if (++job.done < job.total) return end()
+    if (!job.big) { end(); return finish(job, true, doneText(job, xhr.responseText)) }
+    // Han llegado todos los trozos: que el archivo aparezca con su nombre
+    try {
+      const r = await fetch(url(job, '&fin=1'), { method: 'PUT' })
+      const text = await r.text()
+      end(); finish(job, r.ok, r.ok ? doneText(job, text) : text || T.error)
+    } catch { end(); finish(job, false, T.cut) }
   }
-  const finish = (ok, text) => {
-    running.delete(job)
-    job.el.classList.add(ok ? 'ok' : 'err')
-    bar.style.width = '100%'
-    state.textContent = text
-    if (ok) { sentBytes += job.file.size - job.sent; job.sent = job.file.size }
-    pump(); summary()
-  }
-  xhr.onload = () => xhr.status === 200 ? finish(true, xhr.responseText && xhr.responseText !== job.rel.split('/').pop() ? fmt(T.doneAs, { name: xhr.responseText }) : fmt(T.done, { size: size(job.file.size) })) : finish(false, xhr.responseText || T.error)
-  xhr.onerror = () => finish(false, T.cut)
-  xhr.send(job.file)
+  xhr.onerror = () => { end(); finish(job, false, T.cut) }
+  xhr.send(job.big ? job.file.slice(off, off + CHUNK) : job.file)
 }
 
 function summary() {

@@ -5,7 +5,8 @@ import {
   BatteryLow, BatteryEmpty, BatteryWarning, Plus, Copy, PencilSimple, Trash, Star, Sliders,
 } from '@phosphor-icons/react'
 import { Page } from '../components/Page'
-import { call } from '../native'
+import { call, isDesktopApp } from '../native'
+import { subscribeLivePads, getLivePads } from '../nav/useSpatialNav'
 import { sound, padKind } from '../ui/sound'
 import { t as tr, useT } from '../i18n'
 import {
@@ -50,13 +51,16 @@ interface LivePad { index: number; id: string; pressed: number[]; axes: number[]
 
 /** Mandos que ve la consola en directo (con sus botones). Solo aparecen tras pulsar algo. */
 function useLivePads() {
+  // En la app, los mismos mandos (y nombres) que usa la navegación: así el perfil elegido se aplica
+  const native = useSyncExternalStore(subscribeLivePads, getLivePads)
   const [pads, setPads] = useState<LivePad[]>([])
   useEffect(() => {
     let raf = 0
     let last = ''
     const tick = () => {
-      const now = navigator.getGamepads().filter((p): p is Gamepad => !!p).map((p) => ({
-        index: p.index,
+      // En la app, aquí solo los mandos que la app no lee por su cuenta (ni Xbox ni PlayStation)
+      const now = navigator.getGamepads().filter((p): p is Gamepad => !!p && !(isDesktopApp && /xinput|054c/i.test(p.id))).map((p) => ({
+        index: isDesktopApp ? p.index + 10 : p.index,
         id: p.id,
         pressed: p.buttons.flatMap((b, i) => (b.pressed ? [i] : [])),
         axes: p.axes.slice(0, 4).map((a) => Math.round(a * 10) / 10),
@@ -68,7 +72,7 @@ function useLivePads() {
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
   }, [])
-  return pads
+  return isDesktopApp ? (pads.length ? [...native, ...pads] : native) : pads
 }
 
 const usePadConfig = () => useSyncExternalStore(subscribe, getConfig)

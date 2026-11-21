@@ -1,45 +1,111 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect, type ComponentType } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { IconContext } from '@phosphor-icons/react'
 import { useSpatialNav } from './nav/useSpatialNav'
 import { useSystemLink } from './nav/useSystemLink'
 import { trackInputMode } from './ui/sound'
 import { Home } from './screens/Home'
-import { Library } from './screens/Library'
-import { GameDetail } from './screens/GameDetail'
-import { Apps, AppDetail } from './screens/Apps'
-import { Cloud } from './screens/Cloud'
-import { Desktop } from './screens/Desktop'
-import { FilesHome, Folder, FileItem } from './screens/Files'
-import { Receive, ReceiveWeb, ReceiveFtp, ReceiveLocalSend, ReceiveLocalSendDest } from './screens/Receive'
-import { PhoneRemote } from './screens/PhoneRemote'
-import { Emulators, EmulatorDetail } from './screens/Emulators'
-import { Claude } from './screens/Claude'
-import { ClaudeOverlay } from './screens/ClaudeOverlay'
-import { ClaudeConversations, ClaudeConversationDelete } from './screens/claude/Conversations'
-import { ClaudeConnectors, ClaudeConnectorStore, ClaudeConnectorNew } from './screens/claude/Connectors'
-import { ClaudeExtensions, ClaudeExtensionStore } from './screens/claude/Extensions'
 import { useClaudeNavigate } from './data/claude'
-import { Browser } from './screens/Browser'
-import { Music } from './screens/Music'
 import { RemoteCursors } from './components/RemoteCursors'
 import { PadModeToast } from './components/PadModeToast'
 import { Keyboard } from './components/Keyboard'
-import { ControllersScreen, PadProfilePick, ProfilesScreen, ProfileDetail, ProfileName, ProfileDelete, RemapCapture } from './screens/Controllers'
 import { BootSplash } from './components/BootSplash'
 import { ThemeMusic } from './components/ThemeMusic'
-import { ThemesScreen, ThemeEditor, ThemeDelete, ThemeShare, ThemeImport, MenuMusicSettings } from './screens/Themes'
 import { Backdrop } from './components/Backdrop'
-import { BackgroundSettings, BackgroundStyles, BackgroundSource, BackgroundFiles } from './screens/BackgroundSettings'
-import { Screensaver } from './screens/Screensaver'
-import { ScreensaverSettings, ScreensaverCity } from './screens/ScreensaverSettings'
-import { AmbienceGrid, AmbiencePlayer } from './screens/Ambience'
-import { SettingsMenu, SoundSettings, DisplaySettings, PowerSettings, NetworkSettings, StartupSettings, LanguageSettings } from './screens/Settings'
+import { call } from './native'
+import { useMultitaskLink } from './screens/multitaskStore'
+
+// Arranque rápido: solo el Inicio va dentro; el resto de pantallas se carga aparte
+// (y se precarga en cuanto la consola está quieta, para que abrirlas siga siendo instantáneo).
+type Mod = Record<string, unknown>
+const loaders: (() => Promise<Mod>)[] = []
+function screen<M extends Mod>(load: () => Promise<M>) {
+  loaders.push(load)
+  return <K extends keyof M & string>(name: K) =>
+    lazy(() => load().then((m) => ({ default: m[name] as ComponentType })))
+}
+const library = screen(() => import('./screens/Library'))
+const gameDetail = screen(() => import('./screens/GameDetail'))
+const apps = screen(() => import('./screens/Apps'))
+const cloud = screen(() => import('./screens/Cloud'))
+const desktop = screen(() => import('./screens/Desktop'))
+const files = screen(() => import('./screens/Files'))
+const receive = screen(() => import('./screens/Receive'))
+const phoneRemote = screen(() => import('./screens/PhoneRemote'))
+const emulators = screen(() => import('./screens/Emulators'))
+const claude = screen(() => import('./screens/Claude'))
+const claudeOverlay = screen(() => import('./screens/ClaudeOverlay'))
+const conversations = screen(() => import('./screens/claude/Conversations'))
+const connectors = screen(() => import('./screens/claude/Connectors'))
+const extensions = screen(() => import('./screens/claude/Extensions'))
+const browser = screen(() => import('./screens/Browser'))
+const music = screen(() => import('./screens/Music'))
+const controllers = screen(() => import('./screens/Controllers'))
+const themes = screen(() => import('./screens/Themes'))
+const background = screen(() => import('./screens/BackgroundSettings'))
+const screensaver = screen(() => import('./screens/Screensaver'))
+const screensaverSettings = screen(() => import('./screens/ScreensaverSettings'))
+const ambience = screen(() => import('./screens/Ambience'))
+const settings = screen(() => import('./screens/Settings'))
+const performance_ = screen(() => import('./screens/Performance'))
+const multitask = screen(() => import('./screens/Multitask'))
+const Multitask = multitask('Multitask'), MultitaskForceClose = multitask('MultitaskForceClose'), MemorySettings = multitask('MemorySettings')
+const DeskZones = screen(() => import('./screens/DeskZones'))('DeskZones')
+const DeskZonesLayer = screen(() => import('./screens/DeskZonesLayer'))('DeskZonesLayer')
+
+const Library = library('Library')
+const GameDetail = gameDetail('GameDetail')
+const Apps = apps('Apps'), AppDetail = apps('AppDetail')
+const Cloud = cloud('Cloud')
+const Desktop = desktop('Desktop')
+const FilesHome = files('FilesHome'), Folder = files('Folder'), FileItem = files('FileItem')
+const Receive = receive('Receive'), ReceiveWeb = receive('ReceiveWeb'), ReceiveFtp = receive('ReceiveFtp'),
+  ReceiveLocalSend = receive('ReceiveLocalSend'), ReceiveLocalSendDest = receive('ReceiveLocalSendDest')
+const PhoneRemote = phoneRemote('PhoneRemote')
+const Emulators = emulators('Emulators'), EmulatorDetail = emulators('EmulatorDetail')
+const Claude = claude('Claude')
+const ClaudeOverlay = claudeOverlay('ClaudeOverlay')
+const ClaudeConversations = conversations('ClaudeConversations'), ClaudeConversationDelete = conversations('ClaudeConversationDelete')
+const ClaudeConnectors = connectors('ClaudeConnectors'), ClaudeConnectorStore = connectors('ClaudeConnectorStore'), ClaudeConnectorNew = connectors('ClaudeConnectorNew')
+const ClaudeExtensions = extensions('ClaudeExtensions'), ClaudeExtensionStore = extensions('ClaudeExtensionStore')
+const Browser = browser('Browser')
+const Music = music('Music')
+const ControllersScreen = controllers('ControllersScreen'), PadProfilePick = controllers('PadProfilePick'), ProfilesScreen = controllers('ProfilesScreen'),
+  ProfileDetail = controllers('ProfileDetail'), ProfileName = controllers('ProfileName'), ProfileDelete = controllers('ProfileDelete'), RemapCapture = controllers('RemapCapture')
+const ThemesScreen = themes('ThemesScreen'), ThemeEditor = themes('ThemeEditor'), ThemeDelete = themes('ThemeDelete'),
+  ThemeShare = themes('ThemeShare'), ThemeImport = themes('ThemeImport'), MenuMusicSettings = themes('MenuMusicSettings')
+const BackgroundSettings = background('BackgroundSettings'), BackgroundStyles = background('BackgroundStyles'),
+  BackgroundSource = background('BackgroundSource'), BackgroundFiles = background('BackgroundFiles')
+const Screensaver = screensaver('Screensaver')
+const ScreensaverSettings = screensaverSettings('ScreensaverSettings'), ScreensaverCity = screensaverSettings('ScreensaverCity')
+const AmbienceGrid = ambience('AmbienceGrid'), AmbiencePlayer = ambience('AmbiencePlayer')
+const SettingsMenu = settings('SettingsMenu'), SoundSettings = settings('SoundSettings'), DisplaySettings = settings('DisplaySettings'),
+  PowerSettings = settings('PowerSettings'), NetworkSettings = settings('NetworkSettings'), StartupSettings = settings('StartupSettings'),
+  LanguageSettings = settings('LanguageSettings')
+const PerformanceMenu = performance_('PerformanceMenu'), PerformanceMotion = performance_('PerformanceMotion'),
+  PerformanceWindows = performance_('PerformanceWindows'), PerformanceGame = performance_('PerformanceGame'),
+  PerformanceUpdates = performance_('PerformanceUpdates'), PerformanceAdvanced = performance_('PerformanceAdvanced')
+
+/** Primer pintado: se apunta el tiempo (perf.rs) y se precargan las demás pantallas sin estorbar */
+function useAppReady() {
+  useEffect(() => {
+    requestAnimationFrame(() => setTimeout(() => {
+      const pageMs = performance.now()
+      call('perf_app_ready', { pageMs }).catch(() => { /* versión sin el comando */ })
+      if (!/^\/(asistente-flotante|salvapantallas)/.test(location.pathname)) {
+        const idle = window.requestIdleCallback ?? ((fn: () => void) => setTimeout(fn, 1500))
+        idle(() => loaders.forEach((l) => l().catch(() => {})))
+      }
+    }))
+  }, [])
+}
 
 function Shell() {
   useSpatialNav()
   useSystemLink()
   useClaudeNavigate()
+  useAppReady()
+  useMultitaskLink()
   const location = useLocation()
   useEffect(trackInputMode, [])
   return (
@@ -52,6 +118,7 @@ function Shell() {
       <Keyboard />
       {/* La clave reinicia la animación de entrada en cada pantalla */}
       <div className="route" key={location.pathname}>
+        <Suspense fallback={null}>
         <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/biblioteca" element={<Library />} />
@@ -110,8 +177,19 @@ function Shell() {
           <Route path="/ambiente" element={<AmbienceGrid />} />
           <Route path="/ambiente/:id" element={<AmbiencePlayer />} />
           <Route path="/escritorio" element={<Desktop />} />
+          <Route path="/ajustes/escritorio-organizado/*" element={<DeskZones />} />
+          <Route path="/ajustes/rendimiento" element={<PerformanceMenu />} />
+          <Route path="/ajustes/rendimiento/movimiento" element={<PerformanceMotion />} />
+          <Route path="/ajustes/rendimiento/windows" element={<PerformanceWindows />} />
+          <Route path="/ajustes/rendimiento/juegos" element={<PerformanceGame />} />
+          <Route path="/ajustes/rendimiento/actualizaciones" element={<PerformanceUpdates />} />
+          <Route path="/ajustes/rendimiento/avanzado" element={<PerformanceAdvanced />} />
+          <Route path="/ajustes/rendimiento/memoria" element={<MemorySettings />} />
+          <Route path="/multitarea" element={<Multitask />} />
+          <Route path="/multitarea/forzar/:hwnd" element={<MultitaskForceClose />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </Suspense>
       </div>
     </>
   )
@@ -123,8 +201,11 @@ export default function App() {
       <BrowserRouter>
         {/* La ventana flotante de Claude ("asistente") solo lleva su tarjeta */}
         {/* La ventana "salvapantallas" solo lleva el salvapantallas */}
-        {window.location.pathname.startsWith('/asistente-flotante') ? <ClaudeOverlay />
-          : window.location.pathname.startsWith('/salvapantallas') ? <Screensaver /> : <Shell />}
+        <Suspense fallback={null}>
+          {window.location.pathname.startsWith('/asistente-flotante') ? <ClaudeOverlay />
+            : window.location.pathname.startsWith('/salvapantallas') ? <Screensaver />
+            : window.location.pathname.startsWith('/capa-escritorio') ? <DeskZonesLayer /> : <Shell />}
+        </Suspense>
       </BrowserRouter>
     </IconContext.Provider>
   )

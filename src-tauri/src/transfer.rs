@@ -20,7 +20,6 @@ use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use std::path::{Component, Path, PathBuf};
 use std::sync::Arc;
-use tokio::io::AsyncWriteExt;
 
 const PAGE: &str = include_str!("../remote/subir.html");
 
@@ -144,6 +143,11 @@ pub struct UploadQuery {
     d: String,
     /// Nombre (o ruta relativa si se sube una carpeta)
     n: String,
+    /// Archivos grandes por trozos: id de la subida, posición del trozo, tamaño total y «ya está»
+    u: Option<String>,
+    o: Option<u64>,
+    s: Option<u64>,
+    fin: Option<u8>,
 }
 
 #[derive(Deserialize)]
@@ -182,38 +186,116 @@ pub async fn upload(
     let Some(rel) = safe_relative(&q.n) else {
         return (StatusCode::BAD_REQUEST, tr("transfer.bad_name")).into_response();
     };
-    match save(&dest.path, &rel, body).await {
-        Ok(saved) => (StatusCode::OK, saved.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default()).into_response(),
+    let name = |p: PathBuf| p.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
+    let result = match (q.u.as_deref(), q.s) {
+        // Trozo de un archivo grande, o el aviso de que ya han llegado todos
+        (Some(id), Some(size)) if !id.is_empty() && id.len() <= 32 && id.chars().all(|c| c.is_ascii_alphanumeric()) => {
+            if q.fin.is_some() {
+                finish_chunks(&dest.path, &rel, id, size).await.map(name)
+            } else {
+                save_chunk(&dest.path, &rel, id, q.o.unwrap_or(0), size, body).await.map(|_| String::new())
+            }
+        }
+        (Some(_), _) => return (StatusCode::BAD_REQUEST, tr("transfer.bad_name")).into_response(),
+        _ => save(&dest.path, &rel, body).await.map(name),
+    };
+    match result {
+        Ok(text) => (StatusCode::OK, text).into_response(),
         Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e).into_response(),
     }
 }
 
-/// Escribe el archivo mientras llega, en un «.parte» que solo se renombra al terminar entero
-pub(crate) async fn save(dir: &Path, rel: &Path, body: Body) -> Result<PathBuf, String> {
+/// Archivo a medio llegar: oculto junto al destino, con el nombre final y un id
+fn part_path(dir: &Path, rel: &Path, id: &str) -> Result<(PathBuf, PathBuf), String> {
     let final_path = dir.join(rel);
-    let parent = final_path.parent().ok_or(tr("files.bad_path"))?.to_path_buf();
-    tokio::fs::create_dir_all(&parent).await.map_err(|e| trf("transfer.cant_create", &[("err", &e.to_string())]))?;
-    let part = parent.join(format!(".{}.{}.parte", rel.file_name().unwrap_or_default().to_string_lossy(), std::process::id()));
-    let file = tokio::fs::File::create(&part).await.map_err(|e| e.to_string())?;
-    let mut w = tokio::io::BufWriter::with_capacity(4 << 20, file);
-    let mut stream = body.into_data_stream();
-    let result: Result<(), String> = async {
-        while let Some(chunk) = stream.next().await {
-            let chunk = chunk.map_err(|_| tr("transfer.cut").to_string())?;
-            w.write_all(&chunk).await.map_err(|e| e.to_string())?;
+    let parent = final_path.parent().ok_or(tr("files.bad_path"))?;
+    let part = parent.join(format!(".{}.{id}.parte", rel.file_name().unwrap_or_default().to_string_lossy()));
+    Ok((final_path, part))
+}
+
+/// Vuelca la red al disco a toda velocidad. La red entrega trozos pequeños; un hilo aparte los
+/// junta en escrituras grandes, así recibir y escribir van a la vez y nunca se esperan.
+async fn write_stream(part: PathBuf, offset: u64, size: Option<u64>, body: Body) -> Result<(), String> {
+    use std::io::{Seek, SeekFrom, Write};
+    let (tx, mut rx) = tokio::sync::mpsc::channel::<axum::body::Bytes>(512);
+    let writer = tokio::task::spawn_blocking(move || -> std::io::Result<()> {
+        std::fs::create_dir_all(part.parent().unwrap_or(Path::new(".")))?;
+        let mut f = std::fs::OpenOptions::new().write(true).create(true).truncate(false).open(&part)?;
+        // Reservar el tamaño final de una vez: el disco no se fragmenta y no crece a saltos
+        if let Some(s) = size {
+            if f.metadata()?.len() < s {
+                f.set_len(s)?;
+            }
         }
-        w.flush().await.map_err(|e| e.to_string())
+        f.seek(SeekFrom::Start(offset))?;
+        let mut w = std::io::BufWriter::with_capacity(8 << 20, f);
+        while let Some(b) = rx.blocking_recv() {
+            w.write_all(&b)?;
+        }
+        w.flush()
+    });
+    let mut stream = body.into_data_stream();
+    let mut cut = false;
+    while let Some(chunk) = stream.next().await {
+        match chunk {
+            Ok(c) => {
+                if tx.send(c).await.is_err() {
+                    break; // el disco falló: el error sale abajo
+                }
+            }
+            Err(_) => {
+                cut = true;
+                break;
+            }
+        }
     }
-    .await;
-    drop(w);
-    if let Err(e) = result {
-        let _ = tokio::fs::remove_file(&part).await;
-        return Err(e);
+    drop(tx);
+    let written = writer.await.map_err(|e| e.to_string())?;
+    if cut {
+        return Err(tr("transfer.cut").into());
     }
+    written.map_err(|e| trf("transfer.cant_create", &[("err", &e.to_string())]))
+}
+
+async fn finish(part: PathBuf, final_path: PathBuf) -> Result<PathBuf, String> {
     tokio::task::spawn_blocking(move || move_into(&part, &final_path))
         .await
         .map_err(|e| e.to_string())?
         .map_err(|e| e.to_string())
+}
+
+/// Escribe el archivo mientras llega, en un «.parte» que solo se renombra al terminar entero
+pub(crate) async fn save(dir: &Path, rel: &Path, body: Body) -> Result<PathBuf, String> {
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+    let id = format!("{}-{}", std::process::id(), NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed));
+    let (final_path, part) = part_path(dir, rel, &id)?;
+    if let Err(e) = write_stream(part.clone(), 0, None, body).await {
+        let _ = tokio::fs::remove_file(&part).await;
+        return Err(e);
+    }
+    finish(part, final_path).await
+}
+
+/// Un trozo de un archivo grande. Los archivos grandes llegan en trozos por varias conexiones
+/// a la vez (como los gestores de descargas): con wifi, varias conexiones suman mucha más
+/// velocidad que una sola. Todos escriben en su sitio del mismo «.parte».
+async fn save_chunk(dir: &Path, rel: &Path, id: &str, offset: u64, size: u64, body: Body) -> Result<(), String> {
+    if offset >= size.max(1) {
+        return Err(tr("transfer.bad_name").into());
+    }
+    let (_, part) = part_path(dir, rel, id)?;
+    write_stream(part, offset, Some(size), body).await
+}
+
+/// Todos los trozos han llegado: el archivo aparece con su nombre
+async fn finish_chunks(dir: &Path, rel: &Path, id: &str, size: u64) -> Result<PathBuf, String> {
+    let (final_path, part) = part_path(dir, rel, id)?;
+    let len = tokio::fs::metadata(&part).await.map(|m| m.len()).map_err(|_| tr("transfer.cut").to_string())?;
+    if len != size {
+        let _ = tokio::fs::remove_file(&part).await;
+        return Err(tr("transfer.cut").into());
+    }
+    finish(part, final_path).await
 }
 
 #[cfg(test)]
@@ -250,6 +332,77 @@ mod tests {
         assert_eq!(route_ftp_upload(&root, &map, "/suelto.txt"), None);
         assert!(root.join("suelto.txt").exists());
         std::fs::remove_dir_all(&base).unwrap();
+    }
+
+    /// Un archivo grande en trozos por 6 conexiones a la vez, llegando desordenados
+    #[test]
+    fn subir_por_trozos_en_paralelo() {
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        let hub = crate::remote::Hub::new(None);
+        let token = hub.token().to_string();
+        rt.spawn(crate::remote::serve(hub, 7792));
+        std::thread::sleep(std::time::Duration::from_millis(500));
+
+        const CHUNK: usize = 16 << 20;
+        let size = 400 * (1 << 20) + 12345; // el último trozo es incompleto
+        let data: Arc<Vec<u8>> = Arc::new((0..size).map(|i| (i % 251) as u8).collect());
+        let name = format!("prueba-trozos-{}.bin", std::process::id());
+        let base = format!("http://127.0.0.1:7792/api/subir?t={token}&d=recibidos&n={name}&u=abc123&s={size}");
+        // Del último al primero, repartidos entre 6 hilos
+        let offsets: Vec<usize> = (0..size).step_by(CHUNK).rev().collect();
+        let next = Arc::new(std::sync::Mutex::new(offsets));
+        let start = std::time::Instant::now();
+        let workers: Vec<_> = (0..6)
+            .map(|_| {
+                let (next, data, base) = (next.clone(), data.clone(), base.clone());
+                std::thread::spawn(move || {
+                    let http = reqwest::blocking::Client::new();
+                    while let Some(o) = { let o = next.lock().unwrap().pop(); o } {
+                        let part = data[o..(o + CHUNK).min(data.len())].to_vec();
+                        let r = http.put(format!("{base}&o={o}")).body(part).send().unwrap();
+                        assert_eq!(r.status(), 200);
+                    }
+                })
+            })
+            .collect();
+        workers.into_iter().for_each(|w| w.join().unwrap());
+        let r = reqwest::blocking::Client::new().put(format!("{base}&fin=1")).send().unwrap();
+        let secs = start.elapsed().as_secs_f64();
+        assert_eq!(r.status(), 200);
+        assert_eq!(r.text().unwrap(), name);
+        println!("Velocidad por trozos en local: {:.0} MB/s", size as f64 / secs / 1e6);
+
+        let saved = received_dir().join(&name);
+        assert!(std::fs::read(&saved).unwrap() == *data, "el archivo no llegó igual");
+        // Un id raro se rechaza
+        let r = reqwest::blocking::Client::new().put(base.replace("u=abc123", "u=..%2Fx") + "&o=0").body("x").send().unwrap();
+        assert_eq!(r.status(), 400);
+        // Si falta algo, «ya está» falla y no deja el archivo a medias
+        let r = reqwest::blocking::Client::new().put(format!("{}&o=0", base.replace("abc123", "zzz"))).body(vec![0u8; 10]).send().unwrap();
+        assert_eq!(r.status(), 200);
+        let r = reqwest::blocking::Client::new().put(format!("{}&fin=1", base.replace("abc123", "zzz").replace(&format!("s={size}"), "s=99"))).send().unwrap();
+        assert_ne!(r.status(), 200);
+        let _ = std::fs::remove_file(saved);
+        for e in std::fs::read_dir(received_dir()).unwrap().flatten() {
+            if e.file_name().to_string_lossy().contains(&name) {
+                let _ = std::fs::remove_file(e.path());
+            }
+        }
+    }
+
+    /// Servidor de prueba para revisar la página a mano: cargo test servidor_de_prueba -- --ignored
+    #[test]
+    #[ignore]
+    fn servidor_de_prueba() {
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        let hub = crate::remote::Hub::new(None);
+        println!("http://127.0.0.1:7793/subir?t={}", hub.token());
+        rt.block_on(async {
+            tokio::select! {
+                _ = crate::remote::serve(hub, 7793) => {}
+                _ = tokio::time::sleep(std::time::Duration::from_secs(300)) => {}
+            }
+        });
     }
 
     #[test]

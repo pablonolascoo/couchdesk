@@ -92,8 +92,7 @@ pub struct Marks {
 }
 
 fn data_dir() -> PathBuf {
-    let base = std::env::var("LOCALAPPDATA").unwrap_or_else(|_| ".".into());
-    PathBuf::from(base).join("Consola")
+    crate::paths::data_dir()
 }
 
 pub fn load_marks() -> Marks {

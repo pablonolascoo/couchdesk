@@ -2,6 +2,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
+  // Para medir cuánto tarda en verse la primera pantalla (perf.rs)
+  app_lib::perf::mark_start();
   // Claude Code arranca la consola en este modo para usar sus herramientas
   if std::env::args().any(|a| a == "--mcp") {
     app_lib::mcp::serve_stdio();

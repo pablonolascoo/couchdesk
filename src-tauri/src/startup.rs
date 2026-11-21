@@ -53,7 +53,9 @@ pub fn heal_decision(shell: Option<&str>, exe: &str) -> Option<String> {
     let me = norm(exe);
     let file = |p: &str| p.rsplit('\\').next().unwrap_or_default().to_string();
     // Solo si el arranque es una consola, y solo desde la consola instalada (no el .scr ni pruebas)
-    if file(&shell) != "consola.exe" || file(&me) != "consola.exe" || me.contains("\\target\\") {
+    // Hasta la 1.1.0 el programa era consola.exe; desde la 1.2.0, couchdesk.exe
+    let ours = |f: String| f == "consola.exe" || f == "couchdesk.exe";
+    if !ours(file(&shell)) || !ours(file(&me)) || me.contains("\\target\\") {
         return None;
     }
     (shell != me).then(|| format!("\"{}\"", exe.trim().trim_matches('"')))

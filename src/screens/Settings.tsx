@@ -11,7 +11,7 @@ import { call } from '../native'
 import { GameController, MoonStars, Globe } from '@phosphor-icons/react'
 import { useT, LANGUAGES, getLanguage, setLanguage, pickLanguage, usesSystemLanguage } from '../i18n'
 import { usePadsLabel } from './Controllers'
-import { Palette } from '@phosphor-icons/react'
+import { Palette, Gauge } from '@phosphor-icons/react'
 import { t as tr } from '../i18n'
 import { themeLabel, MenuMusicLink } from './Themes'
 import { WindowsChecklist } from './WindowsChecklist'
@@ -62,6 +62,7 @@ export function SettingsMenu() {
     { path: '/ajustes/temas', label: tr('themes.title'), icon: Palette, value: themeLabel() },
     { path: '/ajustes/fondo', label: t('settings.background'), icon: ImageSquare, value: '' },
     { path: '/ajustes/salvapantallas', label: t('settings.screensaver'), icon: MoonStars, value: '' },
+    { path: '/ajustes/rendimiento', label: t('performance.title'), icon: Gauge, value: '' },
   ]
   return (
     <Page title={t('settings.title')}>
@@ -179,7 +180,7 @@ export function PowerSettings() {
 interface ShellStatus { enabled: boolean; exe: string; runningAsShell: boolean }
 
 export function StartupSettings() {
-  const { data, setData, error, setError } = useNative<ShellStatus>('shell_status', { enabled: false, exe: 'C:\\Users\\CASA\\AppData\\Local\\Consola\\consola.exe', runningAsShell: false })
+  const { data, setData, error, setError } = useNative<ShellStatus>('shell_status', { enabled: false, exe: 'C:\\Users\\CASA\\AppData\\Local\\CouchDesk\\couchdesk.exe', runningAsShell: false })
   const [confirm, setConfirm] = useState(false)
   const devBuild = data?.exe.toLowerCase().includes('\\target\\') ?? false
 

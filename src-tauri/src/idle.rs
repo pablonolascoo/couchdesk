@@ -74,8 +74,7 @@ static MONITOR_OFF: AtomicBool = AtomicBool::new(false);
 static INHIBIT: AtomicBool = AtomicBool::new(false);
 
 fn settings_path() -> PathBuf {
-    PathBuf::from(std::env::var("LOCALAPPDATA").unwrap_or_else(|_| ".".into()))
-        .join("Consola")
+    crate::paths::data_dir()
         .join("salvapantallas.json")
 }
 

@@ -14,6 +14,9 @@
           r.dataset.theme = s.applied || 'salon'
           r.dataset.mode = s.vars['color-scheme'] || 'light'
         }
+        // Movimiento: la app NO sigue el "sin animaciones" de Windows; solo el suyo (Ajustes → Rendimiento)
+        var p = JSON.parse(localStorage.getItem('couchdesk.perf.v1') || 'null')
+        if (p && p.reduceMotion === true) r.dataset.reduceMotion = ''
         // La primera pantalla espera debajo del arranque (BootSplash lo quita; por si acaso, a los 4 s)
         if (!/^\/(asistente-flotante|salvapantallas)/.test(location.pathname)) {
           r.dataset.booting = ''

@@ -36,7 +36,8 @@ const DEFAULT: BackdropState = { choice: { kind: 'animated', style: 'ondas' }, d
 
 function read(): BackdropState {
   try {
-    const raw = localStorage.getItem(KEY)
+    // Hasta la 1.1.0 los fondos importados vivían en AppData\Local\Consola: ahora en AppData\Local\CouchDesk
+    const raw = localStorage.getItem(KEY)?.replace(/(AppData\\\\Local\\\\)Consola(\\\\)/gi, '$1CouchDesk$2')
     if (!raw) return DEFAULT
     const s = JSON.parse(raw) as Partial<BackdropState>
     if (!s.choice || typeof s.choice !== 'object' || !('kind' in s.choice)) return DEFAULT

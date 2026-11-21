@@ -79,7 +79,7 @@ fn testing() -> bool {
 
 fn data_dir() -> PathBuf {
     std::env::var("CONSOLA_SCR_DIR").map(PathBuf::from).unwrap_or_else(|_| {
-        PathBuf::from(std::env::var("LOCALAPPDATA").unwrap_or_else(|_| ".".into())).join("Consola")
+        crate::paths::data_dir()
     })
 }
 
@@ -133,6 +133,11 @@ fn write_values(b: &Backup) -> Result<(), String> {
 /// ¿El valor de Windows apunta a nuestro .scr?
 pub fn is_ours(scrnsave: Option<&str>, ours: &Path) -> bool {
     scrnsave.is_some_and(|s| same_path(s, &ours.display().to_string()))
+}
+
+/// ¿Apunta al .scr de la antigua «Consola»?
+pub fn is_legacy_scr(scrnsave: Option<&str>) -> bool {
+    scrnsave.is_some_and(|s| s.trim().trim_matches('"').replace('/', "\\").to_lowercase().ends_with("\\consola\\couchdesk.scr"))
 }
 
 fn same_path(a: &str, b: &str) -> bool {
@@ -216,13 +221,21 @@ pub fn windows_saver_set(enabled: bool, after_min: u32) -> Result<WindowsSaver, 
 /// Tras una actualización, el .scr se queda con la versión vieja: se renueva al arrancar
 pub fn refresh_copy() {
     let scr = scr_path();
-    if !is_ours(read_values().scrnsave.as_deref(), &scr) {
-        return;
-    }
+    let values = read_values();
     let Ok(exe) = std::env::current_exe() else { return };
     let name = exe.file_name().map(|n| n.to_string_lossy().to_lowercase()).unwrap_or_default();
-    if name != "consola.exe" || exe.display().to_string().to_lowercase().contains("\\target\\") {
+    if !(name == "couchdesk.exe" || name == "consola.exe") || exe.display().to_string().to_lowercase().contains("\\target\\") {
         return; // solo la consola instalada
+    }
+    // Hasta la 1.1.0 el .scr vivía en %LOCALAPPDATA%\Consola: se pasa a la carpeta nueva
+    if is_legacy_scr(values.scrnsave.as_deref()) {
+        if copy_exe(&scr).is_ok() {
+            let _ = write_values(&Backup { scrnsave: Some(scr.display().to_string()), ..values });
+        }
+        return;
+    }
+    if !is_ours(values.scrnsave.as_deref(), &scr) {
+        return;
     }
     let meta = |p: &Path| std::fs::metadata(p).ok().map(|m| (m.len(), m.modified().ok()));
     let (a, b) = (meta(&exe), meta(&scr));
@@ -312,6 +325,8 @@ mod tests {
         assert!(is_ours(Some("\"C:\\Users\\Ana\\AppData\\Local\\Consola\\CouchDesk.scr\""), scr));
         assert!(!is_ours(Some("C:\\Windows\\system32\\Mystify.scr"), scr));
         assert!(!is_ours(None, scr));
+        assert!(is_legacy_scr(Some("C:\\Users\\Ana\\AppData\\Local\\Consola\\CouchDesk.scr")));
+        assert!(!is_legacy_scr(Some("C:\\Users\\Ana\\AppData\\Local\\CouchDesk\\CouchDesk.scr")));
     }
 
     #[test]

@@ -26,7 +26,10 @@ const PAD_SCRIPT: &str = r#"
     (document.head || document.documentElement).appendChild(style);
     cur && cur.classList.remove('__pad-focus');
     cur = el; el.classList.add('__pad-focus');
-    el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    // Cerca: al instante; lejos: suave (así el foco y la página se mueven a la vez)
+    const r = el.getBoundingClientRect();
+    const off = Math.max(0, -r.top, r.bottom - innerHeight, -r.left, r.right - innerWidth);
+    if (off > 0) el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: off > innerHeight ? 'smooth' : 'auto' });
     el.focus({ preventScroll: true });
   };
   const center = (r) => [r.left + r.width / 2, r.top + r.height / 2];
@@ -214,8 +217,10 @@ fn pad_loop(app: tauri::AppHandle) {
     let mut held_since = Instant::now();
     let mut last_repeat = Instant::now();
     let mut reader = PadReader::default();
+    let mut last_scroll = Instant::now();
     while RUNNING.load(Ordering::Relaxed) {
-        std::thread::sleep(Duration::from_millis(16));
+        // 4 ms: la pulsación llega a la web casi al momento (antes, hasta 16 ms de espera)
+        std::thread::sleep(Duration::from_millis(4));
         let Some(win) = app.get_webview_window(LABEL) else { break };
         let Some(g) = reader.read() else { continue };
         let mut b = g.wButtons.0;
@@ -261,7 +266,9 @@ fn pad_loop(app: tauri::AppHandle) {
         }
         // Stick derecho: desplazar la página
         let (rx, ry) = (g.sThumbRX, g.sThumbRY);
-        if rx.unsigned_abs() > 8000 || ry.unsigned_abs() > 8000 {
+        // (a 60 por segundo, como antes: la velocidad de desplazamiento no cambia)
+        if (rx.unsigned_abs() > 8000 || ry.unsigned_abs() > 8000) && last_scroll.elapsed() >= Duration::from_millis(16) {
+            last_scroll = Instant::now();
             let sx = i32::from(rx) / 1500;
             let sy = -i32::from(ry) / 1500;
             let _ = win.eval(format!("window.__pad && __pad.scroll({sx},{sy})"));

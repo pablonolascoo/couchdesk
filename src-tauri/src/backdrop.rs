@@ -38,7 +38,7 @@ pub fn kind_of(path: &Path) -> Option<&'static str> {
 }
 
 pub fn dir() -> PathBuf {
-    PathBuf::from(std::env::var("LOCALAPPDATA").unwrap_or_else(|_| ".".into())).join("Consola").join("fondos")
+    crate::paths::data_dir().join("fondos")
 }
 
 fn home() -> PathBuf {

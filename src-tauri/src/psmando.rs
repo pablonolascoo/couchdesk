@@ -2,7 +2,8 @@
 //! xTend solo entiende mandos de Xbox; esto hace lo mismo con los de PlayStation:
 //! · Touchpad = ratón (un dedo mueve, dos dedos desplazan, pulsarlo hace clic)
 //! · OPTIONS + SHARE cambia de modo: mando → ratón → teclado → mando (igual que START + BACK)
-//! · Botón PS abre la consola si está cerrada
+//! · Botón PS (como el Xbox): corto = Multitarea (otra vez = volver), mantenido 0,8 s = Inicio.
+//!   Si la consola está cerrada, la abre.
 //! Funciona por cable (USB) y por Bluetooth. Va en un proceso aparte (`consola.exe --mando-ps`)
 //! para seguir activo aunque cierres la consola y vayas al escritorio.
 
@@ -191,15 +192,17 @@ pub fn spawn_helper() {
     }
 }
 
-/// ¿Está la consola (o su navegador) delante?
-fn console_in_front() -> bool {
-    use windows::Win32::UI::WindowsAndMessaging::{GetForegroundWindow, GetWindowTextW};
-    unsafe {
-        let mut title = [0u16; 64];
-        let n = GetWindowTextW(GetForegroundWindow(), &mut title) as usize;
-        let t = String::from_utf16_lossy(&title[..n]);
-        t == "CouchDesk" || t == "Consola" || t == "Navegador"
-    }
+/// Botón PS: avisa a la consola (Multitarea o Inicio). Si no está abierta, se abre.
+fn ps_button(action: crate::hotkeys::GuideAction) {
+    use crate::hotkeys::GuideAction;
+    let what = if action == GuideAction::Short { "multitask" } else { "home" };
+    std::thread::spawn(move || {
+        if !crate::multitask::send(what) {
+            if let Ok(exe) = std::env::current_exe() {
+                let _ = std::process::Command::new(exe).spawn();
+            }
+        }
+    });
 }
 
 /// ¿Hay un juego (u otra app) a pantalla completa delante? Entonces el touchpad es del juego.
@@ -247,6 +250,8 @@ struct Mapper {
     held: [Option<Instant>; 4],
     last: Instant,
     scale: f32,
+    /// Botón PS: corto o mantenido
+    ps: crate::hotkeys::GuidePress,
 }
 
 impl Mapper {
@@ -265,6 +270,7 @@ impl Mapper {
             held: [None; 4],
             last: Instant::now(),
             scale: (w.max(800) as f32) / 1920.0,
+            ps: crate::hotkeys::GuidePress::default(),
         }
     }
 
@@ -294,12 +300,10 @@ impl Mapper {
             self.prev = s.buttons;
             return;
         }
-        // Botón PS fuera de la consola: abrirla o traerla al frente (nunca se abre una segunda:
-        // la consola solo admite una copia y la nueva despierta a la que ya está)
-        if pressed & PS != 0 && !console_in_front() {
-            if let Ok(exe) = std::env::current_exe() {
-                let _ = std::process::Command::new(exe).spawn();
-            }
+        // Botón PS, desde cualquier sitio (también con la consola delante): corto = Multitarea,
+        // mantenido = Inicio. Con la consola cerrada, la abre (nunca una segunda copia).
+        if let Some(action) = self.ps.update(s.has(PS), Instant::now()) {
+            ps_button(action);
         }
 
         if self.mode != 0 || !game_in_front() {

@@ -2,6 +2,25 @@
 
 Todas las versiones de CouchDesk (antes «Consola»). Formato: [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) · versiones [SemVer](https://semver.org/lang/es/) con nombre en clave.
 
+## [1.2.0] — Lino — 2026-11-21
+
+Más rápida, con multitarea tipo PS5 y tu escritorio de Windows ordenado solo.
+
+### Añadido
+- **Multitarea:** pulsa el botón Xbox o PS (o Ctrl+Alt+Inicio) desde cualquier sitio y verás todo lo abierto. Cambia de app, ciérrala o libera memoria. Mantenlo pulsado para ir al Inicio.
+- **Gestión de memoria como en iOS:** lo que queda detrás pasa a modo eficiencia y ocupa menos memoria. Lo que juegas recibe más prioridad. Todo se deshace al salir.
+- **Escritorio organizado:** los iconos de tu escritorio de Windows se ordenan solos por zonas (Juegos, Aplicaciones, Documentos…), con iconos más grandes. Se puede volver al escritorio de antes con un botón.
+- **Rendimiento:** modo juego, sin grabación de fondo de la Game Bar, máximo rendimiento al jugar y opciones para que Windows Update no moleste. Todo se puede deshacer.
+- **LocalSend cifrado:** la consola recibe por HTTPS, como LocalSend envía por defecto. Usa un certificado propio que se crea una vez. Los envíos sin cifrar siguen funcionando en el mismo puerto.
+
+### Mejorado
+- **Mandos sin retardo:** CouchDesk lee los mandos cada 2 ms con su propio hilo (antes, hasta 33 ms).
+- **Arranque más ligero:** la app carga la mitad de código al abrirse.
+- **Animaciones siempre:** el fondo y las transiciones se mueven aunque Windows tenga las animaciones apagadas. Se pueden reducir en Ajustes → Rendimiento.
+- **Vídeos a cámara lenta:** salvapantallas y modo ambiente con clips de 60 fotogramas a media velocidad, suaves y sin saltos.
+- **Instalador CouchDesk:** con la marca, en 6 idiomas. Retira la antigua «Consola» y trae tus datos solo.
+- **Envíos al doble de rápido o más:** la consola escribe a disco mientras recibe, sin esperas (de ~180 a ~480 MB/s en el propio PC). Los archivos grandes viajan en trozos por 6 conexiones a la vez, como un gestor de descargas, y los pequeños ya no esperan a que acabe el grande. LocalSend también se beneficia.
+
 ## [1.1.0] — Brasa — 2026-11-21
 
 La consola se llama ahora **CouchDesk**, con marca propia, en 6 idiomas y con temas.

@@ -103,8 +103,7 @@
   to { transform: none; opacity: 1; filter: blur(0); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .boot-c-draw { display: none; }
-  .boot-c-fill, .boot-dot, .boot-char { opacity: 1; transform: none; filter: none; animation: none; }
-  .boot-bloom { display: none; }
-}
+/* Sin movimiento: solo con el ajuste de la app (no con el de Windows) */
+:root[data-reduce-motion] .boot-c-draw { display: none; }
+:root[data-reduce-motion] :is(.boot-c-fill, .boot-dot, .boot-char) { opacity: 1; transform: none; filter: none; animation: none; }
+:root[data-reduce-motion] .boot-bloom { display: none; }

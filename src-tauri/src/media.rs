@@ -149,7 +149,7 @@ fn session() -> Result<Option<Session>, String> {
 }
 
 fn covers_dir() -> PathBuf {
-    PathBuf::from(std::env::var("LOCALAPPDATA").unwrap_or_else(|_| ".".into())).join("Consola").join("musica")
+    crate::paths::data_dir().join("musica")
 }
 
 fn hash(text: &str) -> String {

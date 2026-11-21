@@ -1,7 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Consola",
-  "version": "1.1.0",
+  "productName": "CouchDesk",
+  "mainBinaryName": "couchdesk",
+  "version": "1.2.0",
   "identifier": "es.consola.app",
   "build": {
     "frontendDist": "../dist",
@@ -26,23 +27,28 @@
       "csp": null,
       "assetProtocol": {
         "enable": true,
-        "scope": ["**/appcache/librarycache/**", "**/Consola/iconos/**", "**/Consola/webs/**", "**/Consola/fondos/**", "**/Consola/musica/**", "**/Consola/temas/**"]
+        "scope": ["**/appcache/librarycache/**", "**/Consola/iconos/**", "**/Consola/webs/**", "**/Consola/fondos/**", "**/Consola/musica/**", "**/Consola/temas/**", "**/CouchDesk/iconos/**", "**/CouchDesk/webs/**", "**/CouchDesk/fondos/**", "**/CouchDesk/musica/**", "**/CouchDesk/temas/**"]
       }
     }
   },
   "bundle": {
     "active": true,
     "targets": ["nsis"],
-    "publisher": "Consola",
-    "shortDescription": "Consola",
-    "longDescription": "Escritorio tipo consola para Windows, manejable con mando",
-    "copyright": "Consola",
+    "publisher": "CouchDesk",
+    "homepage": "https://pablonolascoo.github.io/couchdesk/",
+    "shortDescription": "CouchDesk",
+    "longDescription": "Tu PC con Windows en modo consola: juegos, nube, emuladores y webs con el mando, el teclado o el móvil.",
+    "copyright": "© 2026 Pablo Nolasco · MIT",
     "category": "Game",
     "windows": {
       "nsis": {
         "installerIcon": "icons/icon.ico",
+        "headerImage": "../brand/installer/header.bmp",
+        "sidebarImage": "../brand/installer/sidebar.bmp",
+        "installMode": "currentUser",
         "displayLanguageSelector": false,
-        "languages": ["Spanish"]
+        "languages": ["Spanish", "English", "PortugueseBR", "French", "German", "Italian"],
+        "installerHooks": "./windows/hooks.nsh"
       }
     },
     "icon": [

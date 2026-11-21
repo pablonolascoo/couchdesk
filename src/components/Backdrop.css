@@ -95,8 +95,7 @@
   100% { transform: translateY(-112cqh); opacity: 0; }
 }
 
-/* Sin movimiento: imagen quieta (pisa la regla global de 1 ms, que haría parpadear los bucles) */
-@media (prefers-reduced-motion: reduce) {
-  .backdrop *, .bd-anim > i { animation: none !important; }
-  .bd-dot { opacity: 0.6; transform: translateY(calc(var(--y) * -1cqh)); }
-}
+/* Sin movimiento (ajuste de la app, no el de Windows): imagen quieta
+   (pisa la regla global de 1 ms, que haría parpadear los bucles) */
+:root[data-reduce-motion] .backdrop *, :root[data-reduce-motion] .bd-anim > i { animation: none !important; }
+:root[data-reduce-motion] .bd-dot { opacity: 0.6; transform: translateY(calc(var(--y) * -1cqh)); }

@@ -11,7 +11,12 @@ interface Props {
   playing?: boolean
   onError?: () => void
   className?: string
+  /** Velocidad (1 = normal, 0,5 = cámara lenta). En YouTube se redondea a 0,25/0,5/0,75/1… */
+  rate?: number
 }
+
+const YT_RATES = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]
+const ytRate = (r: number) => YT_RATES.reduce((a, b) => (Math.abs(b - r) < Math.abs(a - r) ? b : a))
 
 /** Dirección para insertar un vídeo o lista de YouTube en bucle y sin controles; null si no es YouTube */
 export function youtubeEmbed(url: string): string | null {
@@ -30,7 +35,7 @@ export function youtubeEmbed(url: string): string | null {
 }
 
 /** Vídeo de fondo en bucle, sin sonido salvo que se pida, que cubre todo su hueco */
-export function VideoLoop({ src, poster, muted = true, playing = true, onError, className }: Props) {
+export function VideoLoop({ src, poster, muted = true, playing = true, onError, className, rate = 1 }: Props) {
   const embed = youtubeEmbed(src)
   const t = useT()
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -59,6 +64,15 @@ export function VideoLoop({ src, poster, muted = true, playing = true, onError, 
     else v.pause()
   }, [active, muted, src])
 
+  // Velocidad: también la "por defecto", para que no vuelva a 1 al cargar o repetir
+  const applyRate = () => {
+    const v = videoRef.current
+    if (!v) return
+    v.defaultPlaybackRate = rate
+    v.playbackRate = rate
+  }
+  useEffect(applyRate, [rate, src]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // ---- YouTube: órdenes por postMessage (API del reproductor insertado) ----
   const command = (func: string, args: unknown[] = []) =>
     frameRef.current?.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args }), '*')
@@ -85,10 +99,15 @@ export function VideoLoop({ src, poster, muted = true, playing = true, onError, 
     command(active ? 'playVideo' : 'pauseVideo')
   }, [embed, muted, active])
 
+  useEffect(() => {
+    if (embed && ready) command('setPlaybackRate', [ytRate(rate)])
+  }, [embed, rate, ready]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const onFrameLoad = () => {
     // Pide al reproductor que avise de su estado y de los errores (p. ej. el dueño no deja insertarlo)
     frameRef.current?.contentWindow?.postMessage(JSON.stringify({ event: 'listening', id: 'loop', channel: 'widget' }), '*')
     command(muted ? 'mute' : 'unMute')
+    command('setPlaybackRate', [ytRate(rate)])
     if (!active) command('pauseVideo')
   }
 
@@ -117,7 +136,8 @@ export function VideoLoop({ src, poster, muted = true, playing = true, onError, 
           playsInline
           preload="auto"
           disablePictureInPicture
-          onPlaying={() => setReady(true)}
+          onLoadedMetadata={applyRate}
+          onPlaying={() => { applyRate(); setReady(true) }}
           onError={() => onError?.()}
         />
       )}

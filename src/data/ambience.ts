@@ -1,5 +1,7 @@
 // Vídeos del modo ambiente y del salvapantallas.
-// Solo fuentes reales y comprobadas (HEAD 200 video/mp4 y oEmbed 200 el 21-11-2026):
+// Solo fuentes reales y comprobadas (HEAD 200 video/mp4 y oEmbed 200 el 21-11-2026).
+// Se ven a cámara lenta tipo "salvapantallas aéreo": por eso los de Pexels son de 50/60 fps
+// y se reproducen a 0,5 (siguen viéndose fluidos, a 25–30 imágenes por segundo).
 // · Pexels: licencia libre de Pexels (uso gratis, sin atribución obligatoria; la damos igual)
 // · YouTube: vídeos largos de canales de ambiente; si el dueño bloquea la inserción, se usa el de Pexels
 
@@ -17,6 +19,11 @@ export interface Clip {
   credit: string
   /** Página original */
   page: string
+  /**
+   * Velocidad de reproducción (1 = normal). Cámara lenta suave: los de 50/60 fps van a 0,5
+   * (quedan 25–30 imágenes por segundo, sin saltos); uno de 24–30 fps nunca baja de 0,8.
+   */
+  rate: number
 }
 
 export interface Ambience extends Clip {
@@ -31,20 +38,27 @@ export interface Landscape extends Clip {
   collection: CollectionId
 }
 
-const pexels = (id: number, file: string, credit: string, poster = true): Clip => ({
+/**
+ * Vídeo de Pexels. `file` es el nombre del archivo en su carpeta, sin ".mp4"
+ * (p. ej. "12503404_1920_1080_60fps" o "12465390-hd_1920_1080_60fps").
+ * `poster` es el nombre de su imagen en images.pexels.com/videos/<id>/ (o nada).
+ */
+const pexels = (id: number, file: string, credit: string, rate: number, poster?: string): Clip => ({
   source: 'pexels',
-  url: `https://videos.pexels.com/video-files/${id}/${id}-${file}.mp4`,
-  poster: poster ? `https://images.pexels.com/videos/${id}/pictures/preview-0.jpg?auto=compress&w=640` : undefined,
+  url: `https://videos.pexels.com/video-files/${id}/${file}.mp4`,
+  poster: poster ? `https://images.pexels.com/videos/${id}/${poster}?auto=compress&cs=tinysrgb&w=640` : undefined,
   credit,
   page: `https://www.pexels.com/video/${id}/`,
+  rate,
 })
 
-const youtube = (id: string, credit: string): Clip => ({
+const youtube = (id: string, credit: string, rate = 1): Clip => ({
   source: 'youtube',
   url: `https://www.youtube.com/watch?v=${id}`,
   poster: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
   credit,
   page: `https://www.youtube.com/watch?v=${id}`,
+  rate,
 })
 
 // ---------------- Modo ambiente ----------------
@@ -56,19 +70,27 @@ const amb = (id: string, cat: string, clip: Clip, fallback?: Clip): Ambience => 
   get category() { return t(`ambience.cat.${cat}`) },
 })
 
+// Todos los de Pexels están grabados a 50/60 fps (o más) y van a cámara lenta (0,5).
+// YouTube solo donde Pexels no tiene nada parecido (chimenea de horas, cafetería): a velocidad normal.
 export const ambience: Ambience[] = [
-  amb('chimenea', 'fuego', youtube('cdKop6aixVE', 'Fireplace 10 Hours'), pexels(6507534, 'hd_1920_1080_25fps', 'Mikhail Nilov')),
-  amb('lluvia-ventana', 'lluvia', youtube('YNuP7Fu7DXk', "That'll Play"), pexels(5197762, 'hd_1920_1080_25fps', 'Aleks BM')),
-  amb('cafe-lluvia', 'lluvia', youtube('l2mW0DxCBY4', 'Coffee Shop Vibes'), pexels(5227362, 'hd_1920_1080_24fps', 'Francesco Ungaro')),
-  amb('acuario', 'agua', youtube('zQ8caaUxIvY', 'Above Relaxation'), pexels(13192265, 'hd_1920_1080_25fps', 'Magda Ehlers', false)),
-  amb('cascada', 'agua', pexels(5657930, 'hd_1920_1080_30fps', 'Wayne Speedy')),
-  amb('olas', 'mar', pexels(1739010, 'hd_1920_1080_30fps', 'Nino Souza')),
-  amb('bosque', 'naturaleza', pexels(3768671, 'hd_1920_1080_25fps', 'Taryn Elliott')),
-  amb('nieve', 'invierno', pexels(6056609, 'hd_1920_1080_30fps', 'Francesco Ungaro')),
-  amb('auroras', 'cielo', pexels(5700949, 'hd_1920_1080_25fps', 'Nico Becker')),
-  amb('ciudad-noche', 'ciudad', pexels(5670194, 'hd_1920_1080_30fps', 'Michael Swigunski')),
-  amb('nubes', 'cielo', pexels(6385335, 'hd_1920_1080_30fps', 'Poolside Creative')),
-  amb('lagos', 'montana', pexels(3654337, 'hd_1920_1080_30fps', 'SwissHumanity Stories')),
+  amb('chimenea', 'fuego', youtube('cdKop6aixVE', 'Fireplace 10 Hours'),
+    pexels(13081949, '13081949-hd_1920_1080_60fps', 'Irina Obolonko', 0.5, 'blaze-bonfire-burn-burning-13081949.jpeg')),
+  amb('lluvia-ventana', 'lluvia',
+    pexels(28110696, '12301301_1920_1080_120fps', 'Mehedi Hasan', 0.5, 'peaceful-peaceful-moment-rainy-night-28110696.jpeg'),
+    pexels(13619802, '13619802-hd_1920_1080_60fps', 'Joey D.', 0.5, 'after-rain-after-the-rain-glass-heavy-rain-13619802.jpeg')),
+  amb('cafe-lluvia', 'lluvia', youtube('l2mW0DxCBY4', 'Coffee Shop Vibes'),
+    pexels(36142889, '15330476_1920_1080_50fps', 'Salim Da', 0.5, 'pexels-photo-36142889.jpeg')),
+  amb('acuario', 'agua',
+    pexels(26593809, '11968058_1920_1080_60fps', 'Jianqing Xu', 0.5, 'a-lot-aquariums-blue-color-26593809.jpeg'),
+    pexels(11042667, '11042667-hd_1920_1080_60fps', 'Diana', 0.5, 'pexels-photo-11042667.jpeg')),
+  amb('cascada', 'agua', pexels(33609301, '14285682_1920_1080_60fps', 'Philip Dominic Carpentero', 0.5, 'aerial-drone-falls-forest-waterfall-33609301.jpeg')),
+  amb('olas', 'mar', pexels(12465390, '12465390-hd_1920_1080_60fps', 'Vi Ulloa', 0.5, 'ocean-sea-waves-12465390.jpeg')),
+  amb('bosque', 'naturaleza', pexels(27546116, '12164436_1920_1080_60fps', 'Ünal Karabiber', 0.5, 'pexels-photo-27546116.jpeg')),
+  amb('nieve', 'invierno', pexels(30123241, '12919602_1920_1080_60fps', 'Ahto Palmre', 0.5, 'winter-forest-3-30123241.jpeg')),
+  amb('auroras', 'cielo', pexels(28889010, '12505178_1920_1080_60fps', 'Frank Cone', 0.5, 'aurora-time-lapse-28889010.jpeg')),
+  amb('ciudad-noche', 'ciudad', pexels(11677590, '11677590-hd_1920_1080_60fps', 'Daniel Narinian', 0.5, 'pexels-photo-11677590.jpeg')),
+  amb('nubes', 'cielo', pexels(41157432, '17625507_1920_1080_60fps', 'Yunus Terk', 0.5, 'pexels-photo-41157432.jpeg')),
+  amb('lagos', 'montana', pexels(38361089, '16290220_1920_1080_60fps', 'Yunus Terk', 0.5, 'pexels-photo-38361089.jpeg')),
 ]
 
 // ---------------- Salvapantallas ----------------
@@ -80,31 +102,35 @@ const collection = (id: CollectionId) => ({ id, get label() { return t(`screensa
 export const collections: { id: CollectionId; readonly label: string }[] =
   (['costas', 'montanas', 'bosques', 'ciudades', 'nubes', 'agua'] as const).map(collection)
 
+/** Paisaje aéreo de Pexels grabado a 50/60 fps: siempre a cámara lenta (0,5), suave */
 const land = (collection: CollectionId, id: number, file: string, credit: string): Landscape =>
-  ({ collection, ...pexels(id, file, credit, false) })
+  ({ collection, ...pexels(id, file, credit, 0.5) })
 
 export const landscapes: Landscape[] = [
-  land('costas', 10070724, 'hd_1920_1080_24fps', 'Claudiu Ciobanu'),
-  land('costas', 7913483, 'hd_1920_1080_30fps', 'Noel McShane'),
-  land('costas', 6981329, 'hd_1920_1080_25fps', 'Mikhail Nilov'),
-  land('costas', 1739010, 'hd_1920_1080_30fps', 'Nino Souza'),
-  land('montanas', 3654337, 'hd_1920_1080_30fps', 'SwissHumanity Stories'),
-  land('montanas', 3947129, 'hd_1920_1080_30fps', 'SwissHumanity Stories'),
-  land('montanas', 6630032, 'hd_1920_1080_25fps', 'Adrien JACTA'),
-  land('montanas', 2110771, 'hd_1920_1080_30fps', 'Wietse van den Hout'),
-  land('bosques', 3768496, 'hd_1920_1080_25fps', 'Taryn Elliott'),
-  land('bosques', 4046286, 'hd_1920_1080_25fps', 'Taryn Elliott'),
-  land('bosques', 5607842, 'hd_1920_1080_24fps', 'Zlatin Georgiev'),
-  land('bosques', 8191389, 'hd_2048_1080_30fps', 'Roman Odintsov'),
-  land('ciudades', 5670194, 'hd_1920_1080_30fps', 'Michael Swigunski'),
-  land('ciudades', 11016337, 'hd_1920_1080_60fps', 'Altaf Shah'),
-  land('ciudades', 15215011, 'hd_1920_1080_30fps', 'Jiří Malý'),
-  land('nubes', 6385335, 'hd_1920_1080_30fps', 'Poolside Creative'),
-  land('nubes', 856171, 'hd_1920_1080_30fps', 'Pixabay'),
-  land('nubes', 4092850, 'hd_1920_1080_30fps', 'Rajamohan S'),
-  land('agua', 10171430, 'hd_1920_1080_25fps', 'Adrien JACTA'),
-  land('agua', 5657930, 'hd_1920_1080_30fps', 'Wayne Speedy'),
-  land('agua', 10989547, 'hd_1920_1080_30fps', 'Hussain Naushad'),
+  land('costas', 28882533, '12503404_1920_1080_60fps', 'Andre Dantas'),
+  land('costas', 33301276, '14184775_1920_1080_60fps', 'FL Studio Image-Line'),
+  land('costas', 28652279, '12443214_1920_1080_60fps', 'Luca Musella'),
+  land('costas', 33734610, '14323332_1920_1080_60fps', 'Malcoln Oliveira'),
+  land('montanas', 37218218, '15767088_1920_1080_60fps', 'Жанна Алимкулова'),
+  land('montanas', 31115054, '13294747_1920_1080_60fps', 'Florian Delée'),
+  land('montanas', 30859401, '13196587_1920_1080_60fps', 'Florian Delée'),
+  land('montanas', 29136312, '12586418_1920_1080_60fps', 'Sergey Guk'),
+  land('bosques', 40168172, '17158383_1920_1080_60fps', 'Ali Akdemir'),
+  land('bosques', 29792712, '12800451_1920_1080_60fps', 'Julien Goettelmann'),
+  land('bosques', 28712877, '12458593_1920_1080_60fps', 'Sascha Weber'),
+  land('bosques', 35548240, '15060531_1920_1080_50fps', 'Sascha Weber'),
+  land('ciudades', 11016337, '11016337-hd_1920_1080_60fps', 'Altaf Shah'),
+  land('ciudades', 40524262, '17316552_1920_1080_60fps', 'Altaf Shah'),
+  land('ciudades', 33290791, '14179907_1920_1080_60fps', 'The Six'),
+  land('ciudades', 12097524, '12097524-hd_1920_1080_60fps', 'Braeson Holland'),
+  land('nubes', 32194311, '13729922_1920_1080_60fps', 'Riedelmax'),
+  land('nubes', 41157432, '17625507_1920_1080_60fps', 'Yunus Terk'),
+  land('nubes', 32313070, '13781234_1920_1080_60fps', 'Julien Goettelmann'),
+  land('nubes', 11053545, '11053545-hd_1920_1080_60fps', 'Sergei Skrynnik'),
+  land('agua', 33609301, '14285682_1920_1080_60fps', 'Philip Dominic Carpentero'),
+  land('agua', 37692559, '15981863_1920_1080_60fps', 'Nirjhar Basak'),
+  land('agua', 38361089, '16290220_1920_1080_60fps', 'Yunus Terk'),
+  land('agua', 35893963, '15224090_1920_1080_60fps', 'Julien Goettelmann'),
 ]
 
 /** Créditos en una línea: "Vídeos de Pexels: A, B… · YouTube: canal, canal…" */

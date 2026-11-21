@@ -2,7 +2,10 @@
 //!
 //! La consola aparece sola en la lista de LocalSend de cualquier dispositivo de casa:
 //! - Descubrimiento por multidifusión UDP (224.0.0.167:53317), protocolo v2.
-//! - Servidor HTTP en el puerto 53317: register, info, prepare-upload, upload y cancel.
+//! - Servidor en el puerto 53317: register, info, prepare-upload, upload y cancel.
+//!   Atiende HTTPS (cifrado, lo normal en LocalSend) y HTTP en el mismo puerto: se mira el
+//!   primer byte de cada conexión (0x16 = saludo TLS). El certificado es propio y se guarda
+//!   en la carpeta de datos (%LOCALAPPDATA%\CouchDesk); su huella SHA-256 es el «fingerprint» que pide el protocolo.
 //!
 //! Seguridad:
 //! - Solo se atiende a la red de casa (`receive::is_lan`).
@@ -43,6 +46,8 @@ pub struct LocalSend {
     alias: String,
     model: String,
     fingerprint: String,
+    /// HTTPS; si no se pudo preparar el certificado, solo HTTP
+    tls: Option<tokio_rustls::TlsAcceptor>,
     app: Option<tauri::AppHandle>,
     /// id de destino → carpeta real
     resolve: Resolver,
@@ -94,15 +99,32 @@ pub struct Received {
 impl LocalSend {
     pub fn new(app: Option<tauri::AppHandle>) -> Arc<Self> {
         let resolve: Resolver = Box::new(|id| crate::transfer::destinations().into_iter().find(|d| d.id == id).map(|d| d.path));
-        Self::with_resolver(app, resolve)
+        let identity = saved_identity(&crate::paths::data_dir());
+        if let Err(e) = &identity {
+            log::warn!("LocalSend: sin HTTPS ({e})");
+        }
+        Self::with_resolver(app, resolve, identity.ok())
     }
 
-    fn with_resolver(app: Option<tauri::AppHandle>, resolve: Resolver) -> Arc<Self> {
+    fn with_resolver(app: Option<tauri::AppHandle>, resolve: Resolver, identity: Option<Identity>) -> Arc<Self> {
         let pc = std::env::var("COMPUTERNAME").unwrap_or_default();
+        let tls = identity.as_ref().and_then(|id| match tls_acceptor(id) {
+            Ok(a) => Some(a),
+            Err(e) => {
+                log::warn!("LocalSend: sin HTTPS ({e})");
+                None
+            }
+        });
+        let fingerprint = match (&tls, &identity) {
+            (Some(_), Some(id)) => cert_fingerprint(&id.cert),
+            // Sin certificado el protocolo pide una cadena aleatoria
+            _ => format!("{}{}{}", random_password(), random_password(), random_password()),
+        };
         Arc::new(Self {
             alias: if pc.is_empty() { "CouchDesk".into() } else { format!("CouchDesk ({pc})") },
             model: "Windows".into(),
-            fingerprint: format!("{}{}{}", random_password(), random_password(), random_password()),
+            fingerprint,
+            tls,
             app,
             resolve,
             inner: Mutex::new(Inner { dest: "recibidos".into(), ..Default::default() }),
@@ -117,7 +139,7 @@ impl LocalSend {
             "deviceType": "desktop",
             "fingerprint": self.fingerprint,
             "port": PORT,
-            "protocol": "http",
+            "protocol": if self.tls.is_some() { "https" } else { "http" },
             "download": false,
         });
         if let Some(a) = announce {
@@ -126,6 +148,159 @@ impl LocalSend {
         }
         v
     }
+}
+
+// ---------------- Certificado (HTTPS) ----------------
+
+/// Certificado propio y su clave, en DER
+pub struct Identity {
+    cert: Vec<u8>,
+    key: Vec<u8>,
+}
+
+fn new_identity() -> Result<Identity, String> {
+    let ck = rcgen::generate_simple_self_signed(vec!["localsend".into()]).map_err(|e| e.to_string())?;
+    Ok(Identity { cert: ck.cert.der().to_vec(), key: ck.signing_key.serialize_der() })
+}
+
+/// Se crea una vez y se reutiliza: así la huella no cambia y LocalSend reconoce la consola
+fn saved_identity(dir: &std::path::Path) -> Result<Identity, String> {
+    let (cert, key) = (dir.join("localsend-cert.der"), dir.join("localsend-key.der"));
+    if let (Ok(cert), Ok(key)) = (std::fs::read(&cert), std::fs::read(&key)) {
+        let id = Identity { cert, key };
+        if tls_acceptor(&id).is_ok() {
+            return Ok(id);
+        }
+    }
+    let id = new_identity()?;
+    std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
+    std::fs::write(&cert, &id.cert).map_err(|e| e.to_string())?;
+    std::fs::write(&key, &id.key).map_err(|e| e.to_string())?;
+    Ok(id)
+}
+
+fn tls_acceptor(id: &Identity) -> Result<tokio_rustls::TlsAcceptor, String> {
+    use tokio_rustls::rustls::{self, pki_types::{CertificateDer, PrivateKeyDer, PrivatePkcs8KeyDer}};
+    let provider = Arc::new(rustls::crypto::ring::default_provider());
+    let config = rustls::ServerConfig::builder_with_provider(provider)
+        .with_safe_default_protocol_versions()
+        .map_err(|e| e.to_string())?
+        .with_no_client_auth()
+        .with_single_cert(
+            vec![CertificateDer::from(id.cert.clone())],
+            PrivateKeyDer::Pkcs8(PrivatePkcs8KeyDer::from(id.key.clone())),
+        )
+        .map_err(|e| e.to_string())?;
+    Ok(tokio_rustls::TlsAcceptor::from(Arc::new(config)))
+}
+
+/// Huella del certificado como la calcula LocalSend: SHA-256 del DER, en hexadecimal
+fn cert_fingerprint(der: &[u8]) -> String {
+    ring::digest::digest(&ring::digest::SHA256, der).as_ref().iter().map(|b| format!("{b:02x}")).collect()
+}
+
+// ---------------- HTTPS y HTTP en el mismo puerto ----------------
+
+/// Conexión ya preparada: cifrada o tal cual
+pub enum Conn {
+    Plain(tokio::net::TcpStream),
+    Tls(Box<tokio_rustls::server::TlsStream<tokio::net::TcpStream>>),
+}
+
+impl tokio::io::AsyncRead for Conn {
+    fn poll_read(self: std::pin::Pin<&mut Self>, cx: &mut std::task::Context<'_>, buf: &mut tokio::io::ReadBuf<'_>) -> std::task::Poll<std::io::Result<()>> {
+        match self.get_mut() {
+            Conn::Plain(s) => std::pin::Pin::new(s).poll_read(cx, buf),
+            Conn::Tls(s) => std::pin::Pin::new(s.as_mut()).poll_read(cx, buf),
+        }
+    }
+}
+
+impl tokio::io::AsyncWrite for Conn {
+    fn poll_write(self: std::pin::Pin<&mut Self>, cx: &mut std::task::Context<'_>, buf: &[u8]) -> std::task::Poll<std::io::Result<usize>> {
+        match self.get_mut() {
+            Conn::Plain(s) => std::pin::Pin::new(s).poll_write(cx, buf),
+            Conn::Tls(s) => std::pin::Pin::new(s.as_mut()).poll_write(cx, buf),
+        }
+    }
+    fn poll_flush(self: std::pin::Pin<&mut Self>, cx: &mut std::task::Context<'_>) -> std::task::Poll<std::io::Result<()>> {
+        match self.get_mut() {
+            Conn::Plain(s) => std::pin::Pin::new(s).poll_flush(cx),
+            Conn::Tls(s) => std::pin::Pin::new(s.as_mut()).poll_flush(cx),
+        }
+    }
+    fn poll_shutdown(self: std::pin::Pin<&mut Self>, cx: &mut std::task::Context<'_>) -> std::task::Poll<std::io::Result<()>> {
+        match self.get_mut() {
+            Conn::Plain(s) => std::pin::Pin::new(s).poll_shutdown(cx),
+            Conn::Tls(s) => std::pin::Pin::new(s.as_mut()).poll_shutdown(cx),
+        }
+    }
+}
+
+/// Acepta conexiones y prepara cada una aparte (un saludo TLS lento no frena a las demás)
+pub struct DualListener {
+    rx: tokio::sync::mpsc::Receiver<(Conn, SocketAddr)>,
+    local: SocketAddr,
+}
+
+impl DualListener {
+    pub fn new(tcp: tokio::net::TcpListener, tls: Option<tokio_rustls::TlsAcceptor>) -> std::io::Result<Self> {
+        let local = tcp.local_addr()?;
+        let (tx, rx) = tokio::sync::mpsc::channel(64);
+        tokio::spawn(async move {
+            loop {
+                let (stream, addr) = match tcp.accept().await {
+                    Ok(c) => c,
+                    Err(_) => {
+                        tokio::time::sleep(Duration::from_millis(100)).await;
+                        continue;
+                    }
+                };
+                let (conn_tx, tls) = (tx.clone(), tls.clone());
+                tokio::spawn(async move {
+                    let prepared = tokio::time::timeout(Duration::from_secs(10), async {
+                        let mut first = [0u8; 1];
+                        let n = stream.peek(&mut first).await.ok()?;
+                        match tls {
+                            Some(tls) if n == 1 && first[0] == 0x16 => tls.accept(stream).await.ok().map(|s| Conn::Tls(Box::new(s))),
+                            _ => Some(Conn::Plain(stream)),
+                        }
+                    })
+                    .await;
+                    if let Ok(Some(conn)) = prepared {
+                        let _ = conn_tx.send((conn, addr)).await;
+                    }
+                });
+                if tx.is_closed() {
+                    break;
+                }
+            }
+        });
+        Ok(Self { rx, local })
+    }
+}
+
+impl axum::serve::Listener for DualListener {
+    type Io = Conn;
+    type Addr = SocketAddr;
+    async fn accept(&mut self) -> (Conn, SocketAddr) {
+        match self.rx.recv().await {
+            Some(c) => c,
+            None => std::future::pending().await,
+        }
+    }
+    fn local_addr(&self) -> std::io::Result<SocketAddr> {
+        Ok(self.local)
+    }
+}
+
+/// Sirve el router en un puerto ya abierto, con HTTPS y HTTP a la vez
+async fn serve_on(ls: Arc<LocalSend>, tcp: tokio::net::TcpListener) -> std::io::Result<()> {
+    use axum::serve::ListenerExt;
+    // tap_io: así ConnectInfo<SocketAddr> sirve con este listener propio
+    let listener = DualListener::new(tcp, ls.tls.clone())?.tap_io(|_| {});
+    let app = router(ls).into_make_service_with_connect_info::<SocketAddr>();
+    axum::serve(listener, app).await
 }
 
 // ---------------- HTTP ----------------
@@ -398,8 +573,7 @@ pub async fn serve(ls: Arc<LocalSend>) {
             log::warn!("LocalSend (descubrimiento): {e}");
         }
     });
-    let app = router(ls).into_make_service_with_connect_info::<SocketAddr>();
-    if let Err(e) = axum::serve(listener, app).await {
+    if let Err(e) = serve_on(ls, listener).await {
         log::error!("LocalSend: {e}");
     }
 }
@@ -511,12 +685,47 @@ mod tests {
 
     async fn start(dir: &std::path::Path) -> (Arc<LocalSend>, String) {
         let root = dir.to_path_buf();
-        let ls = LocalSend::with_resolver(None, Box::new(move |id| (id == "recibidos").then(|| root.clone())));
+        let ls = LocalSend::with_resolver(None, Box::new(move |id| (id == "recibidos").then(|| root.clone())), Some(new_identity().unwrap()));
         let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
-        let base = format!("http://{}/api/localsend/v2", listener.local_addr().unwrap());
-        let app = router(ls.clone()).into_make_service_with_connect_info::<SocketAddr>();
-        tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
+        // Cifrado, como envía LocalSend por defecto
+        let base = format!("https://{}/api/localsend/v2", listener.local_addr().unwrap());
+        tokio::spawn(serve_on(ls.clone(), listener));
         (ls, base)
+    }
+
+    /// Cliente como el de LocalSend: acepta certificados propios (no hay autoridad en casa)
+    fn client() -> reqwest::Client {
+        reqwest::Client::builder().danger_accept_invalid_certs(true).build().unwrap()
+    }
+
+    #[tokio::test]
+    async fn https_y_http_en_el_mismo_puerto() {
+        let dir = std::env::temp_dir().join(format!("consola-localsend-dual-{}", std::process::id()));
+        let (ls, base) = start(&dir).await;
+        // La huella es el SHA-256 del certificado y se anuncia HTTPS
+        assert_eq!(ls.fingerprint.len(), 64);
+        assert!(ls.fingerprint.chars().all(|c| c.is_ascii_hexdigit()));
+        let me: serde_json::Value = client().get(format!("{base}/info")).send().await.unwrap().json().await.unwrap();
+        assert_eq!(me["fingerprint"], ls.fingerprint.as_str());
+        assert_eq!(ls.info(Some(true))["protocol"], "https");
+        // Un emisor sin cifrado también entra por el mismo puerto
+        let plain = base.replace("https://", "http://");
+        let me: serde_json::Value = reqwest::Client::new().post(format!("{plain}/register")).json(&serde_json::json!({})).send().await.unwrap().json().await.unwrap();
+        assert_eq!(me["version"], "2.0");
+    }
+
+    #[test]
+    fn certificado_guardado_se_reutiliza() {
+        let dir = std::env::temp_dir().join(format!("consola-localsend-cert-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let a = saved_identity(&dir).unwrap();
+        let b = saved_identity(&dir).unwrap();
+        assert_eq!(cert_fingerprint(&a.cert), cert_fingerprint(&b.cert));
+        // Archivo roto: se crea otro
+        std::fs::write(dir.join("localsend-key.der"), b"roto").unwrap();
+        let c = saved_identity(&dir).unwrap();
+        assert_ne!(cert_fingerprint(&a.cert), cert_fingerprint(&c.cert));
+        std::fs::remove_dir_all(&dir).unwrap();
     }
 
     fn prepare(files: serde_json::Value) -> serde_json::Value {
@@ -534,7 +743,7 @@ mod tests {
         std::fs::create_dir_all(&dir).unwrap();
         std::fs::write(dir.join("juego.iso"), b"ya estaba").unwrap();
         let (ls, base) = start(&dir).await;
-        let http = reqwest::Client::new();
+        let http = client();
 
         // Descubrimiento por HTTP
         let me: serde_json::Value = http.post(format!("{base}/register")).json(&serde_json::json!({})).send().await.unwrap().json().await.unwrap();

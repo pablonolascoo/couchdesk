@@ -1,6 +1,6 @@
 # CouchDesk
 
-> CouchDesk is a free, open-source (MIT) app for 64-bit Windows 10 and 11. It replaces the Windows desktop with a console-style living-room interface, like a PS5 or Steam Big Picture, run with a gamepad, the keyboard or a phone. Current version: 1.1.0 "Brasa". Built with Tauri 2 and React by Pablo Nolasco. No account, no ads, no telemetry.
+> CouchDesk is a free, open-source (MIT) app for 64-bit Windows 10 and 11. It replaces the Windows desktop with a console-style living-room interface, like a PS5 or Steam Big Picture, run with a gamepad, the keyboard or a phone. Current version: 1.2.0 "Lino". Built with Tauri 2 and React by Pablo Nolasco. No account, no ads, no telemetry.
 
 ## Features
 

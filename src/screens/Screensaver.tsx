@@ -185,7 +185,7 @@ function Landscapes({ collections, sound = false }: { collections: string[]; sou
     <>
       {layers.map((l) => (
         <div key={l.key} className="ss-layer" style={{ ['--change' as string]: `${CHANGE_MS + FADE_MS}ms` }}>
-          <VideoLoop src={l.clip.url} muted={!(sound && l.clip.source === 'youtube')} onError={() => { setFailed((f) => f + 1); next() }} />
+          <VideoLoop src={l.clip.url} rate={l.clip.rate} muted={!(sound && l.clip.source === 'youtube')} onError={() => { setFailed((f) => f + 1); next() }} />
         </div>
       ))}
       <p className="ss-credit">{t('screensaver.credit', { name: current.clip.credit })}</p>

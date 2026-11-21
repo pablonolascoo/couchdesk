@@ -16,7 +16,7 @@ pub struct Preview {
 }
 
 fn dir() -> PathBuf {
-    PathBuf::from(std::env::var("LOCALAPPDATA").unwrap_or_else(|_| ".".into())).join("Consola").join("webs")
+    crate::paths::data_dir().join("webs")
 }
 
 /// Atributos de una etiqueta HTML: `<meta property="og:image" content="...">`

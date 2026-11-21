@@ -736,7 +736,7 @@ dependencies = [
 
 [[package]]
 name = "consola"
-version = "1.1.0"
+version = "1.2.0"
 dependencies = [
  "async-trait",
  "axum",
@@ -747,6 +747,7 @@ dependencies = [
  "png",
  "rcgen",
  "reqwest",
+ "ring",
  "serde",
  "serde_json",
  "sevenz-rust2",
@@ -756,9 +757,11 @@ dependencies = [
  "tauri-plugin-log",
  "tauri-plugin-single-instance",
  "tokio",
+ "tokio-rustls",
  "trash",
  "unftp-core",
  "unftp-sbe-fs",
+ "webview2-com",
  "windows",
  "winreg",
  "zip",

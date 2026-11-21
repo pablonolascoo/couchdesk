@@ -4,6 +4,7 @@ mod apps;
 mod backdrop;
 mod browser;
 mod claude;
+pub mod deskzones;
 mod emulators;
 pub mod mcp;
 mod files;
@@ -15,7 +16,12 @@ mod idle;
 mod input;
 mod localsend;
 pub mod media;
+pub mod memory;
+pub mod multitask;
 mod pads;
+mod padpoll;
+pub mod paths;
+pub mod perf;
 pub mod psmando;
 mod receive;
 mod remote;
@@ -83,7 +89,18 @@ pub fn run() {
     .manage(games::Launchables::default())
     .manage(receive::ReceiveState::default())
     .manage(claude::ClaudeState::default())
+    // Mando sin retraso: padpoll.rs solo lee con la ventana principal delante
+    .on_window_event(|w, e| {
+      if let tauri::WindowEvent::Focused(on) = e {
+        if w.label() == "main" {
+          padpoll::set_focused(*on);
+        }
+      }
+    })
     .setup(|app| {
+      perf::mark_setup();
+      // Antes «Consola»: sus datos pasan a %LOCALAPPDATA%\CouchDesk (una sola vez, sin copiar)
+      paths::migrate_legacy();
       // Abierta por Windows solo como salvapantallas: nada más que eso
       if scr::saver_only() {
         let handle = app.handle().clone();
@@ -97,9 +114,18 @@ pub fn run() {
         });
         return Ok(());
       }
-      // Si el arranque de Windows apunta a una consola vieja (actualizada o movida), se arregla
-      startup::heal_shell();
-      std::thread::spawn(scr::refresh_copy);
+      // Mando sin retraso (hilo propio con prioridad de juego) y plan de energía al jugar
+      if let Some(main) = app.get_webview_window("main") {
+        padpoll::set_focused(main.is_focused().unwrap_or(true));
+      }
+      padpoll::start(app.handle().clone());
+      perf::start();
+      // Si el arranque de Windows apunta a una consola vieja (actualizada o movida), se arregla.
+      // En otro hilo: nada lento antes del primer pintado.
+      std::thread::spawn(|| {
+        startup::heal_shell();
+        scr::refresh_copy();
+      });
       // Mando móvil siempre disponible (solo red local + código secreto del QR)
       let hub = remote::Hub::new(Some(app.handle().clone()));
       app.manage(hub.clone());
@@ -109,17 +135,24 @@ pub fn run() {
       tauri::async_runtime::spawn(localsend::serve(ls));
       // Salidas de emergencia: Esc mantenido / 3 veces y el botón Xbox del mando
       hotkeys::start(app.handle().clone());
+      // Multitarea (botón Xbox/PS corto, Ctrl+Alt+Inicio) y gestor de memoria
+      multitask::start(app.handle().clone());
+      memory::start(app.handle().clone());
       // Salvapantallas: vigila cuánto tiempo lleva el PC sin tocarse
       idle::start(app.handle().clone());
       // Claude: recoge los pedidos de su servidor MCP (abrir pantallas, webs, Inicio)
       claude::start(app.handle().clone());
+      // Escritorio organizado: zonas en el escritorio de Windows cuando está a la vista
+      deskzones::start(app.handle().clone());
       // Actualizar emuladores instalados en segundo plano, un rato después de arrancar
       // Si la consola es el escritorio, arrancar los programas de inicio (RustDesk, WARP, audio…)
-      if !startup::explorer_running() {
-        startup::run_startup_items();
-      }
-      // Mandos de PlayStation: lo mismo que xTend hace con los de Xbox, más el touchpad
-      psmando::spawn_helper();
+      std::thread::spawn(|| {
+        if !startup::explorer_running() {
+          startup::run_startup_items();
+        }
+        // Mandos de PlayStation: lo mismo que xTend hace con los de Xbox, más el touchpad
+        psmando::spawn_helper();
+      });
       std::thread::spawn(|| {
         // xTend: mando como ratón y teclado en todo Windows (START + BACK cambia de modo)
         if let Err(e) = emulators::ensure_xtend_running() {
@@ -231,8 +264,37 @@ pub fn run() {
       idle::screensaver_inhibit,
       weather::weather_search,
       weather::weather_now,
-      weather::weather_locate
+      weather::weather_locate,
+      deskzones::deskzones_get,
+      deskzones::deskzones_set,
+      deskzones::deskzones_status,
+      deskzones::deskzones_organize,
+      deskzones::deskzones_restore,
+      deskzones::deskzones_frames,
+      deskzones::deskzones_preview,
+      perf::perf_app_ready,
+      perf::perf_status,
+      perf::perf_tweak_set,
+      perf::perf_undo_all,
+      perf::perf_game_plan_set,
+      perf::perf_open_settings,
+      multitask::multitask_list,
+      multitask::multitask_visible,
+      multitask::multitask_switch,
+      multitask::multitask_back,
+      multitask::multitask_close,
+      multitask::multitask_alive,
+      multitask::multitask_force_close,
+      memory::memory_status,
+      memory::memory_settings_set,
+      memory::memory_free
     ])
-    .run(context)
-    .expect("error while building tauri application");
+    .build(context)
+    .expect("error while building tauri application")
+    .run(|app, event| {
+      // Al cerrar: deshacer prioridades y modo eficiencia puestos por el gestor de memoria
+      if let tauri::RunEvent::Exit = event {
+        memory::restore_all(app);
+      }
+    });
 }
