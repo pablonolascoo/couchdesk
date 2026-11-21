@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="es" data-type="software" data-radius="round" data-ground="sage" data-buttons="arrow" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Consola: interfaz de consola para tu PC con Windows</title>
+<meta name="description" content="App gratis y de código abierto que cambia el escritorio de Windows 10 y 11 por una pantalla tipo PS5 con tus juegos de Steam, Epic y Xbox, y que manejas con un mando de Xbox o PlayStation, el teclado o el móvil.">
+<link rel="canonical" href="https://pablonolascoo.github.io/consola/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Consola">
+<meta property="og:locale" content="es_ES">
+<meta property="og:url" content="https://pablonolascoo.github.io/consola/">
+<meta property="og:title" content="Consola: tu PC con Windows en modo consola">
+<meta property="og:description" content="Steam, Epic, GOG y Xbox en una biblioteca, juego en la nube, emuladores y navegador, todo con el mando. Gratis y de código abierto.">
+<meta property="og:image" content="https://pablonolascoo.github.io/consola/share.jpg">
+<meta property="og:image:width" content="1440">
+<meta property="og:image:height" content="900">
+<meta property="og:image:alt" content="La pantalla de inicio de Consola junto al botón Descargar para Windows">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Consola: tu PC con Windows en modo consola">
+<meta name="twitter:description" content="Steam, Epic, GOG y Xbox en una biblioteca, juego en la nube, emuladores y navegador, todo con el mando. Gratis y de código abierto.">
+<meta name="twitter:image" content="https://pablonolascoo.github.io/consola/share.jpg">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#111111">
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Consola",
+  "description": "Interfaz de consola para Windows: cambia el escritorio por una pantalla tipo PS5 que se maneja con mando, teclado o móvil.",
+  "url": "https://pablonolascoo.github.io/consola/",
+  "operatingSystem": "Windows 10, Windows 11",
+  "applicationCategory": "GameApplication",
+  "softwareVersion": "1.0.0",
+  "license": "https://opensource.org/licenses/MIT",
+  "downloadUrl": "https://github.com/pablonolascoo/consola/releases/latest",
+  "codeRepository": "https://github.com/pablonolascoo/consola",
+  "image": "https://pablonolascoo.github.io/consola/share.jpg",
+  "inLanguage": "es",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "author": { "@type": "Person", "name": "Pablo Nolasco", "url": "https://github.com/pablonolascoo" }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/system.css">
+<link rel="stylesheet" href="assets/ui/cards.css">
+<link rel="stylesheet" href="assets/motion/motion.css">
+<link rel="stylesheet" href="assets/backgrounds/backgrounds.css">
+<link rel="stylesheet" href="assets/layout/layout.css">
+<link rel="stylesheet" href="assets/icons/icon.css">
+<style>
+:root {
+  --p-bg: #111111; --p-surface: #1c1c1c; --p-ink: #f2f2f2; --p-muted: #8f8f8f;
+  --p-accent: #a08672; --p-accent-ink: #111111; --p-action: #a08672; --p-action-ink: #111111;
+  --p-inv-bg: #f2f2f2; --p-inv-surface: #e0e0e0; --p-inv-ink: #111111; --p-inv-muted: #5c5c5c;
+  --p-inv-accent: #a08672; --p-inv-accent-ink: #111111; --p-inv-action: #a08672; --p-inv-action-ink: #111111;
+  --font-display: "Host Grotesk", system-ui, sans-serif;
+  --font-text: "Host Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.035em;
+  --display-tracking-xl: -0.04em;
+}
+</style>
+<link rel="stylesheet" href="assets/diagrams/diagram.css">
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script src="assets/backgrounds/backgrounds.js"></script>
+<script>document.documentElement.classList.add('mo-js');setTimeout(()=>document.documentElement.classList.add('mo-safe'),2500)</script>
+<link rel="modulepreload" href="assets/moments/moments.js">
+<link rel="modulepreload" href="assets/moments/lib.js">
+<link rel="modulepreload" href="assets/moments/pinned-chapters/moment.js">
+<link rel="modulepreload" href="assets/moments/liquid-type/moment.js">
+<!-- page CSS: only what sits inside a visual -->
+<style>
+  /* a real screenshot of the app, placed in a frame or panel like a window and cut by its edges */
+  .shot { display: block; width: var(--shot-w, 1100px); height: auto; max-width: none; border-radius: 12px; border: 1px solid rgba(17, 17, 17, .14); box-shadow: 0 24px 48px -28px rgba(17, 17, 17, .45); }
+  .hero__media > .frame__fx { position: absolute; inset: 0; z-index: 0; }
+  .menu-card .panel { --p-h: 200px; }
+  #salida .grid { margin-top: var(--s-8); }
+  #mandos .panel { --p-h: 380px; }
+  /* the diagrams sit on the lit (light) ground, so they take its ink */
+  #mandos .panel > .dg { --ink: #1d221b; --muted: #1d221b; --card: #e6ebe1; }
+  #arranque .shot { --shot-w: 900px; }
+  #arranque .frame--split { --ratio: 100%; }
+  #biblioteca .frame__img { object-position: 0 0; }
+  #salida .section-head { max-width: none; }
+  /* the static rest of the pinned chapters keeps the two screens the live section takes */
+  @media (min-width: 1024px) { main > #dentro[data-moment].is-static { min-height: 200vh; min-height: 200svh; } }
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    #mandos .panel { --p-h: 280px; }
+    .hero .btn-row > .btn--secondary { margin-left: calc(-1 * var(--s-2)); }
+  }
+  @media (min-width: 640px) and (max-width: 1023px) {
+    #mandos .panel { --p-h: 420px; }
+    #salida .mo-lt__type { font-size: 13vw; }
+    #salida .grid > div { grid-column: auto / span 4; }
+    main > #dentro[data-moment]:not(.is-live) { min-height: 200vh; min-height: 200svh; }
+    #arranque .frame--split { --ratio: 56%; }
+    #dentro .mo-pc__step { grid-template-columns: minmax(0, 1fr); }
+    #dentro .mo-pc__step .mo-pc__visual { grid-column: 1; grid-row: auto; margin-top: var(--s-4); }
+    #dentro .mo-pc__visual > img { max-height: 40svh; }
+  }
+  @media (min-width: 800px) and (max-width: 1023px) { #salida .mo-lt__type { font-size: 18vw; } #preguntas .faq__item { padding-block: var(--s-5); } }
+  @media (max-width: 639px) {
+    #mandos .panel { --p-h: 260px; }
+    main > #dentro[data-moment]:not(.is-live) { min-height: 200vh; min-height: 200lvh; }
+    #salida .grid { margin-top: var(--s-4); }
+    #arranque .frame--split { --ratio: 50%; }
+    .stage > .at-corner > .shot { --shot-w: 620px; }
+  }
+  @media (max-width: 359px) { .btn--xl.btn--wide { padding-inline: var(--s-4); font-size: 16px; } }
+</style>
+</head>
+<body>
+<!-- type: software (site-kind software)
+     deal: hero split, nav nav-cards, close close-type, footer footer-statement, rhythm surface-pairs (#mandos), buttons arrow, mark ring,
+           palette lunar-grey-bronze, type host (instrument failed hero-lines), radius round, lit ground sage, grounds bg-dots (#arranque) and bg-band (#preguntas)
+     effect: gradient-mesh in the hero frame (live); card grounds painterly-landscape dealt but unused (the one card group holds diagrams)
+     moments: pinned-chapters in #dentro (three features, one screenshot each, in the space of one frame);
+              liquid-type in #salida (the one large line: there is always a way back) -->
+
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">Saltar al contenido</a>
+    <a class="nav__logo" href="#top"><span class="mark" data-mark="ring" aria-hidden="true"></span>Consola</a>
+    <nav class="nav__links" aria-label="Principal">
+      <div class="nav__item">
+        <a class="nav__link" href="#biblioteca">Biblioteca <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav__menu">
+          <div class="wrap grid">
+            <a class="menu-card span-4" href="#biblioteca">
+              <div class="panel"><img class="frame__img" src="img/biblioteca-800.jpg" width="800" height="380" alt="La biblioteca de Consola con juegos de Steam, Epic y GOG" loading="lazy" style="object-position: 0 0"></div>
+              <span class="t-card">Biblioteca</span>
+              <span class="t-small muted">Steam, Epic, GOG y Xbox en una sola lista</span>
+            </a>
+            <a class="menu-card span-4" href="#dentro">
+              <div class="panel"><img class="frame__img" src="img/navegador-640.jpg" width="640" height="480" alt="El navegador de Consola con accesos a YouTube y Netflix" loading="lazy" style="object-position: 0 0"></div>
+              <span class="t-card">Nube, navegador y emuladores</span>
+              <span class="t-small muted">Juega y navega sin salir de la consola</span>
+            </a>
+            <a class="menu-card span-4" href="#arranque">
+              <div class="panel"><img class="frame__img" src="img/arranque-640.jpg" width="640" height="326" alt="El ajuste de Consola para arrancar en lugar del escritorio" loading="lazy" style="object-position: 0 0"></div>
+              <span class="t-card">Arranque</span>
+              <span class="t-small muted">Consola en lugar del escritorio al encender</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="#mandos">Mandos</a></div>
+      <div class="nav__item"><a class="nav__link" href="#arranque">Arranque</a></div>
+      <div class="nav__item"><a class="nav__link" href="#preguntas">Preguntas</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="nav__link" href="https://github.com/pablonolascoo/consola">GitHub</a>
+      <a class="btn btn--primary" href="https://github.com/pablonolascoo/consola/releases/latest">Descargar para Windows</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menú">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero hero--split" data-enter aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text grid hero__grid">
+      <div class="hero__text span-5">
+        <p class="hero__kicker"><span class="dot" aria-hidden="true"></span>Versión 1.0.0 «Salón», gratis y de código abierto</p>
+        <h1 id="hero-h">Modo consola para tu PC con Windows</h1>
+        <p class="hero__lead">Consola cambia el escritorio de Windows por una pantalla como la de una PS5. Juegas, abres apps y cambias ajustes con el mando, el teclado o el móvil.</p>
+        <div class="btn-row"><a class="btn btn--primary" href="https://github.com/pablonolascoo/consola/releases/latest">Descargar para Windows<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a><a class="btn btn--secondary" href="https://github.com/pablonolascoo/consola">Ver el código en GitHub</a></div>
+      </div>
+      <div class="hero__media span-6 start-7">
+        <div class="frame__fx" data-fx="gradient-mesh" data-fx-seed="9" data-fx-palette='{"bg":"#cdd6c6","surface":"#dce3d6","ink":"#262d24","muted":"#5f6a5a","accent":"#6c8e63"}' data-fx-params='{"calm":0.2,"calmX":0.4,"calmY":0.5,"tint":0.6,"relief":0.35}'></div>
+        <div class="stage stage--fade-br">
+          <div class="at-corner" style="--ax: 48px; --ay: 56px; --ay-sm: 24px">
+            <img class="shot" src="img/inicio.jpg" srcset="img/inicio-800.jpg 800w, img/inicio.jpg 1600w" sizes="(max-width: 639px) 620px, 1100px" width="1600" height="900" alt="La pantalla de inicio de Consola: juegos de Steam, Epic y GOG arriba y accesos a Biblioteca, Nube, Emuladores, Navegador y Ajustes abajo" fetchpriority="high">
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="section" id="biblioteca" aria-labelledby="biblioteca-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <h2 id="biblioteca-h" class="span-5">Todos tus juegos en la biblioteca de Consola</h2>
+        <div class="span-6 start-7 stack-4">
+          <p class="t-lead">Consola reúne lo que tienes instalado en Steam, Epic, GOG y Xbox o Game Pass. Los juegos de otras tiendas salen del menú Inicio: ábrelos y pulsa «Marcar como juego».</p>
+          <p><a class="link" href="#dentro">Ver qué más trae</a></p>
+        </div>
+      </div>
+      <div class="frame frame--photo fill">
+        <img class="frame__img" src="img/biblioteca.jpg" srcset="img/biblioteca-800.jpg 800w, img/biblioteca.jpg 1600w" sizes="(max-width: 639px) 800px, 1600px" width="1600" height="760" alt="La biblioteca de Consola: seis juegos de Steam, Epic y GOG con su tienda debajo de cada portada" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="dentro" style="--h: 2" data-moment="pinned-chapters" aria-labelledby="dentro-h">
+    <div class="wrap mo-pc__grid">
+      <div class="mo-pc__text">
+        <h2 id="dentro-h">Nube, navegador y emuladores en Consola</h2>
+        <ol class="mo-pc__steps">
+          <li class="mo-pc__step">
+            <h3>Juega en la nube con Xbox y PS5</h3>
+            <p>Xbox Cloud Gaming a pantalla completa y Remote Play de tu PS5 con chiaki-ng.</p>
+            <figure class="mo-pc__visual"><img src="img/nube.jpg" srcset="img/nube-480.jpg 480w, img/nube.jpg 960w" sizes="(max-width: 639px) 342px, (max-width: 1023px) 724px, 628px" width="960" height="720" alt="La pantalla En la nube de Consola con Xbox Cloud Gaming y PS5 Remote Play" loading="lazy" decoding="async"></figure>
+          </li>
+          <li class="mo-pc__step">
+            <h3>Un navegador dentro de Consola</h3>
+            <p>Se maneja con el mando y trae accesos a YouTube, Netflix, Prime Video y más.</p>
+            <figure class="mo-pc__visual"><img src="img/navegador.jpg" srcset="img/navegador-480.jpg 480w, img/navegador.jpg 960w" sizes="(max-width: 639px) 342px, (max-width: 1023px) 724px, 628px" width="960" height="720" alt="El navegador de Consola con accesos a YouTube, Netflix, Prime Video y otras webs" loading="lazy" decoding="async"></figure>
+          </li>
+          <li class="mo-pc__step">
+            <h3>Emuladores que Consola mantiene al día</h3>
+            <p>Se instalan y se actualizan solos. Si una versión nueva falla, vuelves a la anterior.</p>
+            <figure class="mo-pc__visual"><img src="img/emuladores.jpg" srcset="img/emuladores-480.jpg 480w, img/emuladores.jpg 960w" sizes="(max-width: 639px) 342px, (max-width: 1023px) 724px, 628px" width="960" height="720" alt="La lista de emuladores de Consola, cada uno con cómo irá en tu PC" loading="lazy" decoding="async"></figure>
+          </li>
+        </ol>
+      </div>
+      <div class="mo-pc__visuals frame"></div>
+    </div>
+  </section>
+
+  <section class="section ground-surface" id="mandos" style="--hm: 2" aria-labelledby="mandos-h">
+    <div class="wrap">
+        <div class="section-head">
+          <h2 id="mandos-h">Todo Windows, con el mando o el móvil</h2>
+        </div>
+        <div class="grid">
+          <article class="card card--row span-6 m-nolift">
+            <h3>Conecta mandos de Xbox y PlayStation</h3>
+            <p>Xbox, PS4 y PS5 por cable o Bluetooth, sin drivers. El touchpad hace de ratón.</p>
+            <div class="panel panel--flush">
+              <div class="dg" data-diagram><script type="application/json">{"layout": "hub", "alt": "Consola en el centro, unida a mandos de Xbox, PS4 y PS5, al teclado y al móvil.", "size": "card", "center": {"label": "Consola", "icon": "ui:monitor"}, "spokes": [{"label": "Xbox", "icon": "ui:gamepad-2"}, {"label": "PS4 y PS5", "icon": "playstation"}, {"label": "Móvil", "icon": "ui:smartphone"}, {"label": "Teclado", "icon": "ui:keyboard"}]}</script></div>
+            </div>
+          </article>
+          <article class="card card--row span-6 m-nolift">
+            <h3>Usa el móvil como mando</h3>
+            <p>Escanea el QR: el móvil hace de mando, touchpad o teclado, y cambia de modo solo.</p>
+            <div class="panel panel--flush">
+              <div class="dg" data-dg-still data-diagram><script type="application/json">{"layout": "lanes", "curve": "curve", "ground": "none", "alt": "El móvil se une a Consola con un código QR y hace de mando, touchpad o teclado en todo Windows.", "input": {"label": "Móvil", "icon": "ui:smartphone", "meta": "código QR"}, "core": {"label": "Consola", "icon": "ui:monitor"}, "lanes": [{"label": "Mando", "icon": "ui:gamepad-2", "done": true}, {"label": "Touchpad", "icon": "ui:mouse-pointer-2", "done": true}, {"label": "Teclado", "icon": "ui:keyboard", "done": true}], "output": {"label": "Windows", "icon": "windows", "done": true}}</script></div>
+            </div>
+          </article>
+        </div>
+    </div>
+  </section>
+
+  <section class="section" id="salida" aria-labelledby="salida-h">
+    <div class="wrap">
+      <div class="section-head" data-moment="liquid-type">
+        <h2 id="salida-h" class="mo-lt__type">Siempre hay una salida</h2>
+        <p>Desde cualquier juego o app vuelves a la pantalla de inicio de Consola con un gesto.</p>
+      </div>
+      <div class="grid">
+        <div class="span-4 stack-4"><p class="t-stat">Esc</p><p class="t-card">Con teclado</p><p>Mantén pulsada la tecla Esc.</p></div>
+        <div class="span-4 stack-4"><p class="t-stat">Xbox</p><p class="t-card">Con mando</p><p>Pulsa el botón Xbox del mando.</p></div>
+        <div class="span-4 stack-4"><p class="t-stat">LB + RB + View</p><p class="t-card">En la nube</p><p>Mantén los tres, o L1 + R1 + SHARE en un mando de PlayStation.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-dots" id="arranque" aria-labelledby="arranque-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 stack-6">
+          <h2 id="arranque-h">Enciende el PC directamente en Consola</h2>
+          <p class="t-lead">Activa «Arrancar directamente en la consola» y, al encender el PC, verás Consola en lugar del escritorio de Windows.</p>
+          <div class="stack-4">
+            <p>Un botón te devuelve al escritorio normal cuando lo necesites.</p>
+            <p>Sonido, brillo, energía y Wi-Fi se cambian con el mando.</p>
+            <p>Trae explorador de archivos, recepción por FTP en tu red y el asistente Claude.</p>
+          </div>
+       </div>
+        <div class="frame frame--split frame--lit span-6 start-7">
+          <div class="stage stage--fade-br"><div class="at-corner" style="--ax: 56px; --ay: 56px"><img class="shot" src="img/ajustes.jpg" width="1100" height="700" alt="Los ajustes de Consola: sonido, pantalla, energía, Wi-Fi y arranque" loading="lazy" decoding="async"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-band bg-bleed" id="preguntas" aria-labelledby="preguntas-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 stack-4">
+          <h2 id="preguntas-h">Preguntas sobre Consola</h2>
+       </div>
+        <div class="faq span-6 start-7">
+          <div class="faq__item"><h3>¿Cuánto cuesta Consola?</h3><p>Nada. Es gratis y de código abierto, con <a class="link" href="https://github.com/pablonolascoo/consola/blob/main/LICENSE">licencia MIT</a>.</p></div>
+          <div class="faq__item"><h3>¿En qué Windows funciona?</h3><p>En Windows 10 y Windows 11 de 64 bits.</p></div>
+          <div class="faq__item"><h3>Windows me avisa al abrir el instalador</h3><p>El instalador aún no está firmado. Pulsa «Más información» y luego «Ejecutar de todas formas».</p></div>
+          <div class="faq__item"><h3>¿Consola descarga juegos o BIOS?</h3><p>No. No descarga juegos, BIOS ni claves: usa los de tus propias consolas.</p></div>
+          <div class="faq__item"><h3>¿Quién hace Consola?</h3><p>Pablo Nolasco. El código y las versiones están en GitHub.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer closing footer--statement" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--type">
+      <div class="section-head">
+        <h2 id="close-h">Prueba Consola en tu PC</h2>
+        <p>Gratis, para Windows 10 y 11 de 64 bits.</p>
+      </div>
+      <a class="btn btn--primary btn--xl btn--wide" href="https://github.com/pablonolascoo/consola/releases/latest">Descargar para Windows<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-6 stack-4">
+          <a class="nav__logo" href="#top"><span class="mark" data-mark="ring" aria-hidden="true"></span>Consola</a>
+          <p class="footer__lede">Una interfaz de consola para Windows, hecha por Pablo Nolasco.</p>
+        </div>
+       <div class="span-2 start-7 footer__col"><h3>Proyecto</h3><ul><li><a href="https://github.com/pablonolascoo/consola">GitHub</a></li><li><a href="https://github.com/pablonolascoo/consola/releases">Versiones</a></li><li><a href="https://github.com/pablonolascoo/consola/issues">Incidencias</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>&copy; 2026 Pablo Nolasco &nbsp; <a href="https://github.com/pablonolascoo/consola/blob/main/LICENSE">Licencia MIT</a></span>
+        <div class="socials"></div>
+        <span>Los nombres y logos de productos son marcas de sus dueños.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<nav class="actionbar" aria-label="Acciones rápidas">
+  <a class="btn btn--primary" href="https://github.com/pablonolascoo/consola/releases/latest">Descargar para Windows</a>
+</nav>
+
+<script type="module" src="assets/system.js"></script>
+<script type="module" src="assets/motion/motion.js"></script>
+<script type="module" src="assets/layout/layout.js"></script>
+<script type="module" src="assets/diagrams/mount.js"></script>
+</body>
+</html>

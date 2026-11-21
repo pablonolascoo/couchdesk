@@ -1,0 +1,26 @@
+# Consola
+
+> Consola es una app gratis y de código abierto (licencia MIT) para Windows 10 y 11 de 64 bits. Cambia el escritorio de Windows por una interfaz tipo consola, como la de una PS5 o Steam Big Picture, que se maneja con un mando, el teclado o el móvil. Primera versión: 1.0.0 «Salón». Hecha con Tauri 2 y React por Pablo Nolasco.
+
+## Qué hace
+
+- Una biblioteca con los juegos de Steam, Epic, GOG y Xbox o Game Pass, más los de otras tiendas que salen del menú Inicio ("Marcar como juego").
+- Todas las aplicaciones instaladas, con sus iconos reales.
+- Juego en la nube: Xbox Cloud Gaming a pantalla completa y Remote Play de PS5 con chiaki-ng.
+- Emuladores que se instalan y se actualizan solos, con vuelta a la versión anterior. No descarga juegos, BIOS ni claves.
+- Mandos de Xbox, PS4 y PS5 por cable o Bluetooth, sin drivers. El touchpad de PlayStation hace de ratón y el mando maneja ratón y teclado en todo Windows.
+- El móvil como mando con un código QR: mando, touchpad o teclado.
+- Un navegador que se maneja con el mando, con accesos a YouTube, Netflix, Prime Video y más.
+- Siempre hay salida: mantén Esc o pulsa el botón Xbox para volver a la consola.
+- Puede arrancar en lugar del escritorio de Windows, con un botón para volver al escritorio normal.
+- Explorador de archivos, recepción de archivos por FTP en la red de casa, ajustes de sonido, brillo, energía y Wi-Fi, y el asistente Claude.
+
+## Enlaces
+
+- [Descargar para Windows](https://github.com/pablonolascoo/consola/releases/latest)
+- [Código en GitHub](https://github.com/pablonolascoo/consola)
+- [Licencia MIT](https://github.com/pablonolascoo/consola/blob/main/LICENSE)
+
+## Nota
+
+El instalador aún no está firmado. Windows SmartScreen puede avisar: pulsa "Más información" y luego "Ejecutar de todas formas".
