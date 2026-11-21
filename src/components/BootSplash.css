@@ -1,0 +1,77 @@
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  background:
+    radial-gradient(50% 50% at 50% 45%, rgba(226, 196, 150, 0.28), transparent 70%),
+    var(--bg);
+  transition: opacity 900ms var(--ease), transform 900ms var(--ease), filter 900ms var(--ease);
+}
+.boot-out { opacity: 0; transform: scale(1.04); filter: blur(14px); pointer-events: none; }
+
+/* Marca: dos aros que se abren y un punto central */
+.boot-mark { position: relative; width: 74px; height: 74px; }
+.boot-ring, .boot-dot {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+.boot-ring {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+  opacity: 0;
+  transform: scale(0.4);
+  animation: boot-ring 1200ms var(--out) 80ms forwards;
+}
+.boot-ring-2 {
+  inset: -14px;
+  box-shadow: inset 0 0 0 1px rgba(28, 23, 18, 0.18);
+  animation-delay: 260ms;
+}
+.boot-dot {
+  inset: 30px;
+  background: var(--text);
+  transform: scale(0);
+  animation: boot-dot 700ms var(--spring) 380ms forwards;
+}
+@keyframes boot-ring { to { opacity: 1; transform: scale(1); } }
+@keyframes boot-dot { to { transform: scale(1); } }
+
+.boot-word {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 64px;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  display: flex;
+  overflow: hidden;
+  padding-bottom: 6px;
+}
+.boot-char {
+  display: inline-block;
+  transform: translateY(105%);
+  opacity: 0;
+  animation: boot-char 900ms var(--ease) forwards;
+}
+@keyframes boot-char { to { transform: none; opacity: 1; } }
+
+.boot-line {
+  width: 160px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(28, 23, 18, 0.08);
+  overflow: hidden;
+}
+.boot-line span {
+  display: block;
+  height: 100%;
+  background: var(--text);
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: boot-line 1500ms var(--ease) 500ms forwards;
+}
+@keyframes boot-line { to { transform: scaleX(1); } }

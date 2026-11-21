@@ -1,0 +1,15 @@
+.library-count {
+  padding: 8px var(--gutter) 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+.library-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 156px);
+  gap: 30px 24px;
+  align-content: start;
+  padding: 28px var(--gutter) 100px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}

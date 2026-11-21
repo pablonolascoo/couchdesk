@@ -1,0 +1,20 @@
+.remote-layer { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
+.remote-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+  transition: transform 60ms var(--out);
+  will-change: transform;
+}
+.remote-cursor span {
+  margin-top: 14px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}

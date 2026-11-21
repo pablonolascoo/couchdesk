@@ -1,0 +1,3 @@
+.hw { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; }
+.bios-text { max-width: 640px; font-size: 16px; color: var(--text-2); }
+.menu-item .tag { flex: none; }

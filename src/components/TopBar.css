@@ -1,0 +1,74 @@
+/* Barra flotante: islas separadas del borde, nunca pegadas de lado a lado */
+.topbar {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px var(--gutter) 0;
+}
+.topbar-brand { display: flex; align-items: center; gap: 16px; }
+.brand-mark {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.25px var(--text);
+}
+.brand-mark span {
+  position: absolute;
+  inset: 11px;
+  border-radius: 50%;
+  background: var(--text);
+}
+.topbar-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 36px;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  overflow: hidden;
+}
+.topbar-title span {
+  display: inline-block;
+  animation: title-in 900ms var(--ease) both 80ms;
+}
+@keyframes title-in {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.topbar-status, .qr {
+  background: rgba(255, 253, 249, 0.72);
+  backdrop-filter: blur(18px) saturate(1.2);
+  box-shadow: inset 0 1px 1px #fff, 0 0 0 1px var(--hair), 0 18px 40px -24px rgba(80, 56, 30, 0.25);
+  border-radius: 9999px;
+}
+.topbar-status {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 52px;
+  padding: 0 22px;
+  color: var(--text-2);
+  font-size: 14px;
+}
+.status-sep { width: 1px; height: 18px; background: var(--hair); }
+.battery { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 13px; }
+.clock { font-family: var(--mono); font-size: 14px; color: var(--text); letter-spacing: 0.02em; }
+.qr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 52px;
+  padding: 0 20px 0 6px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.15;
+  text-align: left;
+  color: var(--text);
+}
+.qr small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); }
+.qr .qr-box { margin-left: 4px; border-radius: 12px; overflow: hidden; background: #fff; padding: 2px; box-sizing: content-box; box-shadow: none; }
+.qr[data-focused] { transform: scale(1.04); }

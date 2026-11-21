@@ -1,0 +1,18 @@
+.mono { font-family: var(--mono); font-size: 13px; }
+.path { color: var(--muted); word-break: break-all; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.option.tool { width: auto; margin-top: 0; justify-content: flex-start; gap: 10px; font-size: 14px; padding: 10px 18px; border-radius: 9999px; }
+.file-list { display: flex; flex-direction: column; margin-top: 18px; }
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 13px 16px;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  box-shadow: 0 1px 0 var(--hair);
+}
+.file-row[data-focused] { background: var(--surface); transform: translateX(6px); }
+.file-row svg { color: var(--text-2); flex: none; }
+.file-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
+.file-meta { color: var(--muted); font-size: 13px; font-family: var(--mono); }

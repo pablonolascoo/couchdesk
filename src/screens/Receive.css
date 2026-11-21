@@ -1,0 +1,11 @@
+.receive { display: flex; gap: 64px; align-items: flex-start; justify-content: space-between; }
+.creds { margin-top: 28px; }
+.receive-qr { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 0; }
+.receive-qr figcaption { font-size: 13px; color: var(--muted); }
+.qr-box {
+  padding: 14px;
+  background: #ffffff;
+  border-radius: var(--radius);
+  box-shadow: var(--bezel);
+}
+.qr-box svg { width: 100%; height: 100%; display: block; }

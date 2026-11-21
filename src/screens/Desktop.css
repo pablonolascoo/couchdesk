@@ -1,0 +1,51 @@
+.desk { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 var(--gutter) 110px; }
+.desk .eyebrow { margin-bottom: 18px; }
+.desk .hero-title { margin-bottom: 36px; }
+.desk .hero-title + .hero-meta { margin: -18px 0 32px; }
+.desk-options { display: grid; grid-template-columns: repeat(2, minmax(0, 460px)); gap: 28px; }
+
+/* Tarjeta de doble marco con el icono en su burbuja y la flecha en la esquina */
+.desk-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 250px;
+  padding: 30px 30px 28px;
+  border-radius: calc(var(--radius) + 6px);
+  background: var(--surface);
+  box-shadow: var(--bezel);
+  text-align: left;
+}
+.desk-card:disabled { opacity: 0.5; }
+.desk-icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: var(--bg-2);
+  transition: transform 520ms var(--spring), background-color 420ms var(--ease), color 420ms var(--ease);
+}
+.desk-title { font-family: var(--serif); font-size: 34px; line-height: 1.05; letter-spacing: -0.02em; }
+.desk-text { color: var(--muted); font-size: 15px; max-width: 360px; }
+.desk-go {
+  position: absolute;
+  top: 26px;
+  right: 26px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-2);
+  transition: transform 520ms var(--spring);
+}
+.desk-card[data-focused] { transform: translateY(-6px); }
+.desk-card[data-focused] .desk-icon { background: var(--text); color: var(--bg); transform: rotate(-8deg) scale(1.05); }
+.desk-card[data-focused] .desk-go { transform: translate(3px, -3px) scale(1.08); }
+.desk-warn .desk-text { color: var(--red); }
+.desk-warn .desk-icon { background: var(--red-bg) !important; color: var(--red) !important; }
+.desk-foot { margin-top: 30px; color: var(--muted); font-size: 14px; }
